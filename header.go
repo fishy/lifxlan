@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"math"
 	"math/rand"
-	"reflect"
 	"time"
 )
 
@@ -63,26 +62,6 @@ const HeaderLength uint16 = 36
 // ResponseReadBufferSize is the recommended buffer size to read UDP responses.
 // It's big enough for all the payloads.
 const ResponseReadBufferSize = 4096
-
-// UintToBytes encodes v into a byte array with appropriate size.
-//
-// v must be an uintN type (excluding uint), or UintToBytes panics.
-func UintToBytes(v interface{}) []byte {
-	u := reflect.ValueOf(v).Uint()
-	size := binary.Size(v)
-	buf := make([]byte, size)
-	switch size {
-	case 1:
-		buf[0] = byte(u)
-	case 2:
-		binary.LittleEndian.PutUint16(buf, uint16(u))
-	case 4:
-		binary.LittleEndian.PutUint32(buf, uint32(u))
-	case 8:
-		binary.LittleEndian.PutUint64(buf, uint64(u))
-	}
-	return buf
-}
 
 // GenerateMessage generates the message to send.
 func GenerateMessage(
