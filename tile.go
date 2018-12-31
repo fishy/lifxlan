@@ -57,6 +57,8 @@ func (td *TileDevice) GetTileDevice(ctx context.Context) (*TileDevice, error) {
 
 // RawStateDeviceChainPayload defines the struct to be used for encoding and
 // decoding.
+//
+// https://lan.developer.lifx.com/v2.0/docs/tile-messages#section-statedevicechain-702
 type RawStateDeviceChainPayload struct {
 	StartIndex  uint8
 	TileDevices [16]RawTileDevice
@@ -160,6 +162,8 @@ func (d *device) GetTileDevice(ctx context.Context) (*TileDevice, error) {
 }
 
 // RawTileDevice defines the struct to be used for encoding and decoding.
+//
+// https://lan.developer.lifx.com/v2.0/docs/tile-messages#section-tile
 type RawTileDevice struct {
 	AccelMeasX int16
 	AccelMeasY int16
