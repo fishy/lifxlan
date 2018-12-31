@@ -119,15 +119,13 @@ func Discover(
 			return ctx.Err()
 		}
 
-		if err := conn.SetReadDeadline(getReadDeadline()); err != nil {
+		if err := conn.SetReadDeadline(GetReadDeadline()); err != nil {
 			return err
 		}
 		n, addr, err := conn.ReadFrom(buf)
 		if err != nil {
-			if timeoutErr, ok := err.(timeouter); ok {
-				if timeoutErr.Timeout() {
-					continue
-				}
+			if CheckTimeoutError(err) {
+				continue
 			}
 			return err
 		}

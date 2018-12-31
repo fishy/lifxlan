@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/fishy/lifxlan"
+	"github.com/fishy/lifxlan/tile"
 )
 
 // Flags
@@ -57,7 +58,7 @@ func main() {
 		}
 	}()
 
-	var tile *lifxlan.TileDevice
+	var td tile.Device
 
 	for device := range deviceChan {
 		if !device.Target().Matches(target) {
@@ -67,19 +68,19 @@ func main() {
 		wg.Add(1)
 		go func(device lifxlan.Device) {
 			defer wg.Done()
-			t, err := device.GetTileDevice(ctx)
+			t, err := tile.Wrap(ctx, device, false)
 			if checkContextError(err) {
 				log.Printf("Check tile for %v failed: %v\n", device, err)
 			} else {
 				if t == nil {
 					return
 				}
-				tile = t
+				td = t
 				cancel()
 			}
 		}(device)
 	}
 
 	wg.Wait()
-	log.Print(tile)
+	log.Print(td)
 }

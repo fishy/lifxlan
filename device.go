@@ -1,7 +1,6 @@
 package lifxlan
 
 import (
-	"context"
 	"fmt"
 	"net"
 	"sync/atomic"
@@ -37,15 +36,6 @@ type Device interface {
 
 	// NextSequence returns the next sequence value to be used with API calls.
 	NextSequence() uint8
-
-	// GetTileDevice tests the device's tile related capability,
-	// if successful, it generates a TileDevice to return.
-	//
-	// If this device is not a tile device,
-	// nil *TileDevice and nil error will be returned.
-	//
-	// This function might not return until ctx is cancelled.
-	GetTileDevice(ctx context.Context) (*TileDevice, error)
 }
 
 var _ Device = (*device)(nil)
