@@ -2,6 +2,7 @@ package tile
 
 import (
 	"fmt"
+	"math"
 )
 
 // Board defines a board for a tile device (collection of tiles).
@@ -55,53 +56,40 @@ func (td *device) parseBoard() {
 // ParseBoard parses tiles into BoardData.
 func ParseBoard(tiles []*Tile) BoardData {
 	var board BoardData
-	var offset Coordinate
+	var base Coordinate
+	bs := make([][][]Coordinate, len(tiles))
+
+	base.X = int(math.MaxInt32)
+	base.Y = int(math.MaxInt32)
+	board.X = int(math.MinInt32)
+	board.Y = int(math.MinInt32)
+
 	for i, tile := range tiles {
-		b, min, max := tile.BoardCoordinates()
+		var min, max Coordinate
+		bs[i], min, max = tile.BoardCoordinates()
 
-		if min.X+offset.X < 0 {
-			// Need to pad x to the head.
-			newOffset := 0 - min.X - offset.X
-			newData := make([][]*IndexData, len(board.Data)+newOffset)
-			for i := 0; i < newOffset; i++ {
-				newData[i] = make([]*IndexData, board.Y)
-			}
-			copy(newData[newOffset:], board.Data)
-			board.Data = newData
-			offset.X += newOffset
-			board.X += newOffset
+		if min.X < base.X {
+			base.X = min.X
 		}
-		if max.X+offset.X > board.X {
-			// Need to pad x to the tail.
-			sizeDiff := max.X + offset.X - board.X
-			for i := 0; i < sizeDiff; i++ {
-				board.Data = append(board.Data, make([]*IndexData, board.Y))
-			}
-			board.X += sizeDiff
+		if min.Y < base.Y {
+			base.Y = min.Y
 		}
+		if max.X > board.X {
+			board.X = max.X
+		}
+		if max.Y > board.Y {
+			board.Y = max.Y
+		}
+	}
 
-		if min.Y+offset.Y < 0 {
-			// Need to pad y to the head.
-			newOffset := 0 - min.Y - offset.Y
-			for i := range board.Data {
-				newRow := make([]*IndexData, board.Y+newOffset)
-				copy(newRow[newOffset:], board.Data[i])
-				board.Data[i] = newRow
-			}
-			offset.Y += newOffset
-			board.Y += newOffset
-		}
-		if max.Y+offset.Y > board.Y {
-			// Need to pad y to the tail.
-			sizeDiff := max.Y + offset.Y - board.Y
-			for i := range board.Data {
-				newRow := make([]*IndexData, board.Y+sizeDiff)
-				copy(newRow, board.Data[i])
-				board.Data[i] = newRow
-			}
-			board.Y += sizeDiff
-		}
+	board.X -= base.X
+	board.Y -= base.Y
+	board.Data = make([][]*IndexData, board.X)
+	for i := range board.Data {
+		board.Data[i] = make([]*IndexData, board.Y)
+	}
 
+	for i, b := range bs {
 		for x := range b {
 			for y, c := range b[x] {
 				data := &IndexData{
@@ -111,49 +99,10 @@ func ParseBoard(tiles []*Tile) BoardData {
 					},
 					Index: i,
 				}
-				board.Data[c.X+offset.X][c.Y+offset.Y] = data
+				board.Data[c.X-base.X][c.Y-base.Y] = data
 			}
 		}
 	}
-
-	// Trim down the board
-	var max Coordinate
-	min := Coordinate{
-		X: board.X,
-		Y: board.Y,
-	}
-	for x := 0; x < board.X; x++ {
-		for y := 0; y < board.Y; y++ {
-			if board.Data[x][y] != nil {
-				if x < min.X {
-					min.X = x
-				}
-				if x+1 > max.X {
-					max.X = x + 1
-				}
-				if y < min.Y {
-					min.Y = y
-				}
-				if y+1 > max.Y {
-					max.Y = y + 1
-				}
-			}
-		}
-	}
-	if min.X > 0 || max.X < board.X {
-		newData := make([][]*IndexData, max.X-min.X)
-		copy(newData, board.Data[min.X:])
-		board.Data = newData
-	}
-	board.X = max.X - min.X
-	if min.Y > 0 || max.Y < board.Y {
-		for i := range board.Data {
-			newRow := make([]*IndexData, max.Y-min.Y)
-			copy(newRow, board.Data[i][min.Y:])
-			board.Data[i] = newRow
-		}
-	}
-	board.Y = max.Y - min.Y
 
 	return board
 }
