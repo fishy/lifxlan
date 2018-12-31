@@ -106,15 +106,13 @@ func Wrap(ctx context.Context, d lifxlan.Device, force bool) (Device, error) {
 		if err := binary.Read(r, binary.LittleEndian, &raw); err != nil {
 			return nil, err
 		}
-		tiles := make([]*Tile, raw.TotalCount)
-		for i := range tiles {
-			tiles[i] = ParseTile(&raw.TileDevices[int(raw.StartIndex)+i])
-			fmt.Printf("%+v\n", tiles[i])
-		}
 		td := &device{
 			dev:        d,
 			startIndex: raw.StartIndex,
-			tiles:      tiles,
+			tiles:      make([]*Tile, raw.TotalCount),
+		}
+		for i := range td.tiles {
+			td.tiles[i] = ParseTile(&raw.TileDevices[int(raw.StartIndex)+i])
 		}
 		td.initBoard()
 		return td, nil

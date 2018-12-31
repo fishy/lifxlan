@@ -82,5 +82,11 @@ func main() {
 	}
 
 	wg.Wait()
+	if td == nil {
+		log.Fatal("No matching tile device found.")
+	}
 	log.Print(td)
+	for i, t := range td.Tiles() {
+		log.Printf("%d: %+v", i, t)
+	}
 }
