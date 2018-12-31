@@ -1,8 +1,10 @@
 package lifxlan
 
 import (
+	"context"
 	"fmt"
 	"net"
+	"sync/atomic"
 )
 
 // ServiceType define the type of the service this device provides.
@@ -29,6 +31,21 @@ type Device interface {
 
 	// Dial returns the connection of this device.
 	Dial() (net.Conn, error)
+
+	// Source returns a consistent random source to be used with API calls.
+	Source() uint32
+
+	// NextSequence returns the next sequence value to be used with API calls.
+	NextSequence() uint8
+
+	// GetTileDevice tests the device's tile related capability,
+	// if successful, it generates a TileDevice to return.
+	//
+	// If this device is not a tile device,
+	// nil *TileDevice and nil error will be returned.
+	//
+	// This function might not return until ctx is cancelled.
+	GetTileDevice(ctx context.Context) (*TileDevice, error)
 }
 
 var _ Device = (*device)(nil)
@@ -41,6 +58,9 @@ type device struct {
 	service ServiceType
 	// The target of this device, usually it's the MAC address.
 	target Target
+
+	source   uint32
+	sequence uint32
 }
 
 // NewDevice creates a new Device.
@@ -52,6 +72,7 @@ func NewDevice(addr string, service ServiceType, target Target) Device {
 		addr:    addr,
 		service: service,
 		target:  target,
+		source:  RandomSource(),
 	}
 }
 
@@ -75,4 +96,14 @@ func (d *device) Dial() (net.Conn, error) {
 		network = "udp"
 	}
 	return net.Dial(network, d.addr)
+}
+
+func (d *device) Source() uint32 {
+	return d.source
+}
+
+const uint8mask = uint32(0xff)
+
+func (d *device) NextSequence() uint8 {
+	return uint8(atomic.AddUint32(&d.sequence, 1) & uint8mask)
 }

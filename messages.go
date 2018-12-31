@@ -8,4 +8,8 @@ const (
 	// Discover
 	GetService   MessageType = 2
 	StateService             = 3
+
+	// Tile
+	GetDeviceChain   = 701
+	StateDeviceChain = 702
 )
