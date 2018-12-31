@@ -21,6 +21,9 @@ type device struct {
 	dev        lifxlan.Device
 	startIndex uint8
 	tiles      []*Tile
+
+	// parsed board data
+	board BoardData
 }
 
 var _ Device = (*device)(nil)

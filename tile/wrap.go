@@ -114,7 +114,7 @@ func Wrap(ctx context.Context, d lifxlan.Device, force bool) (Device, error) {
 		for i := range td.tiles {
 			td.tiles[i] = ParseTile(&raw.TileDevices[int(raw.StartIndex)+i])
 		}
-		td.initBoard()
+		td.parseBoard()
 		return td, nil
 	}
 }
@@ -127,46 +127,4 @@ type RawStateDeviceChainPayload struct {
 	StartIndex  uint8
 	TileDevices [16]RawTileDevice
 	TotalCount  uint8
-}
-
-// RawTileDevice defines the struct to be used for encoding and decoding.
-//
-// https://lan.developer.lifx.com/v2.0/docs/tile-messages#section-tile
-type RawTileDevice struct {
-	AccelMeasX int16
-	AccelMeasY int16
-	AccelMeasZ int16
-	_          int16 // reserved
-	UserX      float32
-	UserY      float32
-	Width      uint8
-	Height     uint8
-	_          uint8  // reserved
-	_          uint32 // device_version_vendor
-	_          uint32 // device_version_product
-	_          uint32 // device_version_version
-	_          uint64 // firmware_build
-	_          uint64 // reserved
-	_          uint32 // firmware_versio
-	_          uint32 // reserved
-}
-
-// Tile defines a single tile inside a TileDevice
-type Tile struct {
-	UserX    float32
-	UserY    float32
-	Width    uint8
-	Height   uint8
-	Rotation Rotation
-}
-
-// ParseTile parses RawTileDevice into a Tile.
-func ParseTile(raw *RawTileDevice) *Tile {
-	return &Tile{
-		UserX:    raw.UserX,
-		UserY:    raw.UserY,
-		Width:    raw.Width,
-		Height:   raw.Height,
-		Rotation: ParseRotation(raw.AccelMeasX, raw.AccelMeasY, raw.AccelMeasZ),
-	}
 }
