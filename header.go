@@ -1,8 +1,10 @@
 package lifxlan
 
 import (
+	"bytes"
 	"encoding/binary"
 	"fmt"
+	"io/ioutil"
 	"math"
 	"math/rand"
 	"reflect"
@@ -39,23 +41,22 @@ const (
 	FlagAckRequired
 )
 
-// Header offsets.
-const (
-	SizeOffset      = 0                   // 2 bytes
-	TaggedOffset    = SizeOffset + 2      // 2 bytes
-	SourceOffset    = TaggedOffset + 2    // 4 bytes
-	TargetOffset    = SourceOffset + 4    // 8 bytes
-	reserved1Offset = TargetOffset + 8    // 6 bytes
-	FlagsOffset     = reserved1Offset + 6 // 1 byte
-	SequenceOffset  = FlagsOffset + 1     // 1 byte
-	reserved2Offset = SequenceOffset + 1  // 8 bytes
-	TypeOffset      = reserved2Offset + 8 // 2 bytes
-	reserved3Offset = TypeOffset + 2      // 2 bytes
-	PayloadOffset   = reserved3Offset + 2
-)
+// RawHeader defines the struct to be used for encoding and decoding.
+type RawHeader struct {
+	Size     uint16
+	Tagged   TaggedHeader
+	Source   uint32
+	Target   Target
+	_        [6]uint8 // reserved
+	Flags    AckResFlag
+	Sequence uint8
+	_        uint64 // reserved
+	Type     MessageType
+	_        uint16 // reserved
+}
 
 // HeaderLength is the length of the header
-const HeaderLength uint16 = PayloadOffset
+const HeaderLength uint16 = 36
 
 // ResponseReadBufferSize is the recommended buffer size to read UDP responses.
 // It's big enough for all the payloads.
@@ -90,23 +91,25 @@ func GenerateMessage(
 	sequence uint8,
 	message MessageType,
 	payload []byte,
-) []byte {
+) ([]byte, error) {
 	var size = HeaderLength + uint16(len(payload))
-	buf := make([]byte, size)
-	var data = map[int][]byte{
-		SizeOffset:     UintToBytes(size),     // size
-		TaggedOffset:   UintToBytes(tagged),   // origin, tagged, addressable, protocol
-		SourceOffset:   UintToBytes(source),   // source
-		TargetOffset:   UintToBytes(target),   // target
-		FlagsOffset:    UintToBytes(flags),    // reserved, ack_required, res_required
-		SequenceOffset: UintToBytes(sequence), // sequence
-		TypeOffset:     UintToBytes(message),  // type
-		PayloadOffset:  payload,
+	buf := new(bytes.Buffer)
+	data := &RawHeader{
+		Size:     size,
+		Tagged:   tagged,
+		Source:   source,
+		Target:   target,
+		Flags:    flags,
+		Sequence: sequence,
+		Type:     message,
 	}
-	for offset, v := range data {
-		copy(buf[offset:], v)
+	if err := binary.Write(buf, binary.LittleEndian, data); err != nil {
+		return nil, err
 	}
-	return buf
+	if _, err := buf.Write(payload); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
 }
 
 // Response is the parsed response from a lifxlan device.
@@ -127,20 +130,30 @@ func ParseResponse(msg []byte) (*Response, error) {
 			HeaderLength,
 		)
 	}
-	size := binary.LittleEndian.Uint16(msg[SizeOffset:])
-	if len(msg) != int(size) {
+
+	var d RawHeader
+	r := bytes.NewReader(msg)
+	if err := binary.Read(r, binary.LittleEndian, &d); err != nil {
+		return nil, err
+	}
+	if len(msg) != int(d.Size) {
 		return nil, fmt.Errorf(
 			"lifxlan.ParseResponse: response size mismatch: %d != %d",
 			len(msg),
-			size,
+			d.Size,
 		)
 	}
+
+	payload, err := ioutil.ReadAll(r)
+	if err != nil {
+		return nil, err
+	}
 	return &Response{
-		Message:  MessageType(binary.LittleEndian.Uint16(msg[TypeOffset:])),
-		Source:   binary.LittleEndian.Uint32(msg[SourceOffset:]),
-		Target:   Target(binary.LittleEndian.Uint64(msg[TargetOffset:])),
-		Sequence: uint8(msg[SequenceOffset]),
-		Payload:  msg[PayloadOffset:],
+		Message:  d.Type,
+		Source:   d.Source,
+		Target:   d.Target,
+		Sequence: d.Sequence,
+		Payload:  payload,
 	}, nil
 }
 

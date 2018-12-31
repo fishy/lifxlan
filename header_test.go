@@ -66,7 +66,7 @@ func TestHeader(t *testing.T) {
 		func(t *testing.T) {
 			sequence++
 
-			msg := lifxlan.GenerateMessage(
+			msg, err := lifxlan.GenerateMessage(
 				lifxlan.Tagged,
 				0, // source
 				lifxlan.AllDevices,
@@ -75,6 +75,10 @@ func TestHeader(t *testing.T) {
 				lifxlan.GetService,
 				nil, // payload
 			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
 			resp, err := lifxlan.ParseResponse(msg)
 			if err != nil {
 				t.Fatal(err)
@@ -118,7 +122,7 @@ func TestHeader(t *testing.T) {
 			}
 			msgType := lifxlan.MessageType(4321)
 
-			msg := lifxlan.GenerateMessage(
+			msg, err := lifxlan.GenerateMessage(
 				lifxlan.NotTagged,
 				source,
 				target,
@@ -127,6 +131,10 @@ func TestHeader(t *testing.T) {
 				msgType,
 				payload,
 			)
+			if err != nil {
+				t.Fatal(err)
+			}
+
 			resp, err := lifxlan.ParseResponse(msg)
 			if err != nil {
 				t.Fatal(err)

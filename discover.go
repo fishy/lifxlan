@@ -1,17 +1,19 @@
 package lifxlan
 
 import (
+	"bytes"
 	"context"
 	"encoding/binary"
 	"fmt"
 	"net"
 )
 
-// StateService message payload offsets.
-const (
-	StateServiceServiceOffset = 0                             // 1 byte
-	StateServicePortOffset    = StateServiceServiceOffset + 1 // 4 bytes
-)
+// RawStateServicePayload defines the struct to be used for encoding and
+// decoding.
+type RawStateServicePayload struct {
+	Service ServiceType
+	Port    uint32
+}
 
 // Default boardcast host and port.
 const (
@@ -59,7 +61,7 @@ func Discover(
 		return ctx.Err()
 	}
 
-	msg := GenerateMessage(
+	msg, err := GenerateMessage(
 		Tagged,
 		0, // source
 		AllDevices,
@@ -68,6 +70,9 @@ func Discover(
 		GetService,
 		nil, // payload
 	)
+	if err != nil {
+		return err
+	}
 
 	conn, err := net.ListenPacket("udp", ":"+DefaultBroadcastPort)
 	if err != nil {
@@ -138,16 +143,19 @@ func Discover(
 			continue
 		}
 
-		service := ServiceType(resp.Payload[StateServiceServiceOffset])
-		switch service {
+		var d RawStateServicePayload
+		r := bytes.NewReader(resp.Payload)
+		if err := binary.Read(r, binary.LittleEndian, &d); err != nil {
+			return err
+		}
+		switch d.Service {
 		default:
 			// Unkown service, ignore.
 			continue
 		case ServiceUDP:
-			port := binary.LittleEndian.Uint32(resp.Payload[StateServicePortOffset:])
 			devices <- NewDevice(
-				net.JoinHostPort(host, fmt.Sprintf("%d", port)),
-				service,
+				net.JoinHostPort(host, fmt.Sprintf("%d", d.Port)),
+				d.Service,
 				resp.Target,
 			)
 		}
