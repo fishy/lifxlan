@@ -2,6 +2,7 @@ package lifxlan
 
 import (
 	"encoding/binary"
+	"flag"
 	"fmt"
 	"net"
 	"strings"
@@ -9,6 +10,8 @@ import (
 
 // Target defines a target by its MAC address.
 type Target uint64
+
+var _ flag.Value = (*Target)(nil)
 
 // AllDevices is the special Target value means all devices.
 const AllDevices Target = 0
@@ -21,6 +24,12 @@ func (t Target) String() string {
 		strs[i] = fmt.Sprintf("%02x", b)
 	}
 	return strings.Join(strs, ":")
+}
+
+// Set satisfies flag.Value interface.
+func (t *Target) Set(s string) (err error) {
+	*t, err = ParseTarget(s)
+	return
 }
 
 // Matches returns true if either target is AllDevices,
