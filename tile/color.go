@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net"
 	"sync"
+	"time"
 
 	"github.com/fishy/lifxlan"
 )
@@ -57,6 +58,7 @@ func (td *device) SetColors(
 	ctx context.Context,
 	conn net.Conn,
 	cb ColorBoard,
+	duration time.Duration,
 	ack bool,
 ) error {
 	select {
@@ -86,6 +88,7 @@ func (td *device) SetColors(
 			TileIndex: td.startIndex + uint8(i),
 			Length:    1,
 			Width:     td.tiles[i].Width,
+			Duration:  uint32(duration / time.Millisecond),
 		}
 		// Init with all black colors.
 		for j := range payloads[i].Colors {

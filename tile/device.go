@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"time"
 
 	"github.com/fishy/lifxlan"
 )
@@ -24,12 +25,14 @@ type Device interface {
 	// You should pre-dial and pass in the conn if you plan to call this function
 	// repeatedly.
 	//
+	// duration is the fade in time duration.
+	//
 	// If ack is false,
 	// the function returns nil error after the API is sent successfully.
 	// If ack is true,
 	// the function will only return nil error after it received ack from the
 	// device.
-	SetColors(ctx context.Context, conn net.Conn, cb ColorBoard, ack bool) error
+	SetColors(ctx context.Context, conn net.Conn, cb ColorBoard, duration time.Duration, ack bool) error
 }
 
 type device struct {
