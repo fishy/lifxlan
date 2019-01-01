@@ -51,10 +51,23 @@ func ParseTile(raw *RawTileDevice) *Tile {
 	}
 }
 
+// Rotate rotates a given coordinate (x, y) based on tile's rotation and size.
+//
+// x, y must satisfy: (0 <= x < width) && (0 <= y < height)
+func (t Tile) Rotate(x, y int) (int, int) {
+	// TODO: handle other rotations correctly.
+	switch t.Rotation {
+	default:
+		return x, y
+	case RotationRightSideUp:
+		return y, int(t.Width) - 1 - x
+	}
+}
+
 // BoardCoordinates returns non-normalized coordinates of the pixels on this
 // tile on the board.
 //
-// "non-normalized" means that the coornidate might be negative.
+// "non-normalized" means that the coordinate might be negative.
 //
 // The returned coordinates are guaranteed to be of the size of Width*Height.
 func (t Tile) BoardCoordinates() (
@@ -76,29 +89,24 @@ func (t Tile) BoardCoordinates() (
 	baseY := int(float32(t.Height) * t.UserY)
 	for i := 0; i < int(t.Width); i++ {
 		for j := 0; j < int(t.Height); j++ {
-			switch t.Rotation {
-			default:
-				// TODO: handle other rotations correctly.
-				fallthrough
-			case RotationRightSideUp:
-				x := i + baseX
-				if x < min.X {
-					min.X = x
-				}
-				if x+1 > max.X {
-					max.X = x + 1
-				}
-				y := j + baseY
-				if y < min.Y {
-					min.Y = y
-				}
-				if y+1 > max.Y {
-					max.Y = y + 1
-				}
-				coordinates[i][j] = Coordinate{
-					X: x,
-					Y: y,
-				}
+			x, y := t.Rotate(i, j)
+			x += baseX
+			if x < min.X {
+				min.X = x
+			}
+			if x+1 > max.X {
+				max.X = x + 1
+			}
+			y += baseY
+			if y < min.Y {
+				min.Y = y
+			}
+			if y+1 > max.Y {
+				max.Y = y + 1
+			}
+			coordinates[i][j] = Coordinate{
+				X: x,
+				Y: y,
 			}
 		}
 	}

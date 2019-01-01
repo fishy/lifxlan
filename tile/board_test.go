@@ -52,8 +52,8 @@ func TestParse(t *testing.T) {
 				2,
 				2,
 				idaa{
-					ida{id(0, 0, 0), id(0, 0, 1)},
-					ida{id(0, 1, 0), id(0, 1, 1)},
+					ida{id(0, 1, 0), id(0, 0, 0)},
+					ida{id(0, 1, 1), id(0, 0, 1)},
 				},
 			)
 			b := tile.ParseBoard([]*tile.Tile{ti})
