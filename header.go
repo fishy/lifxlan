@@ -17,9 +17,13 @@ func init() {
 }
 
 // TaggedHeader is the 16-bit header including:
+//
 // - origin: 2 bits, must be 0
+//
 // - tagged: 1 bit
+//
 // - addressable: 1 bit, must be 1
+//
 // - protocal: 12 bits, must be 1024
 type TaggedHeader uint16
 
@@ -30,7 +34,9 @@ const (
 )
 
 // AckResFlag could include:
+//
 // - ack_required: if set all sent messages will expect an ack response.
+//
 // - res_required: if set all sent messages will expect a response.
 type AckResFlag uint8
 
@@ -141,7 +147,7 @@ func ParseResponse(msg []byte) (*Response, error) {
 var maxSource int64 = math.MaxUint32
 
 // RandomSource generates a random number to be used as source.
-// It's guaranteed to be non-zero when err is nil.
+// It's guaranteed to be non-zero.
 func RandomSource() uint32 {
 	return uint32(rand.Int63n(maxSource) + 1)
 }

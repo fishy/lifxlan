@@ -40,10 +40,11 @@ func (cb ColorBoard) GetColor(x, y int) *lifxlan.Color {
 	return row[y]
 }
 
-// RawSetTileState64 defines the struct to be used for encoding and decoding.
+// RawSetTileState64Payload defines the struct to be used for encoding and
+// decoding.
 //
 // https://lan.developer.lifx.com/docs/tile-messages#section-settilestate64-715
-type RawSetTileState64 struct {
+type RawSetTileState64Payload struct {
 	TileIndex uint8
 	Length    uint8
 	_         uint8 // reserved
@@ -82,9 +83,9 @@ func (td *device) SetColors(
 		}
 	}
 
-	payloads := make([]*RawSetTileState64, len(td.tiles))
+	payloads := make([]*RawSetTileState64Payload, len(td.tiles))
 	for i := range payloads {
-		payloads[i] = &RawSetTileState64{
+		payloads[i] = &RawSetTileState64Payload{
 			TileIndex: td.startIndex + uint8(i),
 			Length:    1,
 			Width:     td.tiles[i].Width,
@@ -121,7 +122,7 @@ func (td *device) SetColors(
 	sentChan := make(chan uint8, len(payloads))
 	for _, payload := range payloads {
 		sequence := td.NextSequence()
-		go func(sequence uint8, payload *RawSetTileState64) {
+		go func(sequence uint8, payload *RawSetTileState64Payload) {
 			defer wg.Done()
 			buf := new(bytes.Buffer)
 			if err := binary.Write(buf, binary.LittleEndian, payload); err != nil {
