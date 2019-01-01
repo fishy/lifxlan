@@ -32,7 +32,7 @@ var (
 
 	interval = flag.Duration(
 		"interval",
-		time.Second*2,
+		time.Millisecond*1500,
 		"Interval between 2 frames.",
 	)
 
