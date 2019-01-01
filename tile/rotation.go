@@ -6,9 +6,11 @@ import (
 )
 
 // Rotation defines the rotation of a single tile.
+//
+// NOTE: Currently only RotationRightSideUp is fully supported.
 type Rotation int
 
-// Rotation values
+// Possible Rotation values.
 const (
 	RotationRightSideUp Rotation = iota
 	RotationRotateRight
@@ -37,7 +39,7 @@ func (r Rotation) String() string {
 	}
 }
 
-// ParseRotation parses measurements into Rotation
+// ParseRotation parses accelerator measurements into Rotation
 func ParseRotation(x, y, z int16) Rotation {
 	abs := func(x int16) int16 {
 		return int16(math.Abs(float64(x)))

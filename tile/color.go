@@ -26,7 +26,7 @@ func MakeColorBoard(width, height int) ColorBoard {
 	return cb
 }
 
-// GetColor returns a color at the given coordinate.
+// GetColor returns the color at the given coordinate.
 //
 // If the given coordinate is out of boundary, nil color will be returned.
 func (cb ColorBoard) GetColor(x, y int) *lifxlan.Color {

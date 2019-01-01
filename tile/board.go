@@ -16,7 +16,7 @@ import (
 //         |  |
 //         +--+
 //
-// Then the width of the board will be 24, and the height would be 12.
+// Then the width of the board would be 24, and the height would be 12.
 // The coordinate of the topleft corner would be (0, 11) and the coordinate
 // of the bottomright corner of the middle tile would be (15, 0).
 type Board interface {
