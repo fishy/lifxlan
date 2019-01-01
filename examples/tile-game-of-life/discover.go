@@ -38,9 +38,10 @@ func findDevice(target lifxlan.Target) (td tile.Device) {
 		wg.Add(1)
 		go func(device lifxlan.Device) {
 			defer wg.Done()
+			log.Printf("Found %v, checking tile capablities...", device)
 			t, err := tile.Wrap(ctx, device, false)
 			if checkContextError(err) {
-				log.Printf("Check tile for %v failed: %v\n", device, err)
+				log.Printf("Check tile capablities for %v failed: %v", device, err)
 			} else {
 				if t == nil {
 					return

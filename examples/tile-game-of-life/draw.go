@@ -82,6 +82,7 @@ func draw(td tile.Device) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer conn.Close()
 
 	var empty bool
 	drawBoard := func() {
@@ -99,7 +100,7 @@ func draw(td tile.Device) {
 		ctx, cancel := context.WithTimeout(context.Background(), *drawTimeout)
 		defer cancel()
 		start := time.Now()
-		if err := td.SetColors(ctx, conn, colors, 0, *ack); err != nil {
+		if err := td.SetColors(ctx, conn, colors, 0, !*noack); err != nil {
 			log.Printf("Failed to set colors: %v", err)
 		} else {
 			log.Printf("SetColors took %v", time.Since(start))

@@ -12,10 +12,10 @@ import (
 )
 
 var (
-	ack = flag.Bool(
-		"ack",
-		true,
-		"Require ack for all drawing API calls.",
+	noack = flag.Bool(
+		"noack",
+		false,
+		"Do not require ack for drawing API calls.",
 	)
 
 	discoverTimeout = flag.Duration(
@@ -91,12 +91,12 @@ func init() {
 	flag.Var(
 		&target,
 		"target",
-		"The MAC address of the target tile device. Empty value means any (first) tile device",
+		"The MAC address of the target tile device. Empty value means any (first) tile device.",
 	)
 	flag.Var(
 		&origColor,
 		"color",
-		`The hex color to use, in format of "rrggbb"`,
+		`The hex color to use, in format of "rrggbb".`,
 	)
 	flag.Parse()
 }
