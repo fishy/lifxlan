@@ -8,4 +8,5 @@ import (
 const (
 	GetDeviceChain   lifxlan.MessageType = 701
 	StateDeviceChain                     = 702
+	SetTileState64                       = 715
 )

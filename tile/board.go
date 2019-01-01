@@ -24,7 +24,7 @@ type Board interface {
 	Height() int
 
 	// OnTile returns true if coordinate (x, y) is on a tile.
-	OnTile(c Coordinate) bool
+	OnTile(x, y int) bool
 }
 
 // IndexData stores the data linked to a tile for a Board coordinate.
@@ -42,7 +42,7 @@ func (id IndexData) String() string {
 
 // BoardData is the parsed, normalized board data.
 //
-// Empty value represents an empty board of size 0x0.
+// The zero value represents an empty board of size 0x0.
 type BoardData struct {
 	Coordinate
 
@@ -115,9 +115,9 @@ func (td *device) Height() int {
 	return td.board.Y
 }
 
-func (td *device) OnTile(c Coordinate) bool {
-	if c.X < 0 || c.X >= td.Width() || c.Y < 0 || c.Y >= td.Height() {
+func (td *device) OnTile(x, y int) bool {
+	if x < 0 || x >= td.Width() || y < 0 || y >= td.Height() {
 		return false
 	}
-	return td.board.Data[c.X][c.Y] != nil
+	return td.board.Data[x][y] != nil
 }
