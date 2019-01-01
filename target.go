@@ -52,6 +52,11 @@ func (t Target) Matches(other Target) bool {
 // s should be in the format of a MAC address, e.g. "01:23:45:67:89:ab",
 // or the special value for AllDevices: "00:00:00:00:00:00".
 func ParseTarget(s string) (t Target, err error) {
+	// Special case.
+	if s == "" {
+		return AllDevices, nil
+	}
+
 	var mac net.HardwareAddr
 	mac, err = net.ParseMAC(s)
 	if err != nil {

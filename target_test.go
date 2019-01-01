@@ -94,6 +94,25 @@ func TestTargetMatches(t *testing.T) {
 
 func TestParseTarget(t *testing.T) {
 	t.Run(
+		"EmptyAllDevices",
+		func(t *testing.T) {
+			s := ""
+			target, err := lifxlan.ParseTarget(s)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if target != lifxlan.AllDevices {
+				t.Errorf(
+					"ParseTarget(%q) expected %v, got %v",
+					s,
+					lifxlan.AllDevices,
+					target,
+				)
+			}
+		},
+	)
+
+	t.Run(
 		"AllDevices",
 		func(t *testing.T) {
 			s := "00:00:00:00:00:00"
