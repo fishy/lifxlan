@@ -16,5 +16,5 @@
 // capabilities.
 //
 // The API is unstable right now,
-// but the maintainers try very hard not to break them.
+// but the maintainer tries very hard not to break them.
 package lifxlan

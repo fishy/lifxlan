@@ -26,7 +26,7 @@ func (t Target) String() string {
 	return strings.Join(strs, ":")
 }
 
-// Set satisfies flag.Value interface.
+// Set implements flag.Value interface.
 func (t *Target) Set(s string) (err error) {
 	*t, err = ParseTarget(s)
 	return
@@ -50,7 +50,7 @@ func (t Target) Matches(other Target) bool {
 // ParseTarget parses s into a Target.
 //
 // s should be in the format of a MAC address, e.g. "01:23:45:67:89:ab",
-// or the special value for AllDevices: "00:00:00:00:00:00".
+// or the special value for AllDevices: "00:00:00:00:00:00" or "".
 func ParseTarget(s string) (t Target, err error) {
 	// Special case.
 	if s == "" {
