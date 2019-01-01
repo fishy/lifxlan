@@ -1,6 +1,7 @@
 package lifxlan_test
 
 import (
+	"flag"
 	"fmt"
 	"testing"
 
@@ -129,4 +130,14 @@ func TestParseTarget(t *testing.T) {
 			}
 		},
 	)
+}
+
+func ExmapleTargetSet() {
+	var target lifxlan.Target
+	flag.Var(
+		&target,
+		"target",
+		"The MAC address of the target device. Empty value means any device.",
+	)
+	flag.Parse()
 }

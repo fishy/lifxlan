@@ -28,7 +28,7 @@ type Device interface {
 	// Target returns the target of this device, usually it's the MAC address.
 	Target() Target
 
-	// Dial returns the connection of this device.
+	// Dial tries to establish a connection to this device.
 	Dial() (net.Conn, error)
 
 	// Source returns a consistent random source to be used with API calls.
@@ -55,7 +55,7 @@ type device struct {
 
 // NewDevice creates a new Device.
 //
-// addr must be in "ip:port" format and service must be a known service type,
+// addr must be in "host:port" format and service must be a known service type,
 // otherwise the later Dial funcion will fail.
 func NewDevice(addr string, service ServiceType, target Target) Device {
 	return &device{

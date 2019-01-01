@@ -9,18 +9,29 @@ import (
 //
 // It blocks until acks for all sequences are received,
 // in which case it returns nil error.
-// Or until the context is cancelled.
+// It also returns when the context is cancelled.
 //
-// There shouldn't be more than one WaitForAcks functions running for the same
-// connection at the same time.
-// It might cause some sequences waited in one goroutine being dropped by other
-// goroutines.
+// This function drops all received messages that is not an ack,
+// or ack messages that the sequence and source don't match.
+// Therefore, there shouldn't be more than one WaitForAcks functions running for
+// the same connection at the same time,
+// and this function should only be used when no other replies are expected.
 func WaitForAcks(
 	ctx context.Context,
 	conn net.Conn,
 	d Device,
 	sequences ...uint8,
 ) error {
+	select {
+	default:
+	case <-ctx.Done():
+		return ctx.Err()
+	}
+
+	if len(sequences) == 0 {
+		return nil
+	}
+
 	seqMap := make(map[uint8]bool)
 	for _, seq := range sequences {
 		seqMap[seq] = true
