@@ -11,7 +11,7 @@ import (
 
 // Wrap tries to wrap a lifxlan.Device into a tile device.
 //
-// When force is false and d is already a tile Device,
+// When force is false and d is already a tile device,
 // d will be casted and returned directly.
 // Otherwise, this function calls a tile device API,
 // and only return a non-nil Device if it supports the API.
@@ -107,7 +107,7 @@ func Wrap(ctx context.Context, d lifxlan.Device, force bool) (Device, error) {
 			return nil, err
 		}
 		td := &device{
-			dev:        d,
+			Device:     d,
 			startIndex: raw.StartIndex,
 			tiles:      make([]*Tile, raw.TotalCount),
 		}

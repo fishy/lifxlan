@@ -36,7 +36,8 @@ type Device interface {
 }
 
 type device struct {
-	dev        lifxlan.Device
+	lifxlan.Device
+
 	startIndex uint8
 	tiles      []*Tile
 
@@ -48,22 +49,6 @@ var _ Device = (*device)(nil)
 
 func (td *device) String() string {
 	return fmt.Sprintf("TileDevice(%v)", td.Target())
-}
-
-func (td *device) Target() lifxlan.Target {
-	return td.dev.Target()
-}
-
-func (td *device) Dial() (net.Conn, error) {
-	return td.dev.Dial()
-}
-
-func (td *device) Source() uint32 {
-	return td.dev.Source()
-}
-
-func (td *device) NextSequence() uint8 {
-	return td.dev.NextSequence()
 }
 
 func (td *device) Tiles() []Tile {
