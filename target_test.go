@@ -132,7 +132,7 @@ func TestParseTarget(t *testing.T) {
 	)
 }
 
-func ExmapleTargetSet() {
+func ExampleTarget_Set() {
 	var target lifxlan.Target
 	flag.Var(
 		&target,
