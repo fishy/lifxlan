@@ -109,7 +109,7 @@ func (td *device) SetColors(
 
 	var flags lifxlan.AckResFlag
 	if ack {
-		flags += lifxlan.FlagAckRequired
+		flags |= lifxlan.FlagAckRequired
 	}
 
 	var wg sync.WaitGroup
@@ -157,27 +157,30 @@ func (td *device) SetColors(
 	}
 	wg.Wait()
 
-	seqMap := make(map[uint8]bool)
-	var n int
-labelFor:
-	for {
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		case err := <-errChan:
-			return err
-		case seq := <-sentChan:
-			n++
-			seqMap[seq] = true
-			if n >= len(payloads) {
-				// All API calls successfully sent.
-				break labelFor
+	seqs := make([]uint8, 0, 0)
+	if err := func() error {
+		var n int
+		for {
+			select {
+			case <-ctx.Done():
+				return ctx.Err()
+			case err := <-errChan:
+				return err
+			case seq := <-sentChan:
+				n++
+				seqs = append(seqs, seq)
+				if n >= len(payloads) {
+					// All API calls successfully sent.
+					return nil
+				}
 			}
 		}
+	}(); err != nil {
+		return err
 	}
 	if !ack {
 		return nil
 	}
-	// TODO: handle ack
-	return nil
+
+	return lifxlan.WaitForAcks(ctx, conn, td, seqs...)
 }

@@ -5,6 +5,8 @@ type MessageType uint16
 
 // MessageType values.
 const (
-	GetService   MessageType = 2
-	StateService             = 3
+	Acknowledgement MessageType = 45
+
+	GetService   = 2
+	StateService = 3
 )
