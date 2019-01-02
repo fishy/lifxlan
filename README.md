@@ -44,4 +44,7 @@ there are also some example command line apps under the `examples` directory:
 
 - [`tile-game-of-life`](examples/tile-game-of-life/): Draw
   [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
-  on a [Tile device](https://www.lifx.com/products/lifx-tile).
+  on a [LIFX Tile device](https://www.lifx.com/products/lifx-tile).
+
+- [`tile-pix`](examples/tile-pix/): Draw a picture on a
+  [LIFX Tile device](https://www.lifx.com/products/lifx-tile).
