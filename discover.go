@@ -17,7 +17,7 @@ type RawStateServicePayload struct {
 	Port    uint32
 }
 
-// Default boardcast host and port.
+// Default broadcast host and port.
 const (
 	DefaultBroadcastHost = "255.255.255.255"
 	DefaultBroadcastPort = "56700"
@@ -150,7 +150,7 @@ func Discover(
 		}
 		switch d.Service {
 		default:
-			// Unkown service, ignore.
+			// Unknown service, ignore.
 			continue
 		case ServiceUDP:
 			devices <- NewDevice(

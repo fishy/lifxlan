@@ -24,7 +24,7 @@ func init() {
 //
 // - addressable: 1 bit, must be 1
 //
-// - protocal: 12 bits, must be 1024
+// - protocol: 12 bits, must be 1024
 type TaggedHeader uint16
 
 // Tagged and non-tagged versions of TaggedHeader.
