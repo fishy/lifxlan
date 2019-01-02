@@ -33,7 +33,7 @@ func TestTileBoardCooridates(t *testing.T) {
 			expectedMin := cc(0, 0)
 			expectedMax := cc(8, 8)
 			expectedCs := [][]c{
-				[]c{
+				{
 					cc(0, 7),
 					cc(1, 7),
 					cc(2, 7),
@@ -43,7 +43,7 @@ func TestTileBoardCooridates(t *testing.T) {
 					cc(6, 7),
 					cc(7, 7),
 				},
-				[]c{
+				{
 					cc(0, 6),
 					cc(1, 6),
 					cc(2, 6),
@@ -53,7 +53,7 @@ func TestTileBoardCooridates(t *testing.T) {
 					cc(6, 6),
 					cc(7, 6),
 				},
-				[]c{
+				{
 					cc(0, 5),
 					cc(1, 5),
 					cc(2, 5),
@@ -63,7 +63,7 @@ func TestTileBoardCooridates(t *testing.T) {
 					cc(6, 5),
 					cc(7, 5),
 				},
-				[]c{
+				{
 					cc(0, 4),
 					cc(1, 4),
 					cc(2, 4),
@@ -73,7 +73,7 @@ func TestTileBoardCooridates(t *testing.T) {
 					cc(6, 4),
 					cc(7, 4),
 				},
-				[]c{
+				{
 					cc(0, 3),
 					cc(1, 3),
 					cc(2, 3),
@@ -83,7 +83,7 @@ func TestTileBoardCooridates(t *testing.T) {
 					cc(6, 3),
 					cc(7, 3),
 				},
-				[]c{
+				{
 					cc(0, 2),
 					cc(1, 2),
 					cc(2, 2),
@@ -93,7 +93,7 @@ func TestTileBoardCooridates(t *testing.T) {
 					cc(6, 2),
 					cc(7, 2),
 				},
-				[]c{
+				{
 					cc(0, 1),
 					cc(1, 1),
 					cc(2, 1),
@@ -103,7 +103,7 @@ func TestTileBoardCooridates(t *testing.T) {
 					cc(6, 1),
 					cc(7, 1),
 				},
-				[]c{
+				{
 					cc(0, 0),
 					cc(1, 0),
 					cc(2, 0),
@@ -140,11 +140,11 @@ func TestTileBoardCooridates(t *testing.T) {
 			expectedMin := cc(-1, 1)
 			expectedMax := cc(1, 3)
 			expectedCs := [][]c{
-				[]c{
+				{
 					cc(-1, 2),
 					cc(0, 2),
 				},
-				[]c{
+				{
 					cc(-1, 1),
 					cc(0, 1),
 				},
@@ -175,11 +175,11 @@ func TestTileBoardCooridates(t *testing.T) {
 			expectedMin := cc(4, -4)
 			expectedMax := cc(6, -2)
 			expectedCs := [][]c{
-				[]c{
+				{
 					cc(4, -3),
 					cc(5, -3),
 				},
-				[]c{
+				{
 					cc(4, -4),
 					cc(5, -4),
 				},

@@ -87,11 +87,11 @@ func TestColorBoard(t *testing.T) {
 					cb := makeBoard(t, width, height)
 
 					points := []tile.Coordinate{
-						tile.Coordinate{
+						{
 							X: 1,
 							Y: 2,
 						},
-						tile.Coordinate{
+						{
 							X: 3,
 							Y: 0,
 						},
@@ -138,23 +138,23 @@ func TestColorBoard(t *testing.T) {
 
 					// Some random coordinates
 					points := []tile.Coordinate{
-						tile.Coordinate{
+						{
 							X: 12,
 							Y: 17,
 						},
-						tile.Coordinate{
+						{
 							X: 54,
 							Y: 23,
 						},
-						tile.Coordinate{
+						{
 							X: 12,
 							Y: 87,
 						},
-						tile.Coordinate{
+						{
 							X: 24,
 							Y: 23,
 						},
-						tile.Coordinate{
+						{
 							X: 35,
 							Y: 18,
 						},

@@ -18,7 +18,7 @@ func TestFromColor(t *testing.T) {
 	}
 
 	cases := []testCase{
-		testCase{
+		{
 			Label: "Black",
 			Color: color.Black,
 			Expected: lifxlan.Color{
@@ -27,7 +27,7 @@ func TestFromColor(t *testing.T) {
 				Brightness: 0,
 			},
 		},
-		testCase{
+		{
 			Label: "White",
 			Color: color.White,
 			Expected: lifxlan.Color{
@@ -37,7 +37,7 @@ func TestFromColor(t *testing.T) {
 			},
 		},
 
-		testCase{
+		{
 			Label: "Red",
 			Color: &color.RGBA{
 				R: 0xff,
@@ -48,7 +48,7 @@ func TestFromColor(t *testing.T) {
 				Brightness: 65535,
 			},
 		},
-		testCase{
+		{
 			Label: "Green",
 			Color: &color.RGBA{
 				G: 0xff,
@@ -59,7 +59,7 @@ func TestFromColor(t *testing.T) {
 				Brightness: 65535,
 			},
 		},
-		testCase{
+		{
 			Label: "Blue",
 			Color: &color.RGBA{
 				B: 0xff,

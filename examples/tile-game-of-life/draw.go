@@ -11,35 +11,35 @@ import (
 )
 
 var neighbours = []tile.Coordinate{
-	tile.Coordinate{
+	{
 		X: -1,
 		Y: -1,
 	},
-	tile.Coordinate{
+	{
 		X: -1,
 		Y: 0,
 	},
-	tile.Coordinate{
+	{
 		X: 1,
 		Y: 0,
 	},
-	tile.Coordinate{
+	{
 		X: 0,
 		Y: -1,
 	},
-	tile.Coordinate{
+	{
 		X: 0,
 		Y: 1,
 	},
-	tile.Coordinate{
+	{
 		X: 1,
 		Y: -1,
 	},
-	tile.Coordinate{
+	{
 		X: 1,
 		Y: 0,
 	},
-	tile.Coordinate{
+	{
 		X: 1,
 		Y: -1,
 	},
