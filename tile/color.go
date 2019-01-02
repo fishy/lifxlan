@@ -121,20 +121,20 @@ func (td *device) SetColors(
 	errChan := make(chan error, len(payloads))
 	sentChan := make(chan uint8, len(payloads))
 	for _, payload := range payloads {
-		sequence := td.NextSequence()
-		go func(sequence uint8, payload *RawSetTileState64Payload) {
+		go func(payload *RawSetTileState64Payload) {
 			defer wg.Done()
 			buf := new(bytes.Buffer)
 			if err := binary.Write(buf, binary.LittleEndian, payload); err != nil {
 				errChan <- err
 				return
 			}
+			seq := td.NextSequence()
 			msg, err := lifxlan.GenerateMessage(
 				lifxlan.NotTagged,
 				td.Source(),
 				td.Target(),
 				flags,
-				sequence,
+				seq,
 				SetTileState64,
 				buf.Bytes(),
 			)
@@ -156,8 +156,8 @@ func (td *device) SetColors(
 				)
 				return
 			}
-			sentChan <- sequence
-		}(sequence, payload)
+			sentChan <- seq
+		}(payload)
 	}
 	wg.Wait()
 
@@ -182,9 +182,9 @@ func (td *device) SetColors(
 	}(); err != nil {
 		return err
 	}
-	if !ack {
-		return nil
-	}
 
-	return lifxlan.WaitForAcks(ctx, conn, td, seqs...)
+	if ack {
+		return lifxlan.WaitForAcks(ctx, conn, td, seqs...)
+	}
+	return nil
 }
