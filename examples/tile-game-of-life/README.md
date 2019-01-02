@@ -10,5 +10,5 @@ library.
 ## Installation
 
 ```
-go get github.com/fishy/examples/tile-game-of-life
+go get -u github.com/fishy/lifxlan/examples/tile-game-of-life
 ```
