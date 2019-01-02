@@ -68,8 +68,7 @@ func draw(td tile.Device) {
 				if _, err := rand.Read(buf); err != nil {
 					log.Fatal(err)
 				}
-				// 50% light would usually be too bright, so make it 25% instead.
-				board[x][y] = buf[0]%4 == 1
+				board[x][y] = buf[0]%2 == 1
 			}
 		}
 
@@ -106,8 +105,6 @@ func draw(td tile.Device) {
 			log.Printf("SetColors took %v", time.Since(start))
 		}
 	}
-
-	drawBoard()
 
 	countNeighbours := func(x, y int) (n int) {
 		for _, nei := range neighbours {
@@ -164,11 +161,10 @@ func draw(td tile.Device) {
 			if *reset > 0 && step >= *reset {
 				log.Print("Resetting board...")
 				board = initBoard()
-			} else {
-				log.Printf("Step %d...", step)
-				evolve()
 			}
 		}
+		log.Printf("Step %d...", step)
+		evolve()
 		drawBoard()
 	}
 }
