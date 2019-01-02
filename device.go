@@ -1,6 +1,7 @@
 package lifxlan
 
 import (
+	"context"
 	"fmt"
 	"net"
 	"sync/atomic"
@@ -36,6 +37,16 @@ type Device interface {
 
 	// NextSequence returns the next sequence value to be used with API calls.
 	NextSequence() uint8
+
+	// Send generates and sends a message to the device.
+	//
+	// conn must be pre-dialed or this function will fail.
+	//
+	// It calls the device's Target(), Source(), and NextSequence() functions to
+	// fill the appropriate headers.
+	//
+	// The sequence used in this message will be returned.
+	Send(ctx context.Context, conn net.Conn, tagged TaggedHeader, flags AckResFlag, message MessageType, payload []byte) (seq uint8, err error)
 }
 
 var _ Device = (*device)(nil)
@@ -96,4 +107,65 @@ const uint8mask = uint32(0xff)
 
 func (d *device) NextSequence() uint8 {
 	return uint8(atomic.AddUint32(&d.sequence, 1) & uint8mask)
+}
+
+func (d *device) Send(
+	ctx context.Context,
+	conn net.Conn,
+	tagged TaggedHeader,
+	flags AckResFlag,
+	message MessageType,
+	payload []byte,
+) (seq uint8, err error) {
+	select {
+	default:
+	case <-ctx.Done():
+		err = ctx.Err()
+		return
+	}
+
+	var msg []byte
+	seq = d.NextSequence()
+	msg, err = GenerateMessage(
+		tagged,
+		d.Source(),
+		d.Target(),
+		flags,
+		seq,
+		message,
+		payload,
+	)
+	if err != nil {
+		return
+	}
+
+	select {
+	default:
+	case <-ctx.Done():
+		err = ctx.Err()
+		return
+	}
+
+	var n int
+	n, err = conn.Write(msg)
+	if err != nil {
+		return
+	}
+	if n < len(msg) {
+		err = fmt.Errorf(
+			"lifxlan.Device.Send: only wrote %d out of %d bytes",
+			n,
+			len(msg),
+		)
+		return
+	}
+
+	select {
+	default:
+	case <-ctx.Done():
+		err = ctx.Err()
+		return
+	}
+
+	return
 }

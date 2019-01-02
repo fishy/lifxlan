@@ -99,13 +99,11 @@ func Example_sendMessageWithAck() {
 	if err := binary.Write(buf, binary.LittleEndian, payload); err != nil {
 		log.Fatal(err)
 	}
-	sequence := device.NextSequence()
-	msg, err := lifxlan.GenerateMessage(
+	seq, err := device.Send(
+		ctx,
+		conn,
 		lifxlan.NotTagged, // most messages are not tagged.
-		device.Source(),
-		device.Target(),
 		lifxlan.FlagAckRequired,
-		sequence,
 		message,
 		buf.Bytes(), // could be nil if this message doesn't need payload.
 	)
@@ -113,15 +111,7 @@ func Example_sendMessageWithAck() {
 		log.Fatal(err)
 	}
 
-	n, err := conn.Write(msg)
-	if err != nil {
-		log.Fatal(err)
-	}
-	if n < len(msg) {
-		log.Fatalf("only wrote %d out of %d bytes", n, len(msg))
-	}
-
-	if err := lifxlan.WaitForAcks(ctx, conn, device, sequence); err != nil {
+	if err := lifxlan.WaitForAcks(ctx, conn, device, seq); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -163,26 +153,16 @@ func Example_sendMessageWithResponse() {
 	if err := binary.Write(buf, binary.LittleEndian, payload); err != nil {
 		log.Fatal(err)
 	}
-	sequence := device.NextSequence()
-	msg, err := lifxlan.GenerateMessage(
+	seq, err := device.Send(
+		ctx,
+		conn,
 		lifxlan.NotTagged, // most messages are not tagged.
-		device.Source(),
-		device.Target(),
-		0, // flags, not requiring ack because this message will get a response.
-		sequence,
+		0,                 // flags, not requiring ack because this message will get a response.
 		message,
 		buf.Bytes(), // could be nil if this message doesn't need payload.
 	)
 	if err != nil {
 		log.Fatal(err)
-	}
-
-	n, err := conn.Write(msg)
-	if err != nil {
-		log.Fatal(err)
-	}
-	if n < len(msg) {
-		log.Fatalf("only wrote %d out of %d bytes", n, len(msg))
 	}
 
 	respBuf := make([]byte, lifxlan.ResponseReadBufferSize)
@@ -209,7 +189,7 @@ func Example_sendMessageWithResponse() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		if resp.Sequence != sequence || resp.Source != device.Source() {
+		if resp.Sequence != seq || resp.Source != device.Source() {
 			continue
 		}
 		if resp.Message != respMessage {
