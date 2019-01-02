@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/binary"
-	"fmt"
 
 	"github.com/fishy/lifxlan"
 )
@@ -44,30 +43,16 @@ func Wrap(ctx context.Context, d lifxlan.Device, force bool) (Device, error) {
 		return nil, ctx.Err()
 	}
 
-	sequence := d.NextSequence()
-	msg, err := lifxlan.GenerateMessage(
+	seq, err := d.Send(
+		ctx,
+		conn,
 		lifxlan.NotTagged,
-		d.Source(),
-		d.Target(),
 		0, // flags
-		sequence,
 		GetDeviceChain,
 		nil, // payload
 	)
 	if err != nil {
 		return nil, err
-	}
-
-	n, err := conn.Write(msg)
-	if err != nil {
-		return nil, err
-	}
-	if n < len(msg) {
-		return nil, fmt.Errorf(
-			"lifxlan.Device.GetTileDevice: only wrote %d out of %d bytes",
-			n,
-			len(msg),
-		)
 	}
 
 	buf := make([]byte, lifxlan.ResponseReadBufferSize)
@@ -94,7 +79,7 @@ func Wrap(ctx context.Context, d lifxlan.Device, force bool) (Device, error) {
 		if err != nil {
 			return nil, err
 		}
-		if resp.Sequence != sequence || resp.Source != d.Source() {
+		if resp.Sequence != seq || resp.Source != d.Source() {
 			continue
 		}
 		if resp.Message != StateDeviceChain {

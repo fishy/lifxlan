@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/binary"
-	"fmt"
 	"net"
 	"sync"
 	"time"
@@ -128,32 +127,16 @@ func (td *device) SetColors(
 				errChan <- err
 				return
 			}
-			seq := td.NextSequence()
-			msg, err := lifxlan.GenerateMessage(
+			seq, err := td.Send(
+				ctx,
+				conn,
 				lifxlan.NotTagged,
-				td.Source(),
-				td.Target(),
 				flags,
-				seq,
 				SetTileState64,
 				buf.Bytes(),
 			)
 			if err != nil {
 				errChan <- err
-				return
-			}
-
-			n, err := conn.Write(msg)
-			if err != nil {
-				errChan <- err
-				return
-			}
-			if n < len(msg) {
-				errChan <- fmt.Errorf(
-					"lifxlan/tile.SetColors: only wrote %d out of %d bytes",
-					n,
-					len(msg),
-				)
 				return
 			}
 			sentChan <- seq
