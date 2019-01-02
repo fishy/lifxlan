@@ -12,3 +12,7 @@ library.
 ```
 go get -u github.com/fishy/lifxlan/examples/tile-game-of-life
 ```
+
+## Example
+
+[Video](https://gfycat.com/ElegantFrightenedLcont).

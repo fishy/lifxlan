@@ -11,3 +11,8 @@ library.
 ```
 go get -u github.com/fishy/lifxlan/examples/tile-pix
 ```
+
+## Example
+
+[Video](https://gfycat.com/HoarseDirectGalapagostortoise) of it showing
+[this photo](https://imgur.com/0yo2CdP).
