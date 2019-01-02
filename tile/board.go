@@ -44,9 +44,15 @@ func (id IndexData) String() string {
 //
 // The zero value represents an empty board of size 0x0.
 type BoardData struct {
+	// The size of the board.
 	Coordinate
 
+	// Parsed index data, with size X*Y.
 	Data [][]*IndexData
+	// Parsed reverse coordinate data,
+	// with size len(tiles)*tileWidth*tileHeight,
+	// The coordinate is the coordinate of this tile pixel on the board.
+	ReverseData [][][]Coordinate
 }
 
 func (td *device) parseBoard() {
@@ -58,6 +64,7 @@ func ParseBoard(tiles []*Tile) BoardData {
 	var board BoardData
 	var base Coordinate
 	bs := make([][][]Coordinate, len(tiles))
+	board.ReverseData = make([][][]Coordinate, len(tiles))
 
 	base.X = int(math.MaxInt32)
 	base.Y = int(math.MaxInt32)
@@ -90,7 +97,9 @@ func ParseBoard(tiles []*Tile) BoardData {
 	}
 
 	for i, b := range bs {
+		board.ReverseData[i] = make([][]Coordinate, len(b))
 		for x := range b {
+			board.ReverseData[i][x] = make([]Coordinate, len(b[x]))
 			for y, c := range b[x] {
 				data := &IndexData{
 					Coordinate: Coordinate{
@@ -99,7 +108,14 @@ func ParseBoard(tiles []*Tile) BoardData {
 					},
 					Index: i,
 				}
-				board.Data[c.X-base.X][c.Y-base.Y] = data
+				bx := c.X - base.X
+				by := c.Y - base.Y
+
+				board.Data[bx][by] = data
+				board.ReverseData[i][x][y] = Coordinate{
+					X: bx,
+					Y: by,
+				}
 			}
 		}
 	}

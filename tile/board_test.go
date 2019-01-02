@@ -7,9 +7,6 @@ import (
 	"github.com/fishy/lifxlan/tile"
 )
 
-type idaa = [][]*tile.IndexData
-type ida = []*tile.IndexData
-
 func id(i, x, y int) *tile.IndexData {
 	t := &tile.IndexData{}
 	t.Index = i
@@ -18,9 +15,14 @@ func id(i, x, y int) *tile.IndexData {
 	return t
 }
 
-func bd(x, y int, data idaa) tile.BoardData {
+func bd(
+	x, y int,
+	data [][]*tile.IndexData,
+	reverse [][][]tile.Coordinate,
+) tile.BoardData {
 	b := tile.BoardData{
-		Data: data,
+		Data:        data,
+		ReverseData: reverse,
 	}
 	b.X = x
 	b.Y = y
@@ -51,9 +53,15 @@ func TestParse(t *testing.T) {
 			expected := bd(
 				2,
 				2,
-				idaa{
-					ida{id(0, 1, 0), id(0, 0, 0)},
-					ida{id(0, 1, 1), id(0, 0, 1)},
+				[][]*tile.IndexData{
+					{id(0, 1, 0), id(0, 0, 0)},
+					{id(0, 1, 1), id(0, 0, 1)},
+				},
+				[][][]tile.Coordinate{
+					{
+						{c(0, 1), c(1, 1)},
+						{c(0, 0), c(1, 0)},
+					},
 				},
 			)
 			b := tile.ParseBoard([]*tile.Tile{ti})
@@ -83,10 +91,18 @@ func TestParse(t *testing.T) {
 			expected := bd(
 				3,
 				3,
-				idaa{
-					ida{id(1, 0, 0), nil, nil},
-					ida{nil, nil, nil},
-					ida{nil, nil, id(0, 0, 0)},
+				[][]*tile.IndexData{
+					{id(1, 0, 0), nil, nil},
+					{nil, nil, nil},
+					{nil, nil, id(0, 0, 0)},
+				},
+				[][][]tile.Coordinate{
+					{
+						{c(2, 2)},
+					},
+					{
+						{c(0, 0)},
+					},
 				},
 			)
 			b := tile.ParseBoard([]*tile.Tile{t1, t2})
