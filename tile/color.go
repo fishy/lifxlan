@@ -59,7 +59,7 @@ type RawSetTileState64Payload struct {
 	Y         uint8
 	Width     uint8
 	Duration  uint32
-	Colors    [TileState64Width * TileState64Width]lifxlan.Color
+	Colors    [TileState64Width][TileState64Width]lifxlan.Color
 }
 
 func (td *device) SetColors(
@@ -99,8 +99,10 @@ func (td *device) SetColors(
 			Duration:  uint32(duration / time.Millisecond),
 		}
 		// Init with all black colors.
-		for j := range payloads[i].Colors {
-			payloads[i].Colors[j] = lifxlan.ColorBlack
+		for j, colorArray := range payloads[i].Colors {
+			for k := range colorArray {
+				payloads[i].Colors[j][k] = lifxlan.ColorBlack
+			}
 		}
 	}
 
@@ -112,8 +114,7 @@ func (td *device) SetColors(
 					// Not on tile
 					continue
 				}
-				index := data.X*TileState64Width + data.Y
-				payloads[data.Index].Colors[index] = *c
+				payloads[data.Index].Colors[data.X][data.Y] = *c
 			}
 		}
 	}
@@ -203,7 +204,7 @@ type RawStateTileState64Payload struct {
 	X         uint8
 	Y         uint8
 	Width     uint8
-	Colors    [TileState64Width * TileState64Width]lifxlan.Color
+	Colors    [TileState64Width][TileState64Width]lifxlan.Color
 }
 
 func (td *device) GetColors(
@@ -305,11 +306,9 @@ func (td *device) GetColors(
 				if y >= TileState64Width {
 					continue
 				}
-				// index is the index on the returned colors array.
-				index := x*TileState64Width + y
 				// c is the coordinate on the color board.
 				c := td.board.ReverseData[ti][x][y]
-				cb[c.X][c.Y] = &raw.Colors[index]
+				cb[c.X][c.Y] = &raw.Colors[x][y]
 			}
 		}
 
