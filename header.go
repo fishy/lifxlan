@@ -63,7 +63,7 @@ type RawHeader struct {
 }
 
 // HeaderLength is the length of the header
-const HeaderLength uint16 = 36
+const HeaderLength = 36
 
 // ResponseReadBufferSize is the recommended buffer size to read UDP responses.
 // It's big enough for all the payloads.

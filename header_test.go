@@ -11,9 +11,9 @@ import (
 )
 
 func TestParseResponseError(t *testing.T) {
-	makeMsg := func(size uint16) []byte {
-		buf := make([]byte, int(size))
-		binary.LittleEndian.PutUint16(buf, size)
+	makeMsg := func(size int) []byte {
+		buf := make([]byte, size)
+		binary.LittleEndian.PutUint16(buf, uint16(size))
 		return buf
 	}
 
