@@ -83,6 +83,19 @@ func draw(td tile.Device) {
 	}
 	defer conn.Close()
 
+	var origCB tile.ColorBoard
+	if !*loop {
+		func() {
+			ctx, cancel := context.WithTimeout(context.Background(), *drawTimeout)
+			defer cancel()
+			var err error
+			origCB, err = td.GetColors(ctx, conn)
+			if err != nil {
+				log.Fatalf("Cannot get the current colors on %v: %v", td, err)
+			}
+		}()
+	}
+
 	var empty bool
 	drawBoard := func() {
 		colors := tile.MakeColorBoard(width, height)
@@ -155,16 +168,36 @@ func draw(td tile.Device) {
 	for range time.Tick(*interval) {
 		if empty {
 			log.Print("Board empty, resetting board...")
-			board = initBoard()
+			if *loop {
+				board = initBoard()
+			} else {
+				break
+			}
 		} else {
 			step++
-			if *reset > 0 && step >= *reset {
-				log.Print("Resetting board...")
-				board = initBoard()
+			if *generations > 0 && step >= *generations {
+				if *loop {
+					log.Print("Resetting board...")
+					board = initBoard()
+				} else {
+					break
+				}
 			}
 		}
 		log.Printf("Step %d...", step)
 		evolve()
 		drawBoard()
+	}
+
+	for {
+		if err := func() error {
+			ctx, cancel := context.WithTimeout(context.Background(), *drawTimeout)
+			defer cancel()
+			return td.SetColors(ctx, conn, origCB, 0, !*noack)
+		}(); err != nil {
+			log.Printf("Failed to set original colors, retrying... %v", err)
+		} else {
+			return
+		}
 	}
 }

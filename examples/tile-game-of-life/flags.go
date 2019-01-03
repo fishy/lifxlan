@@ -42,10 +42,16 @@ var (
 		`Broadcast IP (e.g. "192.168.1.255"). Empty value means "255.255.255.255", which should work in most networks.`,
 	)
 
-	reset = flag.Int(
-		"reset",
+	generations = flag.Int(
+		"generations",
 		20,
-		"Number of steps before reset and regenerate the whole board. 0 means never reset",
+		"Number of generations before stop. 0 means never stop (but still stops when the board is empty).",
+	)
+
+	loop = flag.Bool(
+		"loop",
+		false,
+		"After reached the number of generations, reset the board and loop over instead of reverting to the original colors.",
 	)
 
 	kelvin = flag.Int(
