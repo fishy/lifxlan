@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/binary"
+	"flag"
 	"net"
 )
 
@@ -29,6 +30,8 @@ const RawLabelLength = 32
 //
 // https://lan.developer.lifx.com/v2.0/docs/device-messages#section-labels
 type RawLabel [RawLabelLength]byte
+
+var _ flag.Value = (*RawLabel)(nil)
 
 func (l RawLabel) String() string {
 	index := bytes.IndexByte(l[:], 0)

@@ -54,8 +54,9 @@ func ParseTile(raw *RawTileDevice) *Tile {
 // Rotate rotates a given coordinate (x, y) based on tile's rotation and size.
 //
 // x, y must satisfy: (0 <= x < width) && (0 <= y < height)
+//
+// TODO: This function currently only handles RotationRightSideUp correctly.
 func (t Tile) Rotate(x, y int) (int, int) {
-	// TODO: handle other rotations correctly.
 	switch t.Rotation {
 	default:
 		return x, y
