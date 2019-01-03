@@ -18,12 +18,25 @@ type Device interface {
 	// Tiles returns a copy of the tiles in this device.
 	Tiles() []Tile
 
+	// GetColors returns the current color board on this tile device.
+	//
+	// If conn is nil,
+	// a new connection will be made and guaranteed to be closed before returning.
+	// You should pre-dial and pass in the conn if you plan to call APIs on this
+	// device repeatedly.
+	//
+	// This function will wait for len(Tiles()) response messages.
+	// In case of one or more of the responses get dropped on the network,
+	// this function will wait until context is cancelled.
+	// So it's important to set an appropriate timeout on the context.
+	GetColors(ctx context.Context, conn net.Conn) (ColorBoard, error)
+
 	// SetColors sets the tile device with the given color board.
 	//
 	// If conn is nil,
 	// a new connection will be made and guaranteed to be closed before returning.
-	// You should pre-dial and pass in the conn if you plan to call this function
-	// repeatedly.
+	// You should pre-dial and pass in the conn if you plan to call APIs on this
+	// device repeatedly.
 	//
 	// If ack is false,
 	// the function returns nil error after the API is sent successfully.

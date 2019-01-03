@@ -25,6 +25,14 @@ func MakeColorBoard(width, height int) ColorBoard {
 	return cb
 }
 
+// TileState64Width is the width value to be used in *TileState64 messages.
+//
+// Please note that in most cases we try to avoid hardcoding the tile width and
+// height, and use the values returned by StateDeviceChain message instead.
+// But for *TileState64 messages it only makes sense to hardcode them,
+// as the colors array is hardcoded as size of 64.
+const TileState64Width = 8
+
 // GetColor returns the color at the given coordinate.
 //
 // If the given coordinate is out of boundary, nil color will be returned.
@@ -42,7 +50,7 @@ func (cb ColorBoard) GetColor(x, y int) *lifxlan.Color {
 // RawSetTileState64Payload defines the struct to be used for encoding and
 // decoding.
 //
-// https://lan.developer.lifx.com/docs/tile-messages#section-settilestate64-715
+// https://lan.developer.lifx.com/v2.0/docs/tile-messages#section-settilestate64-715
 type RawSetTileState64Payload struct {
 	TileIndex uint8
 	Length    uint8
@@ -51,7 +59,7 @@ type RawSetTileState64Payload struct {
 	Y         uint8
 	Width     uint8
 	Duration  uint32
-	Colors    [64]lifxlan.Color
+	Colors    [TileState64Width * TileState64Width]lifxlan.Color
 }
 
 func (td *device) SetColors(
@@ -87,7 +95,7 @@ func (td *device) SetColors(
 		payloads[i] = &RawSetTileState64Payload{
 			TileIndex: td.startIndex + uint8(i),
 			Length:    1,
-			Width:     td.tiles[i].Width,
+			Width:     TileState64Width,
 			Duration:  uint32(duration / time.Millisecond),
 		}
 		// Init with all black colors.
@@ -104,7 +112,7 @@ func (td *device) SetColors(
 					// Not on tile
 					continue
 				}
-				index := data.X*int(td.tiles[data.Index].Width) + data.Y
+				index := data.X*TileState64Width + data.Y
 				payloads[data.Index].Colors[index] = *c
 			}
 		}
@@ -170,4 +178,148 @@ func (td *device) SetColors(
 		return lifxlan.WaitForAcks(ctx, conn, td, seqs...)
 	}
 	return nil
+}
+
+// RawGetTileState64Payload defines the struct to be used for encoding and
+// decoding.
+//
+// https://lan.developer.lifx.com/v2.0/docs/tile-messages#section-gettilestate64-707
+type RawGetTileState64Payload struct {
+	TileIndex uint8
+	Length    uint8
+	_         uint8 // reserved
+	X         uint8
+	Y         uint8
+	Width     uint8
+}
+
+// RawStateTileState64Payload defines the struct to be used for encoding and
+// decoding.
+//
+// https://lan.developer.lifx.com/v2.0/docs/tile-messages#section-statetilestate64-711
+type RawStateTileState64Payload struct {
+	TileIndex uint8
+	_         uint8 // reserved
+	X         uint8
+	Y         uint8
+	Width     uint8
+	Colors    [TileState64Width * TileState64Width]lifxlan.Color
+}
+
+func (td *device) GetColors(
+	ctx context.Context,
+	conn net.Conn,
+) (ColorBoard, error) {
+	select {
+	default:
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	}
+
+	if conn == nil {
+		newConn, err := td.Dial()
+		if err != nil {
+			return nil, err
+		}
+		defer newConn.Close()
+		conn = newConn
+
+		select {
+		default:
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		}
+	}
+
+	// Send
+	payload := &RawGetTileState64Payload{
+		TileIndex: td.startIndex,
+		Length:    uint8(len(td.tiles)),
+		Width:     TileState64Width,
+	}
+	buf := new(bytes.Buffer)
+	if err := binary.Write(buf, binary.LittleEndian, payload); err != nil {
+		return nil, err
+	}
+	seq, err := td.Send(
+		ctx,
+		conn,
+		lifxlan.NotTagged,
+		0, // flags
+		GetTileState64,
+		buf.Bytes(),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	// Read responses
+	respBuf := make([]byte, lifxlan.ResponseReadBufferSize)
+	received := make([]int, len(td.tiles))
+	cb := MakeColorBoard(td.Width(), td.Height())
+	for {
+		select {
+		default:
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		}
+
+		if err := conn.SetReadDeadline(lifxlan.GetReadDeadline()); err != nil {
+			return nil, err
+		}
+
+		n, err := conn.Read(respBuf)
+		if err != nil {
+			if lifxlan.CheckTimeoutError(err) {
+				continue
+			}
+			return nil, err
+		}
+
+		resp, err := lifxlan.ParseResponse(respBuf[:n])
+		if err != nil {
+			return nil, err
+		}
+		if resp.Sequence != seq || resp.Source != td.Source() {
+			continue
+		}
+		if resp.Message != StateTileState64 {
+			continue
+		}
+
+		var raw RawStateTileState64Payload
+		r := bytes.NewReader(resp.Payload)
+		if err := binary.Read(r, binary.LittleEndian, &raw); err != nil {
+			return nil, err
+		}
+
+		// tile index
+		ti := raw.TileIndex - td.startIndex
+		received[ti] = 1
+		tile := td.tiles[ti]
+		for x := 0; x < int(tile.Width); x++ {
+			if x >= TileState64Width {
+				continue
+			}
+			for y := 0; y < int(tile.Height); y++ {
+				if y >= TileState64Width {
+					continue
+				}
+				// index is the index on the returned colors array.
+				index := x*TileState64Width + y
+				// c is the coordinate on the color board.
+				c := td.board.ReverseData[ti][x][y]
+				cb[c.X][c.Y] = &raw.Colors[index]
+			}
+		}
+
+		n = 0
+		for _, rec := range received {
+			n += rec
+		}
+		if n >= len(td.tiles) {
+			// Got responses for all tiles.
+			return cb, nil
+		}
+	}
 }
