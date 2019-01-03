@@ -8,4 +8,6 @@ const (
 	Acknowledgement MessageType = 45
 	GetService                  = 2
 	StateService                = 3
+	GetLabel                    = 23
+	StateLabel                  = 25
 )

@@ -47,6 +47,29 @@ type Device interface {
 	//
 	// The sequence used in this message will be returned.
 	Send(ctx context.Context, conn net.Conn, tagged TaggedHeader, flags AckResFlag, message MessageType, payload []byte) (seq uint8, err error)
+
+	// GetLabel asks the device to return its label.
+	//
+	// If conn is nil,
+	// a new connection will be made and guaranteed to be closed before returning.
+	// You should pre-dial and pass in the conn if you plan to call APIs on this
+	// device repeatedly.
+	//
+	// Upon success return,
+	// the result will be cached and accessible via Label function.
+	GetLabel(ctx context.Context, conn net.Conn) (string, error)
+
+	// Label returns the cached label.
+	//
+	// If a label was never requested before,
+	// Label returns empty string ("").
+	// You should use GetLabel in that situation.
+	Label() string
+
+	// CacheLabel stores the label as the device's cached label.
+	//
+	// It does NOT set the label on the LIFX device permanently.
+	CacheLabel(label string)
 }
 
 var _ Device = (*device)(nil)
@@ -62,6 +85,8 @@ type device struct {
 
 	source   uint32
 	sequence uint32
+
+	label string
 }
 
 // NewDevice creates a new Device.
@@ -78,6 +103,9 @@ func NewDevice(addr string, service ServiceType, target Target) Device {
 }
 
 func (d *device) String() string {
+	if d.label != "" {
+		return fmt.Sprintf("%s(%v)", d.label, d.target)
+	}
 	return fmt.Sprintf("Device(%v)", d.target)
 }
 
