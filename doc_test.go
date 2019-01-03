@@ -111,7 +111,7 @@ func Example_sendMessageWithAck() {
 		log.Fatal(err)
 	}
 
-	if err := lifxlan.WaitForAcks(ctx, conn, device, seq); err != nil {
+	if err := lifxlan.WaitForAcks(ctx, conn, device.Source(), seq); err != nil {
 		log.Fatal(err)
 	}
 }

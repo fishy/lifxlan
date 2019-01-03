@@ -33,6 +33,7 @@ type Device interface {
 	Dial() (net.Conn, error)
 
 	// Source returns a consistent random source to be used with API calls.
+	// It's guaranteed to be non-zero.
 	Source() uint32
 
 	// NextSequence returns the next sequence value to be used with API calls.

@@ -15,11 +15,11 @@ import (
 // or ack messages that the sequence and source don't match.
 // Therefore, there shouldn't be more than one WaitForAcks functions running for
 // the same connection at the same time,
-// and this function should only be used when no other replies are expected.
+// and this function should only be used when no other responses are expected.
 func WaitForAcks(
 	ctx context.Context,
 	conn net.Conn,
-	d Device,
+	source uint32,
 	sequences ...uint8,
 ) error {
 	select {
@@ -61,7 +61,7 @@ func WaitForAcks(
 		if err != nil {
 			return err
 		}
-		if resp.Source != d.Source() || resp.Message != Acknowledgement {
+		if resp.Source != source || resp.Message != Acknowledgement {
 			continue
 		}
 		if seqMap[resp.Sequence] {

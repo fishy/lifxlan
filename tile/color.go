@@ -175,7 +175,7 @@ func (td *device) SetColors(
 	}
 
 	if ack {
-		return lifxlan.WaitForAcks(ctx, conn, td, seqs...)
+		return lifxlan.WaitForAcks(ctx, conn, td.Source(), seqs...)
 	}
 	return nil
 }
