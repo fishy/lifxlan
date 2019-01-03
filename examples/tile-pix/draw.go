@@ -66,14 +66,29 @@ func draw(td tile.Device, img image.Image) {
 	}
 	defer conn.Close()
 
+	var origCB tile.ColorBoard
+	if !*loop {
+		func() {
+			ctx, cancel := context.WithTimeout(context.Background(), *drawTimeout)
+			defer cancel()
+			var err error
+			origCB, err = td.GetColors(ctx, conn)
+			if err != nil {
+				log.Fatalf("Cannot get the current colors on %v: %v", td, err)
+			}
+		}()
+	}
+
 	for range time.Tick(*interval) {
 		step++
 		log.Printf("Step %d...", step)
 		cb, last := getBoard(full, td, horizontal, step)
-		ctx, cancel := context.WithTimeout(context.Background(), *drawTimeout)
-		defer cancel()
 		start := time.Now()
-		if err := td.SetColors(ctx, conn, cb, 0, !*noack); err != nil {
+		if err := func() error {
+			ctx, cancel := context.WithTimeout(context.Background(), *drawTimeout)
+			defer cancel()
+			return td.SetColors(ctx, conn, cb, 0, !*noack)
+		}(); err != nil {
 			log.Printf("Failed to set colors: %v", err)
 			if *noskip {
 				step--
@@ -83,8 +98,24 @@ func draw(td tile.Device, img image.Image) {
 			log.Printf("SetColors took %v", time.Since(start))
 		}
 		if last {
-			step = 0
-			log.Print("Finished. Resetting...")
+			if *loop {
+				step = 0
+				log.Print("Finished. Resetting...")
+			} else {
+				break
+			}
+		}
+	}
+
+	for {
+		if err := func() error {
+			ctx, cancel := context.WithTimeout(context.Background(), *drawTimeout)
+			defer cancel()
+			return td.SetColors(ctx, conn, origCB, 0, !*noack)
+		}(); err != nil {
+			log.Printf("Failed to set original colors, retrying... %v", err)
+		} else {
+			return
 		}
 	}
 }

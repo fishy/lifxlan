@@ -40,12 +40,6 @@ var (
 		`Broadcast IP (e.g. "192.168.1.255"). Empty value means "255.255.255.255", which should work in most networks.`,
 	)
 
-	reset = flag.Int(
-		"reset",
-		20,
-		"Number of steps before reset and regenerate the whole board. 0 means never reset",
-	)
-
 	kelvin = flag.Int(
 		"kelvin",
 		8000,
@@ -56,6 +50,12 @@ var (
 		"noskip",
 		false,
 		"Do not skip failed frames, retry them after the next interval.",
+	)
+
+	loop = flag.Bool(
+		"loop",
+		false,
+		"After fully shown the picture, loop over instead of reverting to the original colors.",
 	)
 
 	target lifxlan.Target
