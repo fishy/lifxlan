@@ -27,8 +27,10 @@ func WaitForAcks(
 	sequences ...uint8,
 ) error {
 	e := &WaitForAcksError{
-		Total: len(sequences),
+		Received: make([]uint8, 0, len(sequences)),
+		Total:    make([]uint8, len(sequences)),
 	}
+	copy(e.Total, sequences)
 
 	select {
 	default:
@@ -78,7 +80,7 @@ func WaitForAcks(
 			continue
 		}
 		if seqMap[resp.Sequence] {
-			e.Received++
+			e.Received = append(e.Received, resp.Sequence)
 			delete(seqMap, resp.Sequence)
 			if len(seqMap) == 0 {
 				// All ack received.
@@ -90,8 +92,8 @@ func WaitForAcks(
 
 // WaitForAcksError defines the error returned by WaitForAcks.
 type WaitForAcksError struct {
-	Received int
-	Total    int
+	Received []uint8
+	Total    []uint8
 	Cause    error
 }
 
@@ -100,8 +102,8 @@ var _ error = (*WaitForAcksError)(nil)
 func (e *WaitForAcksError) Error() string {
 	return fmt.Sprintf(
 		"lifxlan.WaitForAcks: %d of %d ack(s) received: %v",
-		e.Received,
-		e.Total,
+		len(e.Received),
+		len(e.Total),
 		e.Cause,
 	)
 }
