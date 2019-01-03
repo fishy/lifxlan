@@ -92,20 +92,19 @@ func TestTargetMatches(t *testing.T) {
 	)
 }
 
-func TestParseTarget(t *testing.T) {
+func TestTargetSet(t *testing.T) {
 	t.Run(
 		"EmptyAllDevices",
 		func(t *testing.T) {
 			s := ""
-			target, err := lifxlan.ParseTarget(s)
-			if err != nil {
+			var target lifxlan.Target
+			if err := target.Set(s); err != nil {
 				t.Fatal(err)
 			}
 			if target != lifxlan.AllDevices {
 				t.Errorf(
-					"ParseTarget(%q) expected %v, got %v",
+					"Target.Set(%q) got %v",
 					s,
-					lifxlan.AllDevices,
 					target,
 				)
 			}
@@ -116,15 +115,14 @@ func TestParseTarget(t *testing.T) {
 		"AllDevices",
 		func(t *testing.T) {
 			s := "00:00:00:00:00:00"
-			target, err := lifxlan.ParseTarget(s)
-			if err != nil {
+			var target lifxlan.Target
+			if err := target.Set(s); err != nil {
 				t.Fatal(err)
 			}
 			if target != lifxlan.AllDevices {
 				t.Errorf(
-					"ParseTarget(%q) expected %v, got %v",
+					"Target.Set(%q) got %v",
 					s,
-					lifxlan.AllDevices,
 					target,
 				)
 			}
@@ -135,15 +133,14 @@ func TestParseTarget(t *testing.T) {
 		"NormalDevice",
 		func(t *testing.T) {
 			s := "01:23:45:67:89:ab"
-			target, err := lifxlan.ParseTarget(s)
-			if err != nil {
+			var target lifxlan.Target
+			if err := target.Set(s); err != nil {
 				t.Fatal(err)
 			}
 			if target.String() != s {
 				t.Errorf(
-					"ParseTarget(%q) expected %v, got %v",
+					"Target.Set(%q) got %v",
 					s,
-					lifxlan.AllDevices,
 					target,
 				)
 			}
