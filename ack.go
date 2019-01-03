@@ -2,6 +2,7 @@ package lifxlan
 
 import (
 	"context"
+	"fmt"
 	"net"
 )
 
@@ -16,16 +17,24 @@ import (
 // Therefore, there shouldn't be more than one WaitForAcks functions running for
 // the same connection at the same time,
 // and this function should only be used when no other responses are expected.
+//
+// If this function returns an error,
+// the error would be of type *WaitForAcksError.
 func WaitForAcks(
 	ctx context.Context,
 	conn net.Conn,
 	source uint32,
 	sequences ...uint8,
 ) error {
+	e := &WaitForAcksError{
+		Total: len(sequences),
+	}
+
 	select {
 	default:
 	case <-ctx.Done():
-		return ctx.Err()
+		e.Cause = ctx.Err()
+		return e
 	}
 
 	if len(sequences) == 0 {
@@ -42,11 +51,13 @@ func WaitForAcks(
 		select {
 		default:
 		case <-ctx.Done():
-			return ctx.Err()
+			e.Cause = ctx.Err()
+			return e
 		}
 
 		if err := conn.SetReadDeadline(GetReadDeadline()); err != nil {
-			return err
+			e.Cause = err
+			return e
 		}
 
 		n, err := conn.Read(buf)
@@ -54,17 +65,20 @@ func WaitForAcks(
 			if CheckTimeoutError(err) {
 				continue
 			}
-			return err
+			e.Cause = err
+			return e
 		}
 
 		resp, err := ParseResponse(buf[:n])
 		if err != nil {
-			return err
+			e.Cause = err
+			return e
 		}
 		if resp.Source != source || resp.Message != Acknowledgement {
 			continue
 		}
 		if seqMap[resp.Sequence] {
+			e.Received++
 			delete(seqMap, resp.Sequence)
 			if len(seqMap) == 0 {
 				// All ack received.
@@ -72,4 +86,22 @@ func WaitForAcks(
 			}
 		}
 	}
+}
+
+// WaitForAcksError defines the error returned by WaitForAcks.
+type WaitForAcksError struct {
+	Received int
+	Total    int
+	Cause    error
+}
+
+var _ error = (*WaitForAcksError)(nil)
+
+func (e *WaitForAcksError) Error() string {
+	return fmt.Sprintf(
+		"lifxlan.WaitForAcks: %d of %d ack(s) received: %v",
+		e.Received,
+		e.Total,
+		e.Cause,
+	)
 }
