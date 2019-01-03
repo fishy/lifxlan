@@ -19,6 +19,13 @@ import (
 // Then the width of the board would be 24, and the height would be 12.
 // The coordinate of the topleft corner would be (0, 11) and the coordinate
 // of the bottomright corner of the middle tile would be (15, 0).
+//
+// Also the size is guaranteed to be trimmed.
+// Which means that if that on the above example,
+// if either the left or the right tile is removed from the device,
+// the size would change to 16x12.
+// But if the middle tile is removed from the device,
+// the size would change to 24x8 with a 8x8 blackhole in the middle.
 type Board interface {
 	Width() int
 	Height() int

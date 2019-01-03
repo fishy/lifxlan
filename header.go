@@ -33,7 +33,7 @@ const (
 	Tagged                 = 1<<13 + NotTagged
 )
 
-// AckResFlag could include:
+// AckResFlag is the 8-bit header that could include:
 //
 // - ack_required: if set all sent messages will expect an ack response.
 //
