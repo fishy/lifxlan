@@ -1,6 +1,7 @@
 package lifxlan
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -26,6 +27,10 @@ func (ts Timestamp) Time() time.Time {
 	sec := uint64(ts) / uint64(msPerSecond)
 	nano := uint64(ts) % uint64(msPerSecond) * uint64(time.Millisecond)
 	return time.Unix(int64(sec), int64(nano))
+}
+
+func (ts Timestamp) String() string {
+	return fmt.Sprintf("%v", ts.Time())
 }
 
 // TransitionTime is the type used in messages to represent transition time.
@@ -54,4 +59,8 @@ func ConvertDuration(d time.Duration) TransitionTime {
 // Duration converts a TransitionTime into time.Duration.
 func (tt TransitionTime) Duration() time.Duration {
 	return time.Duration(time.Duration(tt) * time.Millisecond)
+}
+
+func (tt TransitionTime) String() string {
+	return fmt.Sprintf("%v", tt.Duration())
 }
