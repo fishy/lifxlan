@@ -38,13 +38,14 @@ type TransitionTime uint32
 // The max uint32 value can represent a transition time of more than 1,193
 // hours[1] (or, in other words, more than a month).
 // So although an overflow is technically possible,
-// we don't really do any special handling here
+// we don't really do any special handlings here
 // (it's not a security risk and won't crash anything[2]).
 // If you feed in a duration that overflows TransitionTime,
 // you should feel bad (or great, it's totally up to you) about it.
 // Do you really want your light(s) to take more than a month to turn on/off?
 //
 // [1] https://play.golang.com/p/LqfMpvhIctx
+//
 // [2] https://play.golang.com/p/edwqG4nNqkt
 func ConvertDuration(d time.Duration) TransitionTime {
 	return TransitionTime(d / time.Millisecond)
