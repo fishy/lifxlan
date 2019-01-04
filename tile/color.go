@@ -58,7 +58,7 @@ type RawSetTileState64Payload struct {
 	X         uint8
 	Y         uint8
 	Width     uint8
-	Duration  uint32
+	Duration  lifxlan.TransitionTime
 	Colors    [TileState64Width][TileState64Width]lifxlan.Color
 }
 
@@ -66,7 +66,7 @@ func (td *device) SetColors(
 	ctx context.Context,
 	conn net.Conn,
 	cb ColorBoard,
-	duration time.Duration,
+	transition time.Duration,
 	ack bool,
 ) error {
 	select {
@@ -96,7 +96,7 @@ func (td *device) SetColors(
 			TileIndex: td.startIndex + uint8(i),
 			Length:    1,
 			Width:     TileState64Width,
-			Duration:  uint32(duration / time.Millisecond),
+			Duration:  lifxlan.ConvertDuration(transition),
 		}
 		// Init with all black colors.
 		for j, colorArray := range payloads[i].Colors {

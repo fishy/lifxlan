@@ -39,11 +39,11 @@ type Device interface {
 	// device repeatedly.
 	//
 	// If ack is false,
-	// the function returns nil error after the API is sent successfully.
+	// this function returns nil error after the API is sent successfully.
 	// If ack is true,
-	// the function will only return nil error after it received acks from the
-	// device.
-	SetColors(ctx context.Context, conn net.Conn, cb ColorBoard, fadein time.Duration, ack bool) error
+	// this function will only return nil error after it received all ack(s) from
+	// the device.
+	SetColors(ctx context.Context, conn net.Conn, cb ColorBoard, transition time.Duration, ack bool) error
 }
 
 type device struct {
