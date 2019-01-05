@@ -139,7 +139,6 @@ func (td *device) SetColors(
 			seq, err := td.Send(
 				ctx,
 				conn,
-				lifxlan.NotTagged,
 				flags,
 				SetTileState64,
 				buf.Bytes(),
@@ -245,7 +244,6 @@ func (td *device) GetColors(
 	seq, err := td.Send(
 		ctx,
 		conn,
-		lifxlan.NotTagged,
 		0, // flags
 		GetTileState64,
 		buf.Bytes(),

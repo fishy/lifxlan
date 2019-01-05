@@ -116,7 +116,6 @@ func (d *device) GetHardwareVersion(ctx context.Context, conn net.Conn) error {
 	seq, err := d.Send(
 		ctx,
 		conn,
-		NotTagged,
 		0, // flags
 		GetVersion,
 		nil, // payload

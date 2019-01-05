@@ -78,7 +78,6 @@ func (d *device) GetLabel(ctx context.Context, conn net.Conn) error {
 	seq, err := d.Send(
 		ctx,
 		conn,
-		NotTagged,
 		0, // flags
 		GetLabel,
 		nil, // payload

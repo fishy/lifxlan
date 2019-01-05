@@ -9,7 +9,6 @@ import (
 func (d *device) Send(
 	ctx context.Context,
 	conn net.Conn,
-	tagged TaggedHeader,
 	flags AckResFlag,
 	message MessageType,
 	payload []byte,
@@ -24,7 +23,7 @@ func (d *device) Send(
 	var msg []byte
 	seq = d.NextSequence()
 	msg, err = GenerateMessage(
-		tagged,
+		NotTagged,
 		d.Source(),
 		d.Target(),
 		flags,

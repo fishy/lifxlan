@@ -102,7 +102,6 @@ func Example_sendMessageWithAck() {
 	seq, err := device.Send(
 		ctx,
 		conn,
-		lifxlan.NotTagged, // most messages are not tagged.
 		lifxlan.FlagAckRequired,
 		message,
 		buf.Bytes(), // could be nil if this message doesn't need payload.
@@ -156,8 +155,7 @@ func Example_sendMessageWithResponse() {
 	seq, err := device.Send(
 		ctx,
 		conn,
-		lifxlan.NotTagged, // most messages are not tagged.
-		0,                 // flags, not requiring ack because this message will get a response.
+		0, // flags, not requiring ack because this message will get a response.
 		message,
 		buf.Bytes(), // could be nil if this message doesn't need payload.
 	)

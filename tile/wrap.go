@@ -47,7 +47,6 @@ func Wrap(ctx context.Context, d lifxlan.Device, force bool) (Device, error) {
 	seq, err := d.Send(
 		ctx,
 		conn,
-		lifxlan.NotTagged,
 		0, // flags
 		GetDeviceChain,
 		nil, // payload
