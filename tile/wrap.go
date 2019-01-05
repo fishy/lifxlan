@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/binary"
+	"errors"
 
 	"github.com/fishy/lifxlan"
 )
@@ -91,6 +92,10 @@ func Wrap(ctx context.Context, d lifxlan.Device, force bool) (Device, error) {
 		if err := binary.Read(r, binary.LittleEndian, &raw); err != nil {
 			return nil, err
 		}
+		if raw.TotalCount == 0 {
+			return nil, errors.New("lifxlan/tile.Wrap: no tiles found")
+		}
+		*d.HardwareVersion() = raw.TileDevices[int(raw.StartIndex)].HardwareVersion
 		td := &device{
 			Device:     d,
 			startIndex: raw.StartIndex,

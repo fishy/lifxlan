@@ -2,6 +2,8 @@ package tile
 
 import (
 	"math"
+
+	"github.com/fishy/lifxlan"
 )
 
 // Coordinate defines a simple 2D coordinate.
@@ -13,22 +15,20 @@ type Coordinate struct {
 //
 // https://lan.developer.lifx.com/v2.0/docs/tile-messages#section-tile
 type RawTileDevice struct {
-	AccelMeasX int16
-	AccelMeasY int16
-	AccelMeasZ int16
-	_          int16 // reserved
-	UserX      float32
-	UserY      float32
-	Width      uint8
-	Height     uint8
-	_          uint8  // reserved
-	_          uint32 // device_version_vendor
-	_          uint32 // device_version_product
-	_          uint32 // device_version_version
-	_          uint64 // firmware_build
-	_          uint64 // reserved
-	_          uint32 // firmware_versio
-	_          uint32 // reserved
+	AccelMeasX      int16
+	AccelMeasY      int16
+	AccelMeasZ      int16
+	_               int16 // reserved
+	UserX           float32
+	UserY           float32
+	Width           uint8
+	Height          uint8
+	_               uint8 // reserved
+	HardwareVersion lifxlan.RawHardwareVersion
+	_               uint64 // firmware_build
+	_               uint64 // reserved
+	_               uint32 // firmware_version
+	_               uint32 // reserved
 }
 
 // Tile defines a single tile inside a TileDevice
