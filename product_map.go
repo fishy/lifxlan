@@ -18,6 +18,7 @@ package lifxlan
 // https://github.com/fishy/lifxlan/cmd/gen-product-map/
 var ProductMap = map[uint64]ParsedHardwareVersion{
 	ProductMapKey(1, 1): {
+		VendorName:  "LIFX",
 		ProductName: "Original 1000",
 		Color:       true,
 		Infrared:    false,
@@ -27,6 +28,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 3): {
+		VendorName:  "LIFX",
 		ProductName: "Color 650",
 		Color:       true,
 		Infrared:    false,
@@ -36,6 +38,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 10): {
+		VendorName:  "LIFX",
 		ProductName: "White 800 (Low Voltage)",
 		Color:       false,
 		Infrared:    false,
@@ -45,6 +48,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   6500,
 	},
 	ProductMapKey(1, 11): {
+		VendorName:  "LIFX",
 		ProductName: "White 800 (High Voltage)",
 		Color:       false,
 		Infrared:    false,
@@ -54,6 +58,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   6500,
 	},
 	ProductMapKey(1, 18): {
+		VendorName:  "LIFX",
 		ProductName: "White 900 BR30 (Low Voltage)",
 		Color:       false,
 		Infrared:    false,
@@ -63,6 +68,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   6500,
 	},
 	ProductMapKey(1, 20): {
+		VendorName:  "LIFX",
 		ProductName: "Color 1000 BR30",
 		Color:       true,
 		Infrared:    false,
@@ -72,6 +78,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 22): {
+		VendorName:  "LIFX",
 		ProductName: "Color 1000",
 		Color:       true,
 		Infrared:    false,
@@ -81,6 +88,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 27): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX A19",
 		Color:       true,
 		Infrared:    false,
@@ -90,6 +98,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 28): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX BR30",
 		Color:       true,
 		Infrared:    false,
@@ -99,6 +108,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 29): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX+ A19",
 		Color:       true,
 		Infrared:    true,
@@ -108,6 +118,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 30): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX+ BR30",
 		Color:       true,
 		Infrared:    true,
@@ -117,6 +128,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 31): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX Z",
 		Color:       true,
 		Infrared:    false,
@@ -126,6 +138,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 32): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX Z 2",
 		Color:       true,
 		Infrared:    false,
@@ -135,6 +148,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 36): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX Downlight",
 		Color:       true,
 		Infrared:    false,
@@ -144,6 +158,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 37): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX Downlight",
 		Color:       true,
 		Infrared:    false,
@@ -153,6 +168,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 38): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX Beam",
 		Color:       true,
 		Infrared:    false,
@@ -162,6 +178,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 43): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX A19",
 		Color:       true,
 		Infrared:    false,
@@ -171,6 +188,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 44): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX BR30",
 		Color:       true,
 		Infrared:    false,
@@ -180,6 +198,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 45): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX+ A19",
 		Color:       true,
 		Infrared:    true,
@@ -189,6 +208,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 46): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX+ BR30",
 		Color:       true,
 		Infrared:    true,
@@ -198,6 +218,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 49): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX Mini",
 		Color:       true,
 		Infrared:    false,
@@ -207,6 +228,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 50): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX Mini Day and Dusk",
 		Color:       false,
 		Infrared:    false,
@@ -216,6 +238,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   4000,
 	},
 	ProductMapKey(1, 51): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX Mini White",
 		Color:       false,
 		Infrared:    false,
@@ -225,6 +248,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   2700,
 	},
 	ProductMapKey(1, 52): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX GU10",
 		Color:       true,
 		Infrared:    false,
@@ -234,6 +258,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 55): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX Tile",
 		Color:       true,
 		Infrared:    false,
@@ -243,6 +268,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 56): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX Beam",
 		Color:       true,
 		Infrared:    false,
@@ -252,6 +278,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 59): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX Mini Color",
 		Color:       true,
 		Infrared:    false,
@@ -261,6 +288,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 60): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX Mini Day and Dusk",
 		Color:       false,
 		Infrared:    false,
@@ -270,6 +298,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MaxKelvin:   4000,
 	},
 	ProductMapKey(1, 61): {
+		VendorName:  "LIFX",
 		ProductName: "LIFX Mini White",
 		Color:       false,
 		Infrared:    false,

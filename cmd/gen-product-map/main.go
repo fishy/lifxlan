@@ -57,6 +57,7 @@ func main() {
 				continue
 			}
 			fmt.Printf("\tProductMapKey(%v, %v): {\n", vendor.ID, product.ID)
+			fmt.Printf("\t\tVendorName:  %q,\n", vendor.Name)
 			fmt.Printf("\t\tProductName: %q,\n", product.Name)
 			fmt.Printf("\t\tColor:       %v,\n", product.Features.Color)
 			fmt.Printf("\t\tInfrared:    %v,\n", product.Features.Infrared)

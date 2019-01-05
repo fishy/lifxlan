@@ -28,6 +28,7 @@ func ProductMapKey(vendor, product uint32) uint64 {
 
 // ParsedHardwareVersion is the parsed hardware version info.
 type ParsedHardwareVersion struct {
+	VendorName  string
 	ProductName string
 
 	// Features
