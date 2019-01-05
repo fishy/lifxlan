@@ -193,7 +193,7 @@ func draw(td tile.Device) {
 		if err := func() error {
 			ctx, cancel := context.WithTimeout(context.Background(), *drawTimeout)
 			defer cancel()
-			return td.SetColors(ctx, conn, origCB, 0, !*noack)
+			return td.SetColors(ctx, conn, origCB, 0, true)
 		}(); err != nil {
 			log.Printf("Failed to set original colors, retrying... %v", err)
 		} else {
