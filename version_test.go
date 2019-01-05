@@ -32,10 +32,9 @@ func TestVersion(t *testing.T) {
 				ProductName: "Foo",
 				Color:       true,
 				Raw:         *raw,
-				NotFound:    false,
 			}
 			parsed := raw.Parse()
-			if !reflect.DeepEqual(parsed, expectedParsed) {
+			if !reflect.DeepEqual(*parsed, expectedParsed) {
 				t.Errorf("Parse expected %+v, got %+v", expectedParsed, parsed)
 			}
 			expectedStr := "Foo(1, 1, 1)"
@@ -54,13 +53,9 @@ func TestVersion(t *testing.T) {
 				ProductID:       2,
 				HardwareVersion: 1,
 			}
-			expectedParsed := lifxlan.ParsedHardwareVersion{
-				Raw:      *raw,
-				NotFound: true,
-			}
 			parsed := raw.Parse()
-			if !reflect.DeepEqual(parsed, expectedParsed) {
-				t.Errorf("Parse expected %+v, got %+v", expectedParsed, parsed)
+			if parsed != nil {
+				t.Errorf("Parse expected nil, got %+v", parsed)
 			}
 			expectedStr := "(1, 2, 1)"
 			s := raw.String()

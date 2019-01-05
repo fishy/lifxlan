@@ -6,6 +6,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"net"
+	"strings"
 )
 
 // EmptyHardwareVersion is the constant to be compared against
@@ -40,9 +41,6 @@ type ParsedHardwareVersion struct {
 
 	// Embedded raw info.
 	Raw RawHardwareVersion
-
-	// NotFound is true if this product is not found in ProductMap.
-	NotFound bool
 }
 
 // RawHardwareVersion defines raw version info in message payloads according to:
@@ -60,23 +58,32 @@ func (raw RawHardwareVersion) ProductMapKey() uint64 {
 }
 
 // Parse parses the raw hardware version info by looking up ProductMap.
-func (raw RawHardwareVersion) Parse() ParsedHardwareVersion {
+//
+// If this hardware version info is not in ProductMap, nil will be returned.
+func (raw RawHardwareVersion) Parse() *ParsedHardwareVersion {
 	parsed, ok := ProductMap[raw.ProductMapKey()]
-	parsed.Raw = raw
 	if !ok {
-		parsed.NotFound = true
+		return nil
 	}
-	return parsed
+	parsed.Raw = raw
+	return &parsed
 }
 
 func (raw RawHardwareVersion) String() string {
-	return fmt.Sprintf(
-		"%s(%v, %v, %v)",
-		raw.Parse().ProductName,
-		raw.VendorID,
-		raw.ProductID,
-		raw.HardwareVersion,
+	var sb strings.Builder
+	parsed := raw.Parse()
+	if parsed != nil {
+		sb.WriteString(parsed.ProductName)
+	}
+	sb.WriteString(
+		fmt.Sprintf(
+			"(%v, %v, %v)",
+			raw.VendorID,
+			raw.ProductID,
+			raw.HardwareVersion,
+		),
 	)
+	return sb.String()
 }
 
 func (d *device) HardwareVersion() *RawHardwareVersion {
