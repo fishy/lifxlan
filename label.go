@@ -8,12 +8,11 @@ import (
 	"net"
 )
 
-func (d *device) Label() string {
-	return d.label
-}
+// EmptyLabel is the constant to be compared against Device.Label().String().
+const EmptyLabel = ""
 
-func (d *device) CacheLabel(label string) {
-	d.label = label
+func (d *device) Label() *RawLabel {
+	return &d.label
 }
 
 // RawStateLabelPayload defines the struct to be used for encoding and decoding.
@@ -54,17 +53,17 @@ func (l *RawLabel) Set(label string) error {
 	return nil
 }
 
-func (d *device) GetLabel(ctx context.Context, conn net.Conn) (string, error) {
+func (d *device) GetLabel(ctx context.Context, conn net.Conn) error {
 	select {
 	default:
 	case <-ctx.Done():
-		return "", ctx.Err()
+		return ctx.Err()
 	}
 
 	if conn == nil {
 		newConn, err := d.Dial()
 		if err != nil {
-			return "", err
+			return err
 		}
 		defer newConn.Close()
 		conn = newConn
@@ -72,7 +71,7 @@ func (d *device) GetLabel(ctx context.Context, conn net.Conn) (string, error) {
 		select {
 		default:
 		case <-ctx.Done():
-			return "", ctx.Err()
+			return ctx.Err()
 		}
 	}
 
@@ -85,7 +84,7 @@ func (d *device) GetLabel(ctx context.Context, conn net.Conn) (string, error) {
 		nil, // payload
 	)
 	if err != nil {
-		return "", err
+		return err
 	}
 
 	buf := make([]byte, ResponseReadBufferSize)
@@ -93,11 +92,11 @@ func (d *device) GetLabel(ctx context.Context, conn net.Conn) (string, error) {
 		select {
 		default:
 		case <-ctx.Done():
-			return "", ctx.Err()
+			return ctx.Err()
 		}
 
 		if err := conn.SetReadDeadline(GetReadDeadline()); err != nil {
-			return "", err
+			return err
 		}
 
 		n, err := conn.Read(buf)
@@ -105,12 +104,12 @@ func (d *device) GetLabel(ctx context.Context, conn net.Conn) (string, error) {
 			if CheckTimeoutError(err) {
 				continue
 			}
-			return "", err
+			return err
 		}
 
 		resp, err := ParseResponse(buf[:n])
 		if err != nil {
-			return "", err
+			return err
 		}
 		if resp.Sequence != seq || resp.Source != d.Source() {
 			continue
@@ -122,10 +121,10 @@ func (d *device) GetLabel(ctx context.Context, conn net.Conn) (string, error) {
 		var raw RawStateLabelPayload
 		r := bytes.NewReader(resp.Payload)
 		if err := binary.Read(r, binary.LittleEndian, &raw); err != nil {
-			return "", err
+			return err
 		}
 
-		d.label = raw.Label.String()
-		return d.label, nil
+		d.label = raw.Label
+		return nil
 	}
 }

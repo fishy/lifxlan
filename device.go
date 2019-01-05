@@ -25,6 +25,45 @@ func (s ServiceType) String() string {
 }
 
 // Device defines the common interface between lifxlan devices.
+//
+// For the Foo() and GetFoo() function pairs (e.g. Label() and GetLabel()),
+// the Foo() one will return an pointer to the cached property,
+// guaranteed to be non-nil but could be the zero value,
+// while the GetFoo() one will use an API call to update the cached property.
+//
+// There will also be an EmptyFoo string constant defined,
+// so that you can compare against Device.Foo().String() to determine if a
+// GetFoo() call is needed.
+// Here is an example code snippet to get a device's label:
+//
+//     func GetLabel(ctx context.Context, d lifxlanDevice) (string, error) {
+//         if d.Label().String() != lifxlan.EmptyLabel {
+//             return d.Label().String(), nil
+//         }
+//         if err := d.GetLabel(ctx, nil); err = nil {
+//             return "", nil
+//         }
+//         return d.Label().String(), nil
+//     }
+//
+// If you are extending a device code and you got the property as part of
+// another API's return payload,
+// you can also use the Foo() function to update the cached value.
+// Here is an example code snippet to update a device's cached label:
+//
+//     func UpdateLabel(d lifxlanDevice, newLabel *lifxlan.RawLabel) {
+//         *d.Label() = *newLabel
+//     }
+//
+// The conn arg in GetFoo() functions can be nil.
+// In such cases,
+// a new connection will be made and guaranteed to be closed before returning.
+// You should pre-dial and pass in the conn if you plan to call APIs on this
+// device repeatedly.
+//
+// In case of network error (e.g. response packet loss),
+// the GetFoo() functions might block until the context is cancelled,
+// as a result, it's a good idea to set a timeout to the context.
 type Device interface {
 	// Target returns the target of this device, usually it's the MAC address.
 	Target() Target
@@ -49,28 +88,13 @@ type Device interface {
 	// The sequence used in this message will be returned.
 	Send(ctx context.Context, conn net.Conn, tagged TaggedHeader, flags AckResFlag, message MessageType, payload []byte) (seq uint8, err error)
 
-	// GetLabel asks the device to return its label.
-	//
-	// If conn is nil,
-	// a new connection will be made and guaranteed to be closed before returning.
-	// You should pre-dial and pass in the conn if you plan to call APIs on this
-	// device repeatedly.
-	//
-	// Upon success return,
-	// the result will be cached and accessible via Label function.
-	GetLabel(ctx context.Context, conn net.Conn) (string, error)
+	// The label of the device.
+	Label() *RawLabel
+	GetLabel(ctx context.Context, conn net.Conn) error
 
-	// Label returns the cached label.
-	//
-	// If a label was never requested before,
-	// Label returns empty string ("").
-	// You should use GetLabel in that situation.
-	Label() string
-
-	// CacheLabel stores the label as the device's cached label.
-	//
-	// It does NOT set the label on the LIFX device permanently.
-	CacheLabel(label string)
+	// The hardware version info of the device.
+	HardwareVersion() *RawHardwareVersion
+	GetHardwareVersion(ctx context.Context, conn net.Conn) error
 }
 
 var _ Device = (*device)(nil)
@@ -87,7 +111,9 @@ type device struct {
 	source   uint32
 	sequence uint32
 
-	label string
+	// Cached properties.
+	label   RawLabel
+	version RawHardwareVersion
 }
 
 // NewDevice creates a new Device.
@@ -104,8 +130,8 @@ func NewDevice(addr string, service ServiceType, target Target) Device {
 }
 
 func (d *device) String() string {
-	if d.label != "" {
-		return fmt.Sprintf("%s(%v)", d.label, d.target)
+	if d.label.String() != EmptyLabel {
+		return fmt.Sprintf("%v(%v)", d.label, d.target)
 	}
 	return fmt.Sprintf("Device(%v)", d.target)
 }

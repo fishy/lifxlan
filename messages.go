@@ -10,4 +10,6 @@ const (
 	StateService                = 3
 	GetLabel                    = 23
 	StateLabel                  = 25
+	GetVersion                  = 32
+	StateVersion                = 33
 )

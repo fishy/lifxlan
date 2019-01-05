@@ -59,7 +59,7 @@ type device struct {
 var _ Device = (*device)(nil)
 
 func (td *device) String() string {
-	if label := td.Label(); label != "" {
+	if label := td.Label().String(); label != lifxlan.EmptyLabel {
 		return fmt.Sprintf("%s(%v)", label, td.Target())
 	}
 	return fmt.Sprintf("TileDevice(%v)", td.Target())

@@ -75,3 +75,11 @@ func TestRawLabel(t *testing.T) {
 		},
 	)
 }
+
+func TestEmptyLabel(t *testing.T) {
+	var label lifxlan.RawLabel
+	s := label.String()
+	if s != lifxlan.EmptyLabel {
+		t.Errorf("Expected %q, got %q", lifxlan.EmptyLabel, s)
+	}
+}
