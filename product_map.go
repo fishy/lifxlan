@@ -8,7 +8,7 @@ package lifxlan
 //     func init() {
 //         key := lifxlan.ProductMapKey(newVID, newPID)
 //         lifxlan.ProductMap[key] = ParsedHardwareVersion{
-//				     // Fill in values
+//             // Fill in values
 //         }
 //     }
 //
