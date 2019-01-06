@@ -22,7 +22,7 @@ const Target lifxlan.Target = 1
 type HandlerFunc func(s *Service, conn net.PacketConn, addr net.Addr, orig *lifxlan.Response)
 
 // DefaultHandlerFunc is the default HandlerFunc to be used when it's not in the
-// handlerMap.
+// Handlers map.
 func DefaultHandlerFunc(
 	s *Service,
 	conn net.PacketConn,
