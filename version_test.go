@@ -1,10 +1,13 @@
 package lifxlan_test
 
 import (
+	"context"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/fishy/lifxlan"
+	"github.com/fishy/lifxlan/mock"
 )
 
 func mockProductMap(t *testing.T) {
@@ -71,5 +74,40 @@ func TestEmptyHardwareVersion(t *testing.T) {
 	s := version.String()
 	if s != lifxlan.EmptyHardwareVersion {
 		t.Errorf("Expected %q, got %q", lifxlan.EmptyHardwareVersion, s)
+	}
+}
+
+func TestGetHardwareVersion(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
+
+	const timeout = time.Millisecond * 200
+
+	mockProductMap(t)
+	expected := lifxlan.RawHardwareVersion{
+		VendorID:        1,
+		ProductID:       1,
+		HardwareVersion: 1,
+	}
+
+	service, device := mock.StartService(t)
+	defer service.Stop()
+	service.RawStateVersionPayload = &lifxlan.RawStateVersionPayload{
+		Version: expected,
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	if err := device.GetHardwareVersion(ctx, nil); err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(*device.HardwareVersion(), expected) {
+		t.Errorf(
+			"HardwareVersion expected %v, got %v",
+			expected,
+			device.HardwareVersion(),
+		)
 	}
 }

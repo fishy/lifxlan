@@ -102,6 +102,7 @@ func GenerateMessage(
 // Response is the parsed response from a lifxlan device.
 type Response struct {
 	Message  MessageType
+	Flags    AckResFlag
 	Source   uint32
 	Target   Target
 	Sequence uint8
@@ -137,6 +138,7 @@ func ParseResponse(msg []byte) (*Response, error) {
 	}
 	return &Response{
 		Message:  d.Type,
+		Flags:    d.Flags,
 		Source:   d.Source,
 		Target:   d.Target,
 		Sequence: d.Sequence,

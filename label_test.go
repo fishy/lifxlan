@@ -1,9 +1,12 @@
 package lifxlan_test
 
 import (
+	"context"
 	"testing"
+	"time"
 
 	"github.com/fishy/lifxlan"
+	"github.com/fishy/lifxlan/mock"
 )
 
 func TestRawLabel(t *testing.T) {
@@ -81,5 +84,32 @@ func TestEmptyLabel(t *testing.T) {
 	s := label.String()
 	if s != lifxlan.EmptyLabel {
 		t.Errorf("Expected %q, got %q", lifxlan.EmptyLabel, s)
+	}
+}
+
+func TestGetLabel(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
+
+	const timeout = time.Millisecond * 200
+
+	var expected lifxlan.RawLabel
+	expected.Set("foo")
+
+	service, device := mock.StartService(t)
+	defer service.Stop()
+	service.RawStateLabelPayload = &lifxlan.RawStateLabelPayload{
+		Label: expected,
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	if err := device.GetLabel(ctx, nil); err != nil {
+		t.Fatal(err)
+	}
+	if device.Label().String() != expected.String() {
+		t.Errorf("Label expected %v, got %v", expected, device.Label())
 	}
 }

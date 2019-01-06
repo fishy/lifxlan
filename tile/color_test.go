@@ -1,12 +1,15 @@
 package tile_test
 
 import (
+	"context"
 	"math/rand"
+	"reflect"
 	"testing"
 	"testing/quick"
 	"time"
 
 	"github.com/fishy/lifxlan"
+	"github.com/fishy/lifxlan/mock"
 	"github.com/fishy/lifxlan/tile"
 )
 
@@ -211,4 +214,134 @@ func ExampleMakeColorBoard() {
 			cb[x][y] = colorGenerator()
 		}
 	}
+}
+
+func TestColorsAPIs(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
+
+	const timeout = time.Millisecond * 200
+
+	service, device := mock.StartService(t)
+	defer service.Stop()
+	rawTile1 := tile.RawTileDevice{
+		Width:  8,
+		Height: 8,
+	}
+	rawTile2 := tile.RawTileDevice{
+		UserX:  1,
+		Width:  8,
+		Height: 8,
+	}
+	rawChain := &tile.RawStateDeviceChainPayload{
+		TotalCount: 2,
+	}
+	rawChain.TileDevices[0] = rawTile1
+	rawChain.TileDevices[1] = rawTile2
+	service.RawStateDeviceChainPayload = rawChain
+
+	td, err := func() (tile.Device, error) {
+		ctx, cancel := context.WithTimeout(context.Background(), timeout)
+		defer cancel()
+		return tile.Wrap(ctx, device, false)
+	}()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if td == nil {
+		t.Fatal("Can't mock tile device.")
+	}
+
+	stateColor1 := tile.RawStateTileState64Payload{
+		TileIndex: 0,
+		Width:     8,
+	}
+	for x, row := range stateColor1.Colors {
+		for y := range row {
+			stateColor1.Colors[x][y] = lifxlan.ColorBlack
+		}
+	}
+	stateColor2 := stateColor1
+	stateColor2.TileIndex = 1
+
+	t.Run(
+		"GetColors",
+		func(t *testing.T) {
+			t.Run(
+				"NotEnough",
+				func(t *testing.T) {
+					service.RawStateTileState64Payloads = []*tile.RawStateTileState64Payload{
+						&stateColor1,
+					}
+
+					ctx, cancel := context.WithTimeout(context.Background(), timeout)
+					defer cancel()
+
+					if _, err := td.GetColors(ctx, nil); err == nil {
+						t.Error("Expected error when not enough tiles returned, got nil")
+					}
+				},
+			)
+
+			t.Run(
+				"Normal",
+				func(t *testing.T) {
+					service.RawStateTileState64Payloads = []*tile.RawStateTileState64Payload{
+						&stateColor1,
+						&stateColor2,
+					}
+
+					ctx, cancel := context.WithTimeout(context.Background(), timeout)
+					defer cancel()
+
+					cb, err := td.GetColors(ctx, nil)
+					if err != nil {
+						t.Fatal(err)
+					}
+
+					for x := 0; x < 16; x++ {
+						for y := 0; y < 8; y++ {
+							if !reflect.DeepEqual(*cb.GetColor(x, y), lifxlan.ColorBlack) {
+								t.Errorf("Got color %+v at (%d, %d)", cb.GetColor(x, y), x, y)
+							}
+						}
+					}
+				},
+			)
+		},
+	)
+
+	t.Run(
+		"SetColors",
+		func(t *testing.T) {
+			t.Run(
+				"NotEnoughAcks",
+				func(t *testing.T) {
+					service.AcksToDrop = 1
+
+					ctx, cancel := context.WithTimeout(context.Background(), timeout)
+					defer cancel()
+
+					if err := td.SetColors(ctx, nil, nil, 0, true); err == nil {
+						t.Error("Expected error when not enough acks returned, got nil")
+					}
+				},
+			)
+
+			t.Run(
+				"Normal",
+				func(t *testing.T) {
+					service.AcksToDrop = 0
+
+					ctx, cancel := context.WithTimeout(context.Background(), timeout)
+					defer cancel()
+
+					if err := td.SetColors(ctx, nil, nil, 0, true); err != nil {
+						t.Error(err)
+					}
+				},
+			)
+		},
+	)
 }

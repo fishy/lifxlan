@@ -19,6 +19,9 @@ import (
 // If the device is not a tile device,
 // the function might return nil Device and nil error.
 // The function might also block until ctx is cancelled.
+//
+// When returning a valid tile device,
+// the device's HardwareVersion is guaranteed to be cached.
 func Wrap(ctx context.Context, d lifxlan.Device, force bool) (Device, error) {
 	select {
 	default:
