@@ -23,19 +23,29 @@ func resizeImage(img image.Image, board tile.Board) (cb tile.ColorBoard, horizon
 	bounds := img.Bounds()
 	origWidth := bounds.Max.X - bounds.Min.X
 	origHeight := bounds.Max.Y - bounds.Min.Y
+	var offsetX, offsetY int
 
 	width := board.Width()
 	height := origHeight * width / origWidth
-	if height < board.Height() {
-		horizontal = true
-		height = board.Height()
-		width = origWidth * height / origHeight
+	if *still {
+		if height > board.Height() {
+			height = board.Height()
+			width = origWidth * height / origHeight
+		}
+		offsetX = (board.Width() - width) / 2
+		offsetY = (board.Height() - height) / 2
+	} else {
+		if height < board.Height() {
+			horizontal = true
+			height = board.Height()
+			width = origWidth * height / origHeight
+		}
 	}
 	ratio := float64(origWidth) / float64(width)
 	n := int(math.Ceil(ratio))
 	colors := make([]color.Color, n*n)
 
-	cb = tile.MakeColorBoard(width, height)
+	cb = tile.MakeColorBoard(offsetX+width, offsetY+height)
 	for x := 0; x < width; x++ {
 		for y := 0; y < height; y++ {
 			baseX := int(math.Round(float64(x) * ratio))
@@ -62,8 +72,10 @@ func resizeImage(img image.Image, board tile.Board) (cb tile.ColorBoard, horizon
 				}
 			}
 
-			// Flip the y axis to fit our coordinates system.
-			cb[x][height-1-y] = averageColor(colors)
+			// image.Image uses (0,0) for the topleft corner,
+			// while tile.ColorBoard uses (0,0) for the bottomleft corner,
+			// so flip the y axis here.
+			cb[offsetX+x][offsetY+height-1-y] = averageColor(colors)
 		}
 	}
 	return

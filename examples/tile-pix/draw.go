@@ -67,7 +67,7 @@ func draw(td tile.Device, img image.Image) {
 	defer conn.Close()
 
 	var origCB tile.ColorBoard
-	if !*loop {
+	if !*loop && !*still {
 		func() {
 			ctx, cancel := context.WithTimeout(context.Background(), *drawTimeout)
 			defer cancel()
@@ -77,6 +77,20 @@ func draw(td tile.Device, img image.Image) {
 				log.Fatalf("Cannot get the current colors on %v: %v", td, err)
 			}
 		}()
+	}
+
+	if *still {
+		for {
+			if err := func() error {
+				ctx, cancel := context.WithTimeout(context.Background(), *drawTimeout)
+				defer cancel()
+				return td.SetColors(ctx, conn, full, 0, *noack)
+			}(); err != nil {
+				log.Printf("Failed to set original colors, retrying... %v", err)
+			} else {
+				return
+			}
+		}
 	}
 
 	for range time.Tick(*interval) {

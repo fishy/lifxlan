@@ -58,6 +58,12 @@ var (
 		"After fully shown the picture, loop over instead of reverting to the original colors.",
 	)
 
+	still = flag.Bool(
+		"still",
+		false,
+		"Shrink the picture to fully fit inside the tile boundaries and display still instead of scrolling.",
+	)
+
 	target lifxlan.Target
 )
 
