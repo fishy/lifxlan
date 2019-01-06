@@ -11,7 +11,7 @@ import (
 // Target defines a target by its MAC address.
 type Target uint64
 
-var _ flag.Value = (*Target)(nil)
+var _ flag.Getter = (*Target)(nil)
 
 // AllDevices is the special Target value means all devices.
 const AllDevices Target = 0
@@ -33,6 +33,11 @@ func (t Target) String() string {
 func (t *Target) Set(s string) (err error) {
 	*t, err = ParseTarget(s)
 	return
+}
+
+// Get implements flag.Getter interface.
+func (t Target) Get() interface{} {
+	return t
 }
 
 // Matches returns true if either target is AllDevices,

@@ -30,7 +30,7 @@ const RawLabelLength = 32
 // https://lan.developer.lifx.com/v2.0/docs/device-messages#section-labels
 type RawLabel [RawLabelLength]byte
 
-var _ flag.Value = (*RawLabel)(nil)
+var _ flag.Getter = (*RawLabel)(nil)
 
 func (l RawLabel) String() string {
 	index := bytes.IndexByte(l[:], 0)
@@ -51,6 +51,11 @@ func (l *RawLabel) Set(label string) error {
 	}
 	copy((*l)[:], label)
 	return nil
+}
+
+// Get implements flag.Getter interface.
+func (l RawLabel) Get() interface{} {
+	return l
 }
 
 func (d *device) GetLabel(ctx context.Context, conn net.Conn) error {
