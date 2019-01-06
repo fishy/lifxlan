@@ -61,7 +61,7 @@ var (
 	still = flag.Bool(
 		"still",
 		false,
-		"Shrink the picture to fully fit inside the tile boundaries and display still instead of scrolling.",
+		"Shrink the picture to fully fit inside the tile boundaries and display still instead of scrolling (ignore loop and interval args).",
 	)
 
 	target lifxlan.Target
