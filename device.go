@@ -130,10 +130,13 @@ func NewDevice(addr string, service ServiceType, target Target) Device {
 }
 
 func (d *device) String() string {
-	if d.label.String() != EmptyLabel {
-		return fmt.Sprintf("%v(%v)", d.label, d.target)
+	if label := d.Label().String(); label != EmptyLabel {
+		return fmt.Sprintf("%s(%v)", label, d.Target())
 	}
-	return fmt.Sprintf("Device(%v)", d.target)
+	if name := d.HardwareVersion().Parse().ProductName; name != "" {
+		return fmt.Sprintf("%s(%v)", name, d.Target())
+	}
+	return fmt.Sprintf("Device(%v)", d.Target())
 }
 
 func (d *device) Target() Target {
