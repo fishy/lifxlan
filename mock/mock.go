@@ -18,6 +18,75 @@ const ListenAddr = "127.0.0.1:"
 // Target is the mocked device target.
 const Target lifxlan.Target = 1
 
+// HandlerFunc defines the handler function.
+type HandlerFunc func(s *Service, conn net.PacketConn, addr net.Addr, orig *lifxlan.Response)
+
+// DefaultHandlerFunc is the default HandlerFunc to be used when it's not in the
+// handlerMap.
+func DefaultHandlerFunc(
+	s *Service,
+	conn net.PacketConn,
+	addr net.Addr,
+	orig *lifxlan.Response,
+) {
+	switch orig.Message {
+	default:
+		s.TB.Logf("Ignoring unknown message %v", orig.Message)
+
+	case lifxlan.GetLabel:
+		buf := new(bytes.Buffer)
+		if err := binary.Write(
+			buf,
+			binary.LittleEndian,
+			s.RawStateLabelPayload,
+		); err != nil {
+			s.TB.Log(err)
+			return
+		}
+		s.Reply(conn, addr, orig, lifxlan.StateLabel, buf.Bytes())
+
+	case lifxlan.GetVersion:
+		buf := new(bytes.Buffer)
+		if err := binary.Write(
+			buf,
+			binary.LittleEndian,
+			s.RawStateVersionPayload,
+		); err != nil {
+			s.TB.Log(err)
+			return
+		}
+		s.Reply(conn, addr, orig, lifxlan.StateVersion, buf.Bytes())
+
+	case tile.GetDeviceChain:
+		buf := new(bytes.Buffer)
+		if err := binary.Write(
+			buf,
+			binary.LittleEndian,
+			s.RawStateDeviceChainPayload,
+		); err != nil {
+			s.TB.Log(err)
+			return
+		}
+		s.Reply(conn, addr, orig, tile.StateDeviceChain, buf.Bytes())
+
+	case tile.GetTileState64:
+		for _, payload := range s.RawStateTileState64Payloads {
+			buf := new(bytes.Buffer)
+			if err := binary.Write(
+				buf,
+				binary.LittleEndian,
+				payload,
+			); err != nil {
+				s.TB.Log(err)
+				return
+			}
+			s.Reply(conn, addr, orig, tile.StateTileState64, buf.Bytes())
+		}
+	}
+}
+
+var _ HandlerFunc = DefaultHandlerFunc
+
 // Service is a mocked device listening on localhost.
 //
 // All service functions require TB to be non-nil, or they will panic.
@@ -29,7 +98,18 @@ type Service struct {
 	// the ack won't be send and AcksToDrop will decrease by 1.
 	AcksToDrop int
 
-	// Payloads to response.
+	// Any custom HandlerFunc to be used besides DefaultHandlerFunc.
+	Handlers map[lifxlan.MessageType]HandlerFunc
+
+	// If HandlerAcks is false, AcksToDrop is ignored and you have to handle acks
+	// in your custom HandlerFunc.
+	//
+	// Please note that DefaultHandlerFunc doesn't handle acks.
+	//
+	// StartService sets HandleAcks to true.
+	HandleAcks bool
+
+	// Payloads to response with DefaultHandlerFunc.
 	RawStateLabelPayload        *lifxlan.RawStateLabelPayload
 	RawStateVersionPayload      *lifxlan.RawStateVersionPayload
 	RawStateDeviceChainPayload  *tile.RawStateDeviceChainPayload
@@ -50,7 +130,9 @@ func StartService(tb testing.TB) (*Service, lifxlan.Device) {
 	tb.Helper()
 
 	s := &Service{
-		TB: tb,
+		TB:         tb,
+		Handlers:   make(map[lifxlan.MessageType]HandlerFunc),
+		HandleAcks: true,
 	}
 	return s, s.Start()
 }
@@ -162,79 +244,30 @@ func (s *Service) handler(conn net.PacketConn) {
 			continue
 		}
 
-		resp, err := lifxlan.ParseResponse(buf[:n])
+		orig, err := lifxlan.ParseResponse(buf[:n])
 		if err != nil {
 			s.TB.Log(err)
 			continue
 		}
 
-		if !resp.Target.Matches(Target) {
-			s.TB.Logf("Ignoring unmatched target %v", resp.Target)
+		if !orig.Target.Matches(Target) {
+			s.TB.Logf("Ignoring unmatched target %v", orig.Target)
 			continue
 		}
 
-		if resp.Flags|lifxlan.FlagAckRequired != 0 {
+		if orig.Flags|lifxlan.FlagAckRequired != 0 && s.HandleAcks {
 			if s.AcksToDrop > 0 {
 				s.AcksToDrop--
 			} else {
-				s.Reply(conn, addr, resp, lifxlan.Acknowledgement, nil)
+				s.Reply(conn, addr, orig, lifxlan.Acknowledgement, nil)
 			}
 		}
 
-		switch resp.Message {
-		default:
-			s.TB.Logf("Ignoring unknown message %v", resp.Message)
-			continue
-
-		case lifxlan.GetLabel:
-			buf := new(bytes.Buffer)
-			if err := binary.Write(
-				buf,
-				binary.LittleEndian,
-				s.RawStateLabelPayload,
-			); err != nil {
-				s.TB.Log(err)
-				continue
-			}
-			s.Reply(conn, addr, resp, lifxlan.StateLabel, buf.Bytes())
-
-		case lifxlan.GetVersion:
-			buf := new(bytes.Buffer)
-			if err := binary.Write(
-				buf,
-				binary.LittleEndian,
-				s.RawStateVersionPayload,
-			); err != nil {
-				s.TB.Log(err)
-				continue
-			}
-			s.Reply(conn, addr, resp, lifxlan.StateVersion, buf.Bytes())
-
-		case tile.GetDeviceChain:
-			buf := new(bytes.Buffer)
-			if err := binary.Write(
-				buf,
-				binary.LittleEndian,
-				s.RawStateDeviceChainPayload,
-			); err != nil {
-				s.TB.Log(err)
-				continue
-			}
-			s.Reply(conn, addr, resp, tile.StateDeviceChain, buf.Bytes())
-
-		case tile.GetTileState64:
-			for _, payload := range s.RawStateTileState64Payloads {
-				buf := new(bytes.Buffer)
-				if err := binary.Write(
-					buf,
-					binary.LittleEndian,
-					payload,
-				); err != nil {
-					s.TB.Log(err)
-					continue
-				}
-				s.Reply(conn, addr, resp, tile.StateTileState64, buf.Bytes())
-			}
+		handler := s.Handlers[orig.Message]
+		if handler == nil {
+			handler = DefaultHandlerFunc
 		}
+
+		handler(s, conn, addr, orig)
 	}
 }

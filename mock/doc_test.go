@@ -1,7 +1,10 @@
 package mock_test
 
 import (
+	"bytes"
 	"context"
+	"encoding/binary"
+	"net"
 	"testing"
 	"time"
 
@@ -30,6 +33,56 @@ func Example_testGetLabel() {
 			// This is the payload to be returned by the mock service.
 			service.RawStateLabelPayload = &lifxlan.RawStateLabelPayload{
 				Label: expected,
+			}
+
+			ctx, cancel := context.WithTimeout(context.Background(), timeout)
+			defer cancel()
+
+			if err := device.GetLabel(ctx, nil); err != nil {
+				t.Fatal(err)
+			}
+			if device.Label().String() != expected.String() {
+				t.Errorf("Label expected %v, got %v", expected, device.Label())
+			}
+		},
+	)
+}
+
+// This example demonstrates how to mock a response with custom HandlerFunc.
+func Example_testGetLabelWithHandlerFunc() {
+	var t *testing.T
+	t.Run(
+		"GetLabel",
+		func(t *testing.T) {
+			if testing.Short() {
+				t.Skip("skipping test in short mode.")
+			}
+
+			const timeout = time.Millisecond * 200
+
+			var expected lifxlan.RawLabel
+			expected.Set("foo")
+
+			service, device := mock.StartService(t)
+			defer service.Stop()
+
+			// This defines the handler for GetLabel messages.
+			service.Handlers[lifxlan.GetLabel] = func(
+				s *mock.Service,
+				conn net.PacketConn,
+				addr net.Addr,
+				orig *lifxlan.Response,
+			) {
+				buf := new(bytes.Buffer)
+				if err := binary.Write(
+					buf,
+					binary.LittleEndian,
+					expected,
+				); err != nil {
+					s.TB.Log(err)
+					return
+				}
+				s.Reply(conn, addr, orig, lifxlan.StateLabel, buf.Bytes())
 			}
 
 			ctx, cancel := context.WithTimeout(context.Background(), timeout)
