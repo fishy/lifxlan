@@ -33,6 +33,18 @@ func DefaultHandlerFunc(
 	default:
 		s.TB.Logf("Ignoring unknown message %v", orig.Message)
 
+	case lifxlan.GetPower:
+		buf := new(bytes.Buffer)
+		if err := binary.Write(
+			buf,
+			binary.LittleEndian,
+			s.RawStatePowerPayload,
+		); err != nil {
+			s.TB.Log(err)
+			return
+		}
+		s.Reply(conn, addr, orig, lifxlan.StatePower, buf.Bytes())
+
 	case lifxlan.GetLabel:
 		buf := new(bytes.Buffer)
 		if err := binary.Write(
@@ -110,6 +122,7 @@ type Service struct {
 	HandleAcks bool
 
 	// Payloads to response with DefaultHandlerFunc.
+	RawStatePowerPayload        *lifxlan.RawStatePowerPayload
 	RawStateLabelPayload        *lifxlan.RawStateLabelPayload
 	RawStateVersionPayload      *lifxlan.RawStateVersionPayload
 	RawStateDeviceChainPayload  *tile.RawStateDeviceChainPayload

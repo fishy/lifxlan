@@ -8,6 +8,9 @@ const (
 	Acknowledgement MessageType = 45
 	GetService                  = 2
 	StateService                = 3
+	GetPower                    = 20
+	StatePower                  = 22
+	SetPower                    = 21
 	GetLabel                    = 23
 	StateLabel                  = 25
 	GetVersion                  = 32

@@ -95,6 +95,28 @@ type Device interface {
 	// it uses default boundaries (see doc for Color.Sanitize).
 	SanitizeColor(color Color) Color
 
+	// GetPower returns the current power level of the device.
+	//
+	// If conn is nil,
+	// a new connection will be made and guaranteed to be closed before returning.
+	// You should pre-dial and pass in the conn if you plan to call APIs on this
+	// device repeatedly.
+	GetPower(ctx context.Context, conn net.Conn) (Power, error)
+	// SetPower sets the power level of the device.
+	// (Turn it on or off.)
+	//
+	// If conn is nil,
+	// a new connection will be made and guaranteed to be closed before returning.
+	// You should pre-dial and pass in the conn if you plan to call APIs on this
+	// device repeatedly.
+	//
+	// If ack is false,
+	// this function returns nil error after the API is sent successfully.
+	// If ack is true,
+	// this function will only return nil error after it received ack from the
+	// device.
+	SetPower(ctx context.Context, conn net.Conn, power Power, ack bool) error
+
 	// The label of the device.
 	Label() *Label
 	GetLabel(ctx context.Context, conn net.Conn) error
