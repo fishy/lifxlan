@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/fishy/lifxlan"
 	"github.com/fishy/lifxlan/tile"
 )
 
@@ -66,6 +67,27 @@ func draw(td tile.Device, img image.Image) {
 	}
 	defer conn.Close()
 
+	power, err := func() (lifxlan.Power, error) {
+		ctx, cancel := context.WithTimeout(context.Background(), *drawTimeout*2)
+		defer cancel()
+
+		power, err := td.GetPower(ctx, conn)
+		if err != nil {
+			return 0, err
+		}
+
+		if !power.On() && *turnon {
+			err = td.SetPower(ctx, conn, lifxlan.PowerOn, true)
+		}
+		return power, err
+	}()
+	if err != nil {
+		log.Fatal(err)
+	}
+	if !power.On() && !*turnon {
+		log.Fatalf("Device is currently %v, exiting...", power)
+	}
+
 	var origCB tile.ColorBoard
 	if !*loop && !*still {
 		func() {
@@ -121,6 +143,20 @@ func draw(td tile.Device, img image.Image) {
 		}
 	}
 
+	if !power.On() {
+		for {
+			if err := func() error {
+				ctx, cancel := context.WithTimeout(context.Background(), *drawTimeout)
+				defer cancel()
+				return td.SetPower(ctx, conn, power, true)
+			}(); err != nil {
+				log.Printf("Failed to turn device %v, retrying... %v", power, err)
+			} else {
+				break
+			}
+		}
+	}
+
 	for {
 		if err := func() error {
 			ctx, cancel := context.WithTimeout(context.Background(), *drawTimeout)
@@ -129,7 +165,7 @@ func draw(td tile.Device, img image.Image) {
 		}(); err != nil {
 			log.Printf("Failed to set original colors, retrying... %v", err)
 		} else {
-			return
+			break
 		}
 	}
 }

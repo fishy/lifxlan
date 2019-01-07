@@ -64,6 +64,12 @@ var (
 		"Shrink the picture to fully fit inside the tile boundaries and display still instead of scrolling (ignore loop and interval args).",
 	)
 
+	turnon = flag.Bool(
+		"turnon",
+		false,
+		"Turn on the device if it's not already on, and turn it off afterwards (when no loop and still args specified).",
+	)
+
 	target lifxlan.Target
 )
 
