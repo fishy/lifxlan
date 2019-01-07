@@ -5,27 +5,22 @@ import (
 	"time"
 )
 
-// msPerSecond is the number of milliseconds per second (1000).
-//
-// It's of the type time.Duration so in most cases you need to cast it.
-const msPerSecond = time.Second / time.Millisecond
-
 // Timestamp is the type used in messages to represent a timestamp.
 //
-// It's defined as milliseconds since UNIX EPOCH.
+// It's defined as nanoseconds since UNIX EPOCH.
 type Timestamp uint64
 
 // ConvertTime converts a time.Time into Timestamp.
 func ConvertTime(t time.Time) Timestamp {
 	return Timestamp(
-		t.Unix()*int64(msPerSecond) + int64(t.Nanosecond())/int64(time.Millisecond),
+		uint64(t.Unix())*uint64(time.Second) + uint64(t.Nanosecond()),
 	)
 }
 
 // Time converts a Timestamp into time.Time.
 func (ts Timestamp) Time() time.Time {
-	sec := uint64(ts) / uint64(msPerSecond)
-	nano := uint64(ts) % uint64(msPerSecond) * uint64(time.Millisecond)
+	sec := uint64(ts) / uint64(time.Second)
+	nano := uint64(ts) % uint64(time.Second)
 	return time.Unix(int64(sec), int64(nano))
 }
 

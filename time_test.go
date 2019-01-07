@@ -22,7 +22,7 @@ func TestTime(t *testing.T) {
 			n++
 			sec := int64(rander.Int31())
 			nano := int64(rander.Intn(int(time.Second)))
-			t := time.Unix(sec, nano).Round(time.Millisecond)
+			t := time.Unix(sec, nano)
 			ts := lifxlan.ConvertTime(t)
 			got := ts.Time()
 			if !got.Equal(t) {
