@@ -62,8 +62,8 @@ func (td *device) String() string {
 	if label := td.Label().String(); label != lifxlan.EmptyLabel {
 		return fmt.Sprintf("%s(%v)", label, td.Target())
 	}
-	if name := td.HardwareVersion().Parse().ProductName; name != "" {
-		return fmt.Sprintf("%s(%v)", name, td.Target())
+	if parsed := td.HardwareVersion().Parse(); parsed != nil {
+		return fmt.Sprintf("%s(%v)", parsed.ProductName, td.Target())
 	}
 	return fmt.Sprintf("TileDevice(%v)", td.Target())
 }

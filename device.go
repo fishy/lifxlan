@@ -140,8 +140,8 @@ func (d *device) String() string {
 	if label := d.Label().String(); label != EmptyLabel {
 		return fmt.Sprintf("%s(%v)", label, d.Target())
 	}
-	if name := d.HardwareVersion().Parse().ProductName; name != "" {
-		return fmt.Sprintf("%s(%v)", name, d.Target())
+	if parsed := d.HardwareVersion().Parse(); parsed != nil {
+		return fmt.Sprintf("%s(%v)", parsed.ProductName, d.Target())
 	}
 	return fmt.Sprintf("Device(%v)", d.Target())
 }
