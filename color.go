@@ -21,10 +21,10 @@ var ColorBlack = *FromColor(color.Black, 0)
 // Color value boundaries and constants.
 const (
 	KelvinWarm uint16 = 2500
-	KelvinCool        = 9000
+	KelvinCool uint16 = 9000
 
-	KelvinMin = KelvinWarm
-	KelvinMax = KelvinCool
+	KelvinMin uint16 = KelvinWarm
+	KelvinMax uint16 = KelvinCool
 )
 
 // Sanitize tries to sanitize the color values to keep them within appropriate

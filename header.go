@@ -30,7 +30,7 @@ type TaggedHeader uint16
 // Tagged and non-tagged versions of TaggedHeader.
 const (
 	NotTagged TaggedHeader = 1<<12 + 1024
-	Tagged                 = 1<<13 + NotTagged
+	Tagged    TaggedHeader = 1<<13 + NotTagged
 )
 
 // AckResFlag is the 8-bit header that could include:
