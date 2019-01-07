@@ -60,6 +60,12 @@ var (
 		"The Kelvin value of the color, in range of [2500, 9000].",
 	)
 
+	turnon = flag.Bool(
+		"turnon",
+		false,
+		"Turn on the device if it's not already on, and turn it off afterwards (when no loop args specified).",
+	)
+
 	origColor = flagColor{0xff, 0xff, 0xff}
 
 	target lifxlan.Target
