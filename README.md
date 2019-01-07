@@ -48,3 +48,7 @@ there are also some example command line apps under the `examples` directory:
 
 - [`tile-pix`](examples/tile-pix/): Draw a picture on a
   [LIFX Tile device](https://www.lifx.com/products/lifx-tile).
+
+## License
+
+[BSD License](https://github.com/fishy/lifxlan/blob/master/LICENSE).
