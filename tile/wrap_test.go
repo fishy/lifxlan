@@ -100,10 +100,6 @@ func TestWrap(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if td == nil {
-				t.Fatal("nil device returned")
-			}
-
 			if td.Width() != 8 || td.Height() != 8 {
 				t.Errorf("Got wrong size: %dx%d", td.Width(), td.Height())
 			}
@@ -137,10 +133,6 @@ func TestWrap(t *testing.T) {
 						t.Fatal(err)
 					}
 
-					if td == nil {
-						t.Fatal("nil device returned")
-					}
-
 					if !reflect.DeepEqual(*td.HardwareVersion(), expectedVersion1) {
 						t.Errorf(
 							"td.HardwareVersion expected %v, got %v",
@@ -168,10 +160,6 @@ func TestWrap(t *testing.T) {
 					td, err := tile.Wrap(ctx, td, true)
 					if err != nil {
 						t.Fatal(err)
-					}
-
-					if td == nil {
-						t.Fatal("nil device returned")
 					}
 
 					if !reflect.DeepEqual(*td.HardwareVersion(), expectedVersion2) {

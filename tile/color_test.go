@@ -263,9 +263,6 @@ func TestColorsAPIs(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if td == nil {
-		t.Fatal("Can't mock tile device.")
-	}
 
 	stateColor1 := tile.RawStateTileState64Payload{
 		TileIndex: 0,

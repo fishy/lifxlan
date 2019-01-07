@@ -17,8 +17,7 @@ import (
 // and only return a non-nil Device if it supports the API.
 //
 // If the device is not a tile device,
-// the function might return nil Device and nil error.
-// The function might also block until ctx is cancelled.
+// the function might block until ctx is cancelled.
 //
 // When returning a valid tile device,
 // the device's HardwareVersion is guaranteed to be cached.
