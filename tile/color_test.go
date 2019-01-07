@@ -232,7 +232,7 @@ func TestColorsAPIs(t *testing.T) {
 	service, device := mock.StartService(t)
 	defer service.Stop()
 
-	version := lifxlan.RawHardwareVersion{
+	version := lifxlan.HardwareVersion{
 		VendorID:        1,
 		ProductID:       2,
 		HardwareVersion: 1,

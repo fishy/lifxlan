@@ -96,11 +96,11 @@ type Device interface {
 	SanitizeColor(color Color) Color
 
 	// The label of the device.
-	Label() *RawLabel
+	Label() *Label
 	GetLabel(ctx context.Context, conn net.Conn) error
 
 	// The hardware version info of the device.
-	HardwareVersion() *RawHardwareVersion
+	HardwareVersion() *HardwareVersion
 	GetHardwareVersion(ctx context.Context, conn net.Conn) error
 }
 
@@ -119,8 +119,8 @@ type device struct {
 	sequence uint32
 
 	// Cached properties.
-	label   RawLabel
-	version RawHardwareVersion
+	label   Label
+	version HardwareVersion
 }
 
 // NewDevice creates a new Device.

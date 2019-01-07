@@ -24,7 +24,7 @@ type RawTileDevice struct {
 	Width           uint8
 	Height          uint8
 	_               uint8 // reserved
-	HardwareVersion lifxlan.RawHardwareVersion
+	HardwareVersion lifxlan.HardwareVersion
 	_               uint64 // firmware_build
 	_               uint64 // reserved
 	_               uint32 // firmware_version

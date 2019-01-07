@@ -25,7 +25,7 @@ func Example_testGetLabel() {
 
 			const timeout = time.Millisecond * 200
 
-			var expected lifxlan.RawLabel
+			var expected lifxlan.Label
 			expected.Set("foo")
 
 			service, device := mock.StartService(t)
@@ -60,7 +60,7 @@ func Example_testGetLabelWithHandlerFunc() {
 
 			const timeout = time.Millisecond * 200
 
-			var expected lifxlan.RawLabel
+			var expected lifxlan.Label
 			expected.Set("foo")
 
 			service, device := mock.StartService(t)

@@ -11,7 +11,7 @@ import (
 // EmptyLabel is the constant to be compared against Device.Label().String().
 const EmptyLabel = ""
 
-func (d *device) Label() *RawLabel {
+func (d *device) Label() *Label {
 	return &d.label
 }
 
@@ -19,20 +19,20 @@ func (d *device) Label() *RawLabel {
 //
 // https://lan.developer.lifx.com/v2.0/docs/device-messages#section-statelabel-25
 type RawStateLabelPayload struct {
-	Label RawLabel
+	Label Label
 }
 
-// RawLabelLength is the length of the raw label used in messages.
-const RawLabelLength = 32
+// LabelLength is the length of the raw label used in messages.
+const LabelLength = 32
 
-// RawLabel defines raw label in message payloads according to:
+// Label defines raw label in message payloads according to:
 //
 // https://lan.developer.lifx.com/v2.0/docs/device-messages#section-labels
-type RawLabel [RawLabelLength]byte
+type Label [LabelLength]byte
 
-var _ flag.Getter = (*RawLabel)(nil)
+var _ flag.Getter = (*Label)(nil)
 
-func (l RawLabel) String() string {
+func (l Label) String() string {
 	index := bytes.IndexByte(l[:], 0)
 	if index < 0 {
 		return string(l[:])
@@ -40,13 +40,13 @@ func (l RawLabel) String() string {
 	return string(l[:index])
 }
 
-// Set encodes label into RawLabel.
+// Set encodes label into Label.
 //
 // Long labels will be truncated. This function always return nil error.
 //
 // It also implements flag.Value interface.
-func (l *RawLabel) Set(label string) error {
-	for i := 0; i < RawLabelLength; i++ {
+func (l *Label) Set(label string) error {
+	for i := 0; i < LabelLength; i++ {
 		l[i] = 0
 	}
 	copy((*l)[:], label)
@@ -54,7 +54,7 @@ func (l *RawLabel) Set(label string) error {
 }
 
 // Get implements flag.Getter interface.
-func (l RawLabel) Get() interface{} {
+func (l Label) Get() interface{} {
 	return l
 }
 

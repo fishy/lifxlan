@@ -26,7 +26,7 @@ func TestVersion(t *testing.T) {
 	t.Run(
 		"Found",
 		func(t *testing.T) {
-			raw := &lifxlan.RawHardwareVersion{
+			raw := &lifxlan.HardwareVersion{
 				VendorID:        1,
 				ProductID:       1,
 				HardwareVersion: 1,
@@ -51,7 +51,7 @@ func TestVersion(t *testing.T) {
 	t.Run(
 		"NotFound",
 		func(t *testing.T) {
-			raw := &lifxlan.RawHardwareVersion{
+			raw := &lifxlan.HardwareVersion{
 				VendorID:        1,
 				ProductID:       2,
 				HardwareVersion: 1,
@@ -70,7 +70,7 @@ func TestVersion(t *testing.T) {
 }
 
 func TestEmptyHardwareVersion(t *testing.T) {
-	var version lifxlan.RawHardwareVersion
+	var version lifxlan.HardwareVersion
 	s := version.String()
 	if s != lifxlan.EmptyHardwareVersion {
 		t.Errorf("Expected %q, got %q", lifxlan.EmptyHardwareVersion, s)
@@ -85,7 +85,7 @@ func TestGetHardwareVersion(t *testing.T) {
 	const timeout = time.Millisecond * 200
 
 	mockProductMap(t)
-	expected := lifxlan.RawHardwareVersion{
+	expected := lifxlan.HardwareVersion{
 		VendorID:        1,
 		ProductID:       1,
 		HardwareVersion: 1,

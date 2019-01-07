@@ -18,7 +18,7 @@ const EmptyHardwareVersion = "(0, 0, 0)"
 //
 // https://lan.developer.lifx.com/v2.0/docs/device-messages#section-stateversion-33
 type RawStateVersionPayload struct {
-	Version RawHardwareVersion
+	Version HardwareVersion
 }
 
 // ProductMapKey generates key for ProductMap based on vendor and product ids.
@@ -41,27 +41,27 @@ type ParsedHardwareVersion struct {
 	MaxKelvin uint16
 
 	// Embedded raw info.
-	Raw RawHardwareVersion
+	Raw HardwareVersion
 }
 
-// RawHardwareVersion defines raw version info in message payloads according to:
+// HardwareVersion defines raw version info in message payloads according to:
 //
 // https://lan.developer.lifx.com/v2.0/docs/device-messages#section-stateversion-33
-type RawHardwareVersion struct {
+type HardwareVersion struct {
 	VendorID        uint32
 	ProductID       uint32
 	HardwareVersion uint32
 }
 
 // ProductMapKey generates key for ProductMap.
-func (raw RawHardwareVersion) ProductMapKey() uint64 {
+func (raw HardwareVersion) ProductMapKey() uint64 {
 	return ProductMapKey(raw.VendorID, raw.ProductID)
 }
 
 // Parse parses the raw hardware version info by looking up ProductMap.
 //
 // If this hardware version info is not in ProductMap, nil will be returned.
-func (raw RawHardwareVersion) Parse() *ParsedHardwareVersion {
+func (raw HardwareVersion) Parse() *ParsedHardwareVersion {
 	parsed, ok := ProductMap[raw.ProductMapKey()]
 	if !ok {
 		return nil
@@ -70,7 +70,7 @@ func (raw RawHardwareVersion) Parse() *ParsedHardwareVersion {
 	return &parsed
 }
 
-func (raw RawHardwareVersion) String() string {
+func (raw HardwareVersion) String() string {
 	var sb strings.Builder
 	parsed := raw.Parse()
 	if parsed != nil {
@@ -87,7 +87,7 @@ func (raw RawHardwareVersion) String() string {
 	return sb.String()
 }
 
-func (d *device) HardwareVersion() *RawHardwareVersion {
+func (d *device) HardwareVersion() *HardwareVersion {
 	return &d.version
 }
 

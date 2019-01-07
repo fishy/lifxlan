@@ -43,7 +43,7 @@ func TestWrap(t *testing.T) {
 
 	rawEmpty := &tile.RawStateDeviceChainPayload{}
 
-	expectedVersion1 := lifxlan.RawHardwareVersion{
+	expectedVersion1 := lifxlan.HardwareVersion{
 		VendorID:        1,
 		ProductID:       1,
 		HardwareVersion: 1,
@@ -58,7 +58,7 @@ func TestWrap(t *testing.T) {
 	}
 	rawOne1.TileDevices[0] = rawTile1
 
-	expectedVersion2 := lifxlan.RawHardwareVersion{
+	expectedVersion2 := lifxlan.HardwareVersion{
 		VendorID:        1,
 		ProductID:       2,
 		HardwareVersion: 1,
