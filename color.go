@@ -28,7 +28,7 @@ const (
 )
 
 // Sanitize tries to sanitize the color values to keep them within appropriate
-// boundaries.
+// boundaries, based on default boundaries.
 func (c *Color) Sanitize() {
 	if c.Kelvin < KelvinMin {
 		c.Kelvin = KelvinMin
@@ -36,6 +36,22 @@ func (c *Color) Sanitize() {
 	if c.Kelvin > KelvinMax {
 		c.Kelvin = KelvinMax
 	}
+}
+
+func (d *device) SanitizeColor(color Color) Color {
+	ret := color
+	parsed := d.version.Parse()
+	if parsed == nil {
+		ret.Sanitize()
+	} else {
+		if ret.Kelvin < parsed.MinKelvin {
+			ret.Kelvin = parsed.MinKelvin
+		}
+		if ret.Kelvin > parsed.MaxKelvin {
+			ret.Kelvin = parsed.MaxKelvin
+		}
+	}
+	return ret
 }
 
 // FromColor converts a standard library color into HSBK color.
@@ -115,6 +131,5 @@ func FromColor(c color.Color, kelvin uint16) *Color {
 		Brightness: uint16(math.Round(float64(cmax) / rgbBase * sbRate)),
 		Kelvin:     kelvin,
 	}
-	ret.Sanitize()
 	return &ret
 }

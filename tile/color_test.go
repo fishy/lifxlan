@@ -1,8 +1,12 @@
 package tile_test
 
 import (
+	"bytes"
 	"context"
+	"encoding/binary"
+	"image/color"
 	"math/rand"
+	"net"
 	"reflect"
 	"testing"
 	"testing/quick"
@@ -221,18 +225,28 @@ func TestColorsAPIs(t *testing.T) {
 		t.Skip("skipping test in short mode.")
 	}
 
+	mockProductMap(t)
+
 	const timeout = time.Millisecond * 200
 
 	service, device := mock.StartService(t)
 	defer service.Stop()
+
+	version := lifxlan.RawHardwareVersion{
+		VendorID:        1,
+		ProductID:       2,
+		HardwareVersion: 1,
+	}
 	rawTile1 := tile.RawTileDevice{
-		Width:  8,
-		Height: 8,
+		Width:           8,
+		Height:          8,
+		HardwareVersion: version,
 	}
 	rawTile2 := tile.RawTileDevice{
-		UserX:  1,
-		Width:  8,
-		Height: 8,
+		UserX:           1,
+		Width:           8,
+		Height:          8,
+		HardwareVersion: version,
 	}
 	rawChain := &tile.RawStateDeviceChainPayload{
 		TotalCount: 2,
@@ -334,10 +348,60 @@ func TestColorsAPIs(t *testing.T) {
 				func(t *testing.T) {
 					service.AcksToDrop = 0
 
+					service.Handlers[tile.SetTileState64] = func(
+						_ *mock.Service,
+						_ net.PacketConn,
+						_ net.Addr,
+						orig *lifxlan.Response,
+					) {
+						var raw tile.RawSetTileState64Payload
+						r := bytes.NewReader(orig.Payload)
+						if err := binary.Read(r, binary.LittleEndian, &raw); err != nil {
+							t.Fatal(err)
+						}
+						parsed := td.HardwareVersion().Parse()
+						if parsed == nil {
+							t.Fatal("No hardware version cached")
+						}
+						for x, row := range raw.Colors {
+							for y := range row {
+								k := raw.Colors[x][y].Kelvin
+								if k < parsed.MinKelvin || k > parsed.MaxKelvin {
+									t.Errorf(
+										"Color(%d, %d) not sanitized: %+v",
+										x,
+										y,
+										raw.Colors[x][y],
+									)
+								}
+							}
+						}
+						if t.Failed() {
+							t.Logf("Parsed hardware version: %+v", *parsed)
+						}
+					}
+
 					ctx, cancel := context.WithTimeout(context.Background(), timeout)
 					defer cancel()
 
-					if err := td.SetColors(ctx, nil, nil, 0, true); err != nil {
+					cb := tile.MakeColorBoard(td.Width(), td.Height())
+					var x, y int
+
+					x = 0
+					y = 0
+					if !td.OnTile(x, y) {
+						t.Errorf("(%d, %d) not on tile.", x, y)
+					}
+					cb[x][y] = lifxlan.FromColor(color.White, 0)
+
+					x = 1
+					y = 1
+					if !td.OnTile(x, y) {
+						t.Errorf("(%d, %d) not on tile.", x, y)
+					}
+					cb[x][y] = lifxlan.FromColor(color.White, 65535)
+
+					if err := td.SetColors(ctx, nil, cb, 0, true); err != nil {
 						t.Error(err)
 					}
 				},

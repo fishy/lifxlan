@@ -23,7 +23,8 @@ func mockProductMap(t *testing.T) {
 			ProductName: "Boo",
 			Color:       true,
 			Chain:       true,
-			MinKelvin:   0,
+			MinKelvin:   100,
+			MaxKelvin:   200,
 		},
 	}
 }

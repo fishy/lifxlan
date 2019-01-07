@@ -91,6 +91,7 @@ func (td *device) SetColors(
 	}
 
 	payloads := make([]*RawSetTileState64Payload, len(td.tiles))
+	sanitizedBlack := td.SanitizeColor(lifxlan.ColorBlack)
 	for i := range payloads {
 		payloads[i] = &RawSetTileState64Payload{
 			TileIndex: td.startIndex + uint8(i),
@@ -101,7 +102,7 @@ func (td *device) SetColors(
 		// Init with all black colors.
 		for j, colorArray := range payloads[i].Colors {
 			for k := range colorArray {
-				payloads[i].Colors[j][k] = lifxlan.ColorBlack
+				payloads[i].Colors[j][k] = sanitizedBlack
 			}
 		}
 	}
@@ -114,7 +115,7 @@ func (td *device) SetColors(
 					// Not on tile
 					continue
 				}
-				payloads[data.Index].Colors[data.X][data.Y] = *c
+				payloads[data.Index].Colors[data.X][data.Y] = td.SanitizeColor(*c)
 			}
 		}
 	}

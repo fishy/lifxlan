@@ -88,6 +88,13 @@ type Device interface {
 	// The sequence used in this message will be returned.
 	Send(ctx context.Context, conn net.Conn, flags AckResFlag, message MessageType, payload []byte) (seq uint8, err error)
 
+	// SanitizeColor tries to sanitize (keep values inside appropriate boundaries)
+	// color based on the device's hardware version, if available.
+	//
+	// If the device's hardware version was never fetched and cached,
+	// it uses default boundaries (see doc for Color.Sanitize).
+	SanitizeColor(color Color) Color
+
 	// The label of the device.
 	Label() *RawLabel
 	GetLabel(ctx context.Context, conn net.Conn) error
