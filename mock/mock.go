@@ -255,6 +255,13 @@ func (s *Service) handler(conn net.PacketConn) {
 			continue
 		}
 
+		handler := s.Handlers[orig.Message]
+		if handler == nil {
+			handler = DefaultHandlerFunc
+		}
+
+		handler(s, conn, addr, orig)
+
 		if orig.Flags|lifxlan.FlagAckRequired != 0 && s.HandleAcks {
 			if s.AcksToDrop > 0 {
 				s.AcksToDrop--
@@ -262,12 +269,5 @@ func (s *Service) handler(conn net.PacketConn) {
 				s.Reply(conn, addr, orig, lifxlan.Acknowledgement, nil)
 			}
 		}
-
-		handler := s.Handlers[orig.Message]
-		if handler == nil {
-			handler = DefaultHandlerFunc
-		}
-
-		handler(s, conn, addr, orig)
 	}
 }
