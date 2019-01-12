@@ -150,19 +150,14 @@ func (d *device) SetPower(
 		flags |= FlagAckRequired
 	}
 
-	payload := RawSetPowerPayload{
-		Level: power,
-	}
-	buf := new(bytes.Buffer)
-	if err := binary.Write(buf, binary.LittleEndian, payload); err != nil {
-		return err
-	}
 	seq, err := d.Send(
 		ctx,
 		conn,
 		flags,
 		SetPower,
-		buf.Bytes(),
+		&RawSetPowerPayload{
+			Level: power,
+		},
 	)
 	if err != nil {
 		return err

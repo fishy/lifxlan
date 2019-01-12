@@ -86,7 +86,7 @@ type Device interface {
 	// fill the appropriate headers.
 	//
 	// The sequence used in this message will be returned.
-	Send(ctx context.Context, conn net.Conn, flags AckResFlag, message MessageType, payload []byte) (seq uint8, err error)
+	Send(ctx context.Context, conn net.Conn, flags AckResFlag, message MessageType, payload interface{}) (seq uint8, err error)
 
 	// SanitizeColor tries to sanitize (keep values inside appropriate boundaries)
 	// color based on the device's hardware version, if available.

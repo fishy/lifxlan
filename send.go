@@ -1,7 +1,9 @@
 package lifxlan
 
 import (
+	"bytes"
 	"context"
+	"encoding/binary"
 	"fmt"
 	"net"
 )
@@ -11,7 +13,7 @@ func (d *device) Send(
 	conn net.Conn,
 	flags AckResFlag,
 	message MessageType,
-	payload []byte,
+	payload interface{},
 ) (seq uint8, err error) {
 	select {
 	default:
@@ -22,6 +24,12 @@ func (d *device) Send(
 
 	var msg []byte
 	seq = d.NextSequence()
+	buf := new(bytes.Buffer)
+	if payload != nil {
+		if err = binary.Write(buf, binary.LittleEndian, payload); err != nil {
+			return
+		}
+	}
 	msg, err = GenerateMessage(
 		NotTagged,
 		d.Source(),
@@ -29,7 +37,7 @@ func (d *device) Send(
 		flags,
 		seq,
 		message,
-		payload,
+		buf.Bytes(),
 	)
 	if err != nil {
 		return

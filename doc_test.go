@@ -95,16 +95,12 @@ func Example_sendMessageWithAck() {
 		log.Fatal(ctx.Err())
 	}
 
-	buf := new(bytes.Buffer)
-	if err := binary.Write(buf, binary.LittleEndian, payload); err != nil {
-		log.Fatal(err)
-	}
 	seq, err := device.Send(
 		ctx,
 		conn,
 		lifxlan.FlagAckRequired,
 		message,
-		buf.Bytes(), // could be nil if this message doesn't need payload.
+		&payload, // could be nil if this message doesn't need payload.
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -148,22 +144,18 @@ func Example_sendMessageWithResponse() {
 		log.Fatal(ctx.Err())
 	}
 
-	buf := new(bytes.Buffer)
-	if err := binary.Write(buf, binary.LittleEndian, payload); err != nil {
-		log.Fatal(err)
-	}
 	seq, err := device.Send(
 		ctx,
 		conn,
 		0, // flags, not requiring ack because this message will get a response.
 		message,
-		buf.Bytes(), // could be nil if this message doesn't need payload.
+		&payload, // could be nil if this message doesn't need payload.
 	)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	respBuf := make([]byte, lifxlan.ResponseReadBufferSize)
+	buf := make([]byte, lifxlan.ResponseReadBufferSize)
 	for {
 		select {
 		default:
@@ -175,7 +167,7 @@ func Example_sendMessageWithResponse() {
 			log.Fatal(err)
 		}
 
-		n, err := conn.Read(respBuf)
+		n, err := conn.Read(buf)
 		if err != nil {
 			if lifxlan.CheckTimeoutError(err) {
 				continue
@@ -183,7 +175,7 @@ func Example_sendMessageWithResponse() {
 			log.Fatal(err)
 		}
 
-		resp, err := lifxlan.ParseResponse(respBuf[:n])
+		resp, err := lifxlan.ParseResponse(buf[:n])
 		if err != nil {
 			log.Fatal(err)
 		}

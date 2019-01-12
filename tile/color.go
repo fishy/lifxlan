@@ -132,17 +132,12 @@ func (td *device) SetColors(
 	for _, payload := range payloads {
 		go func(payload *RawSetTileState64Payload) {
 			defer wg.Done()
-			buf := new(bytes.Buffer)
-			if err := binary.Write(buf, binary.LittleEndian, payload); err != nil {
-				errChan <- err
-				return
-			}
 			seq, err := td.Send(
 				ctx,
 				conn,
 				flags,
 				SetTileState64,
-				buf.Bytes(),
+				payload,
 			)
 			if err != nil {
 				errChan <- err
@@ -233,28 +228,23 @@ func (td *device) GetColors(
 	}
 
 	// Send
-	payload := &RawGetTileState64Payload{
-		TileIndex: td.startIndex,
-		Length:    uint8(len(td.tiles)),
-		Width:     TileState64Width,
-	}
-	buf := new(bytes.Buffer)
-	if err := binary.Write(buf, binary.LittleEndian, payload); err != nil {
-		return nil, err
-	}
 	seq, err := td.Send(
 		ctx,
 		conn,
 		0, // flags
 		GetTileState64,
-		buf.Bytes(),
+		&RawGetTileState64Payload{
+			TileIndex: td.startIndex,
+			Length:    uint8(len(td.tiles)),
+			Width:     TileState64Width,
+		},
 	)
 	if err != nil {
 		return nil, err
 	}
 
 	// Read responses
-	respBuf := make([]byte, lifxlan.ResponseReadBufferSize)
+	buf := make([]byte, lifxlan.ResponseReadBufferSize)
 	received := make([]int, len(td.tiles))
 	cb := MakeColorBoard(td.Width(), td.Height())
 	for {
@@ -268,7 +258,7 @@ func (td *device) GetColors(
 			return nil, err
 		}
 
-		n, err := conn.Read(respBuf)
+		n, err := conn.Read(buf)
 		if err != nil {
 			if lifxlan.CheckTimeoutError(err) {
 				continue
@@ -276,7 +266,7 @@ func (td *device) GetColors(
 			return nil, err
 		}
 
-		resp, err := lifxlan.ParseResponse(respBuf[:n])
+		resp, err := lifxlan.ParseResponse(buf[:n])
 		if err != nil {
 			return nil, err
 		}
