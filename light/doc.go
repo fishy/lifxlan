@@ -1,4 +1,4 @@
-// Package light implements LIFX LAN Protocol for LIFX Tile devices:
+// Package light implements LIFX LAN Protocol for LIFX light devices:
 //
 // https://lan.developer.lifx.com/v2.0/docs/light-messages
 //
