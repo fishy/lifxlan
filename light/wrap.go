@@ -8,7 +8,7 @@ import (
 
 // Wrap tries to wrap a lifxlan.Device into a light device.
 //
-// When force is false and d is already a tile device,
+// When force is false and d is already a light device,
 // d will be casted and returned directly.
 // Otherwise, this function might call a device API to determine whether it's a
 // light device.
