@@ -7,11 +7,12 @@ import (
 	"time"
 
 	"github.com/fishy/lifxlan"
+	"github.com/fishy/lifxlan/light"
 )
 
 // Device is a wrapped lifxlan.Device that provides tile related APIs.
 type Device interface {
-	lifxlan.Device
+	light.Device
 
 	Board
 
@@ -47,7 +48,7 @@ type Device interface {
 }
 
 type device struct {
-	lifxlan.Device
+	light.Device
 
 	startIndex uint8
 	tiles      []*Tile

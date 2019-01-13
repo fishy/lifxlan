@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/fishy/lifxlan"
+	"github.com/fishy/lifxlan/light"
 	"github.com/fishy/lifxlan/tile"
 )
 
@@ -69,6 +70,18 @@ func DefaultHandlerFunc(
 		}
 		s.Reply(conn, addr, orig, lifxlan.StateVersion, buf.Bytes())
 
+	case light.Get:
+		buf := new(bytes.Buffer)
+		if err := binary.Write(
+			buf,
+			binary.LittleEndian,
+			s.RawStatePayload,
+		); err != nil {
+			s.TB.Log(err)
+			return
+		}
+		s.Reply(conn, addr, orig, light.State, buf.Bytes())
+
 	case tile.GetDeviceChain:
 		buf := new(bytes.Buffer)
 		if err := binary.Write(
@@ -125,6 +138,7 @@ type Service struct {
 	RawStatePowerPayload        *lifxlan.RawStatePowerPayload
 	RawStateLabelPayload        *lifxlan.RawStateLabelPayload
 	RawStateVersionPayload      *lifxlan.RawStateVersionPayload
+	RawStatePayload             *light.RawStatePayload
 	RawStateDeviceChainPayload  *tile.RawStateDeviceChainPayload
 	RawStateTileState64Payloads []*tile.RawStateTileState64Payload
 

@@ -7,6 +7,7 @@ import (
 	"errors"
 
 	"github.com/fishy/lifxlan"
+	"github.com/fishy/lifxlan/light"
 )
 
 // Wrap tries to wrap a lifxlan.Device into a tile device.
@@ -32,6 +33,11 @@ func Wrap(ctx context.Context, d lifxlan.Device, force bool) (Device, error) {
 		if t, ok := d.(Device); ok {
 			return t, nil
 		}
+	}
+
+	ld, err := light.Wrap(ctx, d, force)
+	if err != nil {
+		return nil, err
 	}
 
 	conn, err := d.Dial()
@@ -98,7 +104,7 @@ func Wrap(ctx context.Context, d lifxlan.Device, force bool) (Device, error) {
 		}
 		*d.HardwareVersion() = raw.TileDevices[int(raw.StartIndex)].HardwareVersion
 		td := &device{
-			Device:     d,
+			Device:     ld,
 			startIndex: raw.StartIndex,
 			tiles:      make([]*Tile, raw.TotalCount),
 		}
