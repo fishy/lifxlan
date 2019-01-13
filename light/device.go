@@ -34,6 +34,11 @@ type Device interface {
 	// this function will only return nil error after it received ack from the
 	// device.
 	SetColor(ctx context.Context, conn net.Conn, color *lifxlan.Color, transition time.Duration, ack bool) error
+
+	// SetWaveform sends SetWaveformOptional message as defined in
+	//
+	// https://lan.developer.lifx.com/docs/light-messages#section-setwaveformoptional-119
+	SetWaveform(ctx context.Context, conn net.Conn, args *SetWaveformArgs, ack bool) error
 }
 
 type device struct {
