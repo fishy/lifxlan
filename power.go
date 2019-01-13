@@ -70,27 +70,8 @@ func (d *device) GetPower(ctx context.Context, conn net.Conn) (Power, error) {
 		return 0, err
 	}
 
-	buf := make([]byte, ResponseReadBufferSize)
 	for {
-		select {
-		default:
-		case <-ctx.Done():
-			return 0, ctx.Err()
-		}
-
-		if err := conn.SetReadDeadline(GetReadDeadline()); err != nil {
-			return 0, err
-		}
-
-		n, err := conn.Read(buf)
-		if err != nil {
-			if CheckTimeoutError(err) {
-				continue
-			}
-			return 0, err
-		}
-
-		resp, err := ParseResponse(buf[:n])
+		resp, err := ReadNextResponse(ctx, conn)
 		if err != nil {
 			return 0, err
 		}

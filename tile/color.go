@@ -244,29 +244,10 @@ func (td *device) GetColors(
 	}
 
 	// Read responses
-	buf := make([]byte, lifxlan.ResponseReadBufferSize)
 	received := make([]int, len(td.tiles))
 	cb := MakeColorBoard(td.Width(), td.Height())
 	for {
-		select {
-		default:
-		case <-ctx.Done():
-			return nil, ctx.Err()
-		}
-
-		if err := conn.SetReadDeadline(lifxlan.GetReadDeadline()); err != nil {
-			return nil, err
-		}
-
-		n, err := conn.Read(buf)
-		if err != nil {
-			if lifxlan.CheckTimeoutError(err) {
-				continue
-			}
-			return nil, err
-		}
-
-		resp, err := lifxlan.ParseResponse(buf[:n])
+		resp, err := lifxlan.ReadNextResponse(ctx, conn)
 		if err != nil {
 			return nil, err
 		}
@@ -301,7 +282,7 @@ func (td *device) GetColors(
 			}
 		}
 
-		n = 0
+		n := 0
 		for _, rec := range received {
 			n += rec
 		}

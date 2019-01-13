@@ -122,27 +122,8 @@ func (ld *device) GetColor(
 	}
 
 	// Read
-	buf := make([]byte, lifxlan.ResponseReadBufferSize)
 	for {
-		select {
-		default:
-		case <-ctx.Done():
-			return nil, ctx.Err()
-		}
-
-		if err := conn.SetReadDeadline(lifxlan.GetReadDeadline()); err != nil {
-			return nil, err
-		}
-
-		n, err := conn.Read(buf)
-		if err != nil {
-			if lifxlan.CheckTimeoutError(err) {
-				continue
-			}
-			return nil, err
-		}
-
-		resp, err := lifxlan.ParseResponse(buf[:n])
+		resp, err := lifxlan.ReadNextResponse(ctx, conn)
 		if err != nil {
 			return nil, err
 		}

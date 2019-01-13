@@ -48,30 +48,8 @@ func WaitForAcks(
 		seqMap[seq] = true
 	}
 
-	buf := make([]byte, ResponseReadBufferSize)
 	for {
-		select {
-		default:
-		case <-ctx.Done():
-			e.Cause = ctx.Err()
-			return e
-		}
-
-		if err := conn.SetReadDeadline(GetReadDeadline()); err != nil {
-			e.Cause = err
-			return e
-		}
-
-		n, err := conn.Read(buf)
-		if err != nil {
-			if CheckTimeoutError(err) {
-				continue
-			}
-			e.Cause = err
-			return e
-		}
-
-		resp, err := ParseResponse(buf[:n])
+		resp, err := ReadNextResponse(ctx, conn)
 		if err != nil {
 			e.Cause = err
 			return e

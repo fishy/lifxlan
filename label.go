@@ -91,27 +91,8 @@ func (d *device) GetLabel(ctx context.Context, conn net.Conn) error {
 		return err
 	}
 
-	buf := make([]byte, ResponseReadBufferSize)
 	for {
-		select {
-		default:
-		case <-ctx.Done():
-			return ctx.Err()
-		}
-
-		if err := conn.SetReadDeadline(GetReadDeadline()); err != nil {
-			return err
-		}
-
-		n, err := conn.Read(buf)
-		if err != nil {
-			if CheckTimeoutError(err) {
-				continue
-			}
-			return err
-		}
-
-		resp, err := ParseResponse(buf[:n])
+		resp, err := ReadNextResponse(ctx, conn)
 		if err != nil {
 			return err
 		}

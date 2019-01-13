@@ -155,27 +155,8 @@ func Example_sendMessageWithResponse() {
 		log.Fatal(err)
 	}
 
-	buf := make([]byte, lifxlan.ResponseReadBufferSize)
 	for {
-		select {
-		default:
-		case <-ctx.Done():
-			log.Fatal(err)
-		}
-
-		if err := conn.SetReadDeadline(lifxlan.GetReadDeadline()); err != nil {
-			log.Fatal(err)
-		}
-
-		n, err := conn.Read(buf)
-		if err != nil {
-			if lifxlan.CheckTimeoutError(err) {
-				continue
-			}
-			log.Fatal(err)
-		}
-
-		resp, err := lifxlan.ParseResponse(buf[:n])
+		resp, err := lifxlan.ReadNextResponse(ctx, conn)
 		if err != nil {
 			log.Fatal(err)
 		}
