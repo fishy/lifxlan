@@ -9,7 +9,7 @@ import (
 	"github.com/fishy/lifxlan/light"
 )
 
-// This example demonstrates how to set color on a tile device.
+// This example demonstrates how to set color on a light device.
 func Example() {
 	// Need proper initialization on real code.
 	var (
