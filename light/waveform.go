@@ -153,7 +153,7 @@ func (ld *device) SetWaveform(
 			Color:         ld.SanitizeColor(*args.Color),
 			Period:        lifxlan.ConvertDuration(args.Period),
 			Cycles:        args.Cycles,
-			SkewRatio:     ConvertSkewRatio(1 - args.SkewRatio),
+			SkewRatio:     ConvertSkewRatio(args.SkewRatio),
 			Waveform:      args.Waveform,
 			SetHue:        Bool2Uint8(!args.KeepHue),
 			SetSaturation: Bool2Uint8(!args.KeepSaturation),
