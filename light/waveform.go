@@ -47,7 +47,7 @@ func Bool2Uint8(b bool) BoolUint8 {
 
 // ConvertSkewRatio scales [0, 1] into [-32768, 32767].
 func ConvertSkewRatio(v float64) int16 {
-	return int16(int64(math.Round(v*float64(math.MaxUint16))) - 32768)
+	return int16(int64(math.Floor((v - 0.5) * float64(math.MaxUint16))))
 }
 
 // RawSetWaveformOptionalPayload defines the struct to be used for encoding and
