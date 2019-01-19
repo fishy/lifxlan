@@ -1,3 +1,14 @@
+// Command gen-product-map is the helper tool to generate lifxlan ProductMap.
+//
+// To install it:
+//
+//     go get -u github.com/fishy/lifxlan/cmd/gen-product-map
+//
+// To run it:
+//
+//     gen-product-map >> product_map.go
+//
+// Then manally update the file to remove previous value.
 package main
 
 import (

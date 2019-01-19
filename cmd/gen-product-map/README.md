@@ -1,6 +1,6 @@
 # gen-product-map
 
-This is the helper function to help generate 
+This is the helper tool to generate
 [`ProductMap`](https://godoc.org/github.com/fishy/lifxlan#pkg-variables)
 defined in
 [`product_map.go`](https://github.com/fishy/lifxlan/blob/master/product_map.go).
