@@ -40,14 +40,8 @@ The API is unstable right now, but I try very hard not to break them.
 
 Besides
 [examples on GoDoc](https://godoc.org/github.com/fishy/lifxlan#pkg-examples),
-there are also some example command line apps under the `examples` directory:
-
-- [`tile-game-of-life`](examples/tile-game-of-life/): Draw
-  [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
-  on a [LIFX Tile device](https://www.lifx.com/products/lifx-tile).
-
-- [`tile-pix`](examples/tile-pix/): Draw a picture on a
-  [LIFX Tile device](https://www.lifx.com/products/lifx-tile).
+there are also some example command line apps in
+[`lifxlan-examples`](https://github.com/fishy/lifxlan-examples) repository.
 
 ## License
 
