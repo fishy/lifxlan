@@ -267,16 +267,6 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MinKelvin:   2500,
 		MaxKelvin:   9000,
 	},
-	ProductMapKey(1, 56): {
-		VendorName:  "LIFX",
-		ProductName: "LIFX Beam",
-		Color:       true,
-		Infrared:    false,
-		MultiZone:   true,
-		Chain:       false,
-		MinKelvin:   2500,
-		MaxKelvin:   9000,
-	},
 	ProductMapKey(1, 59): {
 		VendorName:  "LIFX",
 		ProductName: "LIFX Mini Color",
