@@ -30,6 +30,7 @@ var data []struct {
 			Infrared         bool     `json:"infrared"`
 			MultiZone        bool     `json:"multizone"`
 			Chain            bool     `json:"chain"`
+			Matrix           bool     `json:"matrix"`
 			TemperatureRange []uint16 `json:"temperature_range"`
 		} `json:"features"`
 	} `json:"products"`
@@ -74,6 +75,7 @@ func main() {
 			fmt.Printf("\t\tInfrared:    %v,\n", product.Features.Infrared)
 			fmt.Printf("\t\tMultiZone:   %v,\n", product.Features.MultiZone)
 			fmt.Printf("\t\tChain:       %v,\n", product.Features.Chain)
+			fmt.Printf("\t\tMatrix:      %v,\n", product.Features.Matrix)
 			fmt.Printf("\t\tMinKelvin:   %v,\n", product.Features.TemperatureRange[0])
 			fmt.Printf("\t\tMaxKelvin:   %v,\n", product.Features.TemperatureRange[1])
 			fmt.Printf("\t},\n")

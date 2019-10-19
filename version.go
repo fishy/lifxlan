@@ -36,6 +36,7 @@ type ParsedHardwareVersion struct {
 	Infrared  bool
 	MultiZone bool
 	Chain     bool
+	Matrix    bool
 	// Both values are inclusive.
 	MinKelvin uint16
 	MaxKelvin uint16
