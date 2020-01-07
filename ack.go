@@ -85,3 +85,8 @@ func (e *WaitForAcksError) Error() string {
 		e.Cause,
 	)
 }
+
+// Unwrap returns the underlying error.
+func (e *WaitForAcksError) Unwrap() error {
+	return e.Cause
+}
