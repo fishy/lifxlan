@@ -300,7 +300,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MultiZone:   false,
 		Chain:       false,
 		Matrix:      true,
-		MinKelvin:   2500,
+		MinKelvin:   1500,
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 59): {
@@ -388,7 +388,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MultiZone:   false,
 		Chain:       false,
 		Matrix:      true,
-		MinKelvin:   2500,
+		MinKelvin:   1500,
 		MaxKelvin:   9000,
 	},
 	ProductMapKey(1, 81): {
@@ -399,7 +399,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MultiZone:   false,
 		Chain:       false,
 		Matrix:      true,
-		MinKelvin:   2500,
+		MinKelvin:   2200,
 		MaxKelvin:   6500,
 	},
 	ProductMapKey(1, 82): {
