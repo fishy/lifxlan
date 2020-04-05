@@ -398,7 +398,7 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		Infrared:    false,
 		MultiZone:   false,
 		Chain:       false,
-		Matrix:      true,
+		Matrix:      false,
 		MinKelvin:   2200,
 		MaxKelvin:   6500,
 	},
