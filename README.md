@@ -1,4 +1,4 @@
-[![GoDoc](https://godoc.org/github.com/fishy/lifxlan?status.svg)](https://godoc.org/github.com/fishy/lifxlan)
+[![GoDoc](https://godoc.org/github.com/fishy/lifxlan?status.svg)](https://pkg.go.dev/github.com/fishy/lifxlan)
 [![Go Report Card](https://goreportcard.com/badge/github.com/fishy/lifxlan)](https://goreportcard.com/report/github.com/fishy/lifxlan)
 
 # LIFX LAN
@@ -28,10 +28,10 @@ The reason is that at the time of writing,
 although there are several Go projects implemented LIFX LAN Protocol available,
 none of them support tile APIs.
 Please refer to
-[`tile` subpackage on GoDoc](https://godoc.org/github.com/fishy/lifxlan/tile)
+[`tile` subpackage on GoDoc](https://pkg.go.dev/github.com/fishy/lifxlan/tile)
 for more details.
 
-All API with (potential) I/O calls takes a [context](https://godoc.org/context)
+All API with (potential) I/O calls takes a [context](https://pkg.go.dev/context)
 arg and checks for (and in most cases, relies on) context cancellations.
 
 The API is unstable right now, but I try very hard not to break them.
@@ -39,7 +39,7 @@ The API is unstable right now, but I try very hard not to break them.
 ## Examples
 
 Besides
-[examples on GoDoc](https://godoc.org/github.com/fishy/lifxlan#pkg-examples),
+[examples on GoDoc](https://pkg.go.dev/github.com/fishy/lifxlan#pkg-examples),
 there are also some example command line apps in
 [`lifxlan-examples`](https://github.com/fishy/lifxlan-examples) repository.
 

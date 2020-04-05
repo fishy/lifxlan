@@ -77,7 +77,7 @@ type SetWaveformArgs struct {
 	// The target color.
 	Color *lifxlan.Color
 
-	// Duratino of a cycle.
+	// Duration of a cycle.
 	Period time.Duration
 
 	// Number of cycles.
@@ -96,8 +96,8 @@ type SetWaveformArgs struct {
 	// For example the current color has H 255, S 255, B 255 and K 255,
 	// and the target color has H 0, S 0, B 0, K 0.
 	// When KeepHue is false and all else are true,
-	// Only H will be changed during the S, B, and K won't be changed during the
-	// waveform.
+	// Only H will be changed during the waveform,
+	// S, B, and K won't be changed.
 	//
 	// Please note this is the reverse of the set_* definitions of
 	// RawSetWaveformOptionalPayload.
