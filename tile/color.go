@@ -25,14 +25,6 @@ func MakeColorBoard(width, height int) ColorBoard {
 	return cb
 }
 
-// TileState64Width is the width value to be used in *TileState64 messages.
-//
-// Please note that in most cases we try to avoid hardcoding the tile width and
-// height, and use the values returned by StateDeviceChain message instead.
-// But for *TileState64 messages it only makes sense to hardcode them,
-// as the colors array is hardcoded as size of 64.
-const TileState64Width = 8
-
 // GetColor returns the color at the given coordinate.
 //
 // If the given coordinate is out of boundary, nil color will be returned.
@@ -59,7 +51,7 @@ type RawSetTileState64Payload struct {
 	Y         uint8
 	Width     uint8
 	Duration  lifxlan.TransitionTime
-	Colors    [TileState64Width][TileState64Width]lifxlan.Color
+	Colors    [64]lifxlan.Color
 }
 
 func (td *device) SetColors(
@@ -96,14 +88,12 @@ func (td *device) SetColors(
 		payloads[i] = &RawSetTileState64Payload{
 			TileIndex: td.startIndex + uint8(i),
 			Length:    1,
-			Width:     TileState64Width,
+			Width:     uint8(td.TileWidth(i)),
 			Duration:  lifxlan.ConvertDuration(transition),
 		}
 		// Init with all black colors.
-		for j, colorArray := range payloads[i].Colors {
-			for k := range colorArray {
-				payloads[i].Colors[j][k] = sanitizedBlack
-			}
+		for j := range payloads[i].Colors {
+			payloads[i].Colors[j] = sanitizedBlack
 		}
 	}
 
@@ -115,7 +105,8 @@ func (td *device) SetColors(
 					// Not on tile
 					continue
 				}
-				payloads[data.Index].Colors[data.X][data.Y] = td.SanitizeColor(*c)
+				colorIndex := data.X*int(td.TileWidth(data.Index)) + data.Y
+				payloads[data.Index].Colors[colorIndex] = td.SanitizeColor(*c)
 			}
 		}
 	}
@@ -199,7 +190,7 @@ type RawStateTileState64Payload struct {
 	X         uint8
 	Y         uint8
 	Width     uint8
-	Colors    [TileState64Width][TileState64Width]lifxlan.Color
+	Colors    [64]lifxlan.Color
 }
 
 func (td *device) GetColors(
@@ -236,7 +227,7 @@ func (td *device) GetColors(
 		&RawGetTileState64Payload{
 			TileIndex: td.startIndex,
 			Length:    uint8(len(td.tiles)),
-			Width:     TileState64Width,
+			Width:     uint8(td.TileWidth(0)),
 		},
 	)
 	if err != nil {
@@ -269,16 +260,10 @@ func (td *device) GetColors(
 		received[ti] = 1
 		tile := td.tiles[ti]
 		for x := 0; x < int(tile.Width); x++ {
-			if x >= TileState64Width {
-				continue
-			}
 			for y := 0; y < int(tile.Height); y++ {
-				if y >= TileState64Width {
-					continue
-				}
 				// c is the coordinate on the color board.
 				c := td.board.ReverseData[ti][x][y]
-				cb[c.X][c.Y] = &raw.Colors[x][y]
+				cb[c.X][c.Y] = &raw.Colors[x*int(tile.Width)+y]
 			}
 		}
 

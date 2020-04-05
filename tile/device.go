@@ -45,6 +45,12 @@ type Device interface {
 	// this function will only return nil error after it received all ack(s) from
 	// the device.
 	SetColors(ctx context.Context, conn net.Conn, cb ColorBoard, transition time.Duration, ack bool) error
+
+	// TileWidth returns the width of the i-th tile.
+	//
+	// If i is out of bound, it returns the width of the first tile (index 0)
+	// instead. If there's no known tiles, it returns 0.
+	TileWidth(i int) uint8
 }
 
 type device struct {
@@ -75,4 +81,14 @@ func (td *device) Tiles() []Tile {
 		tiles[i] = *td.tiles[i]
 	}
 	return tiles
+}
+
+func (td *device) TileWidth(i int) uint8 {
+	if len(td.tiles) == 0 {
+		return 0
+	}
+	if i < 0 || i >= len(td.tiles) {
+		i = 0
+	}
+	return td.tiles[i].Width
 }

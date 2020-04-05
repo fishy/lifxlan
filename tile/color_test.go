@@ -268,10 +268,8 @@ func TestColorsAPIs(t *testing.T) {
 		TileIndex: 0,
 		Width:     8,
 	}
-	for x, row := range stateColor1.Colors {
-		for y := range row {
-			stateColor1.Colors[x][y] = lifxlan.ColorBlack
-		}
+	for i := range stateColor1.Colors {
+		stateColor1.Colors[i] = lifxlan.ColorBlack
 	}
 	stateColor2 := stateColor1
 	stateColor2.TileIndex = 1
@@ -360,17 +358,14 @@ func TestColorsAPIs(t *testing.T) {
 						if parsed == nil {
 							t.Fatal("No hardware version cached")
 						}
-						for x, row := range raw.Colors {
-							for y := range row {
-								k := raw.Colors[x][y].Kelvin
-								if k < parsed.MinKelvin || k > parsed.MaxKelvin {
-									t.Errorf(
-										"Color(%d, %d) not sanitized: %+v",
-										x,
-										y,
-										raw.Colors[x][y],
-									)
-								}
+						for i := range raw.Colors {
+							k := raw.Colors[i].Kelvin
+							if k < parsed.MinKelvin || k > parsed.MaxKelvin {
+								t.Errorf(
+									"Color(%d) not sanitized: %+v",
+									i,
+									raw.Colors[i],
+								)
 							}
 						}
 						if t.Failed() {
