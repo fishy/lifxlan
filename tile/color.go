@@ -88,7 +88,7 @@ func (td *device) SetColors(
 		payloads[i] = &RawSetTileState64Payload{
 			TileIndex: td.startIndex + uint8(i),
 			Length:    1,
-			Width:     uint8(td.TileWidth(i)),
+			Width:     td.TileWidth(i),
 			Duration:  lifxlan.ConvertDuration(transition),
 		}
 		// Init with all black colors.
@@ -227,7 +227,7 @@ func (td *device) GetColors(
 		&RawGetTileState64Payload{
 			TileIndex: td.startIndex,
 			Length:    uint8(len(td.tiles)),
-			Width:     uint8(td.TileWidth(0)),
+			Width:     td.TileWidth(0),
 		},
 	)
 	if err != nil {
