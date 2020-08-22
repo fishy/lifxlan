@@ -1,4 +1,4 @@
-[![GoDoc](https://godoc.org/github.com/fishy/lifxlan?status.svg)](https://pkg.go.dev/github.com/fishy/lifxlan)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/fishy/lifxlan)](https://pkg.go.dev/github.com/fishy/lifxlan)
 [![Go Report Card](https://goreportcard.com/badge/github.com/fishy/lifxlan)](https://goreportcard.com/report/github.com/fishy/lifxlan)
 
 # LIFX LAN

@@ -1,4 +1,4 @@
-[![GoDoc](https://godoc.org/github.com/fishy/lifxlan/mock?status.svg)](https://pkg.go.dev/github.com/fishy/lifxlan/mock)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/fishy/lifxlan/mock)](https://pkg.go.dev/github.com/fishy/lifxlan/mock)
 [![Go Report Card](https://goreportcard.com/badge/github.com/fishy/lifxlan)](https://goreportcard.com/report/github.com/fishy/lifxlan)
 
 # LIFX LAN Mocks
