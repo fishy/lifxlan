@@ -47,12 +47,12 @@ type device struct {
 
 var _ Device = (*device)(nil)
 
-func (td *device) String() string {
-	if label := td.Label().String(); label != lifxlan.EmptyLabel {
-		return fmt.Sprintf("%s(%v)", label, td.Target())
+func (ld *device) String() string {
+	if label := ld.Label().String(); label != lifxlan.EmptyLabel {
+		return fmt.Sprintf("%s(%v)", label, ld.Target())
 	}
-	if parsed := td.HardwareVersion().Parse(); parsed != nil {
-		return fmt.Sprintf("%s(%v)", parsed.ProductName, td.Target())
+	if parsed := ld.HardwareVersion().Parse(); parsed != nil {
+		return fmt.Sprintf("%s(%v)", parsed.ProductName, ld.Target())
 	}
-	return fmt.Sprintf("LightDevice(%v)", td.Target())
+	return fmt.Sprintf("LightDevice(%v)", ld.Target())
 }

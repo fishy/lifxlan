@@ -110,6 +110,36 @@ func DefaultHandlerFunc(
 	}
 }
 
+// StateUnhandledHandler generates a HandlerFunc to return StateUnhandled
+// message.
+func StateUnhandledHandler(msg lifxlan.MessageType) HandlerFunc {
+	return func(
+		s *Service,
+		conn net.PacketConn,
+		addr net.Addr,
+		orig *lifxlan.Response,
+	) {
+		switch orig.Message {
+		default:
+			s.TB.Logf("Ignoring unknown message %v", orig.Message)
+
+		case msg:
+			buf := new(bytes.Buffer)
+			if err := binary.Write(
+				buf,
+				binary.LittleEndian,
+				&lifxlan.RawStateUnhandledPayload{
+					UnhandledType: msg,
+				},
+			); err != nil {
+				s.TB.Log(err)
+				return
+			}
+			s.Reply(conn, addr, orig, lifxlan.StateUnhandled, buf.Bytes())
+		}
+	}
+}
+
 var _ HandlerFunc = DefaultHandlerFunc
 
 // Service is a mocked device listening on localhost.

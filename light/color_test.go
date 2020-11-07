@@ -42,8 +42,14 @@ func TestSetColor(t *testing.T) {
 
 	const timeout = time.Millisecond * 200
 
+	var label lifxlan.Label
+	label.Set("foo")
+
 	service, device := mock.StartService(t)
 	defer service.Stop()
+	service.RawStatePayload = &light.RawStatePayload{
+		Label: label,
+	}
 
 	ld, err := func() (light.Device, error) {
 		ctx, cancel := context.WithTimeout(context.Background(), timeout)
@@ -60,8 +66,6 @@ func TestSetColor(t *testing.T) {
 		Brightness: 3,
 		Kelvin:     0,
 	}
-	var label lifxlan.Label
-	label.Set("foo")
 
 	t.Run(
 		"GetColor",

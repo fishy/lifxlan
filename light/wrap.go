@@ -1,7 +1,9 @@
 package light
 
 import (
+	"bytes"
 	"context"
+	"encoding/binary"
 
 	"github.com/fishy/lifxlan"
 )
@@ -10,15 +12,14 @@ import (
 //
 // When force is false and d is already a light device,
 // d will be casted and returned directly.
-// Otherwise, this function might call a device API to determine whether it's a
-// light device.
+// Otherwise, this function calls a light device API,
+// and only returns a non-nil Device if it supports the API.
 //
 // If the device is not a light device,
 // the function might block until ctx is cancelled.
 //
-// Currently all lifx devices are light device,
-// so this function doesn't really call an API and just do a naive wrapping.
-// But that might change in the future so you shouldn't be relying on that.
+// When returning a valid light device,
+// the device's Label is guaranteed to be cached.
 func Wrap(ctx context.Context, d lifxlan.Device, force bool) (Device, error) {
 	select {
 	default:
@@ -32,7 +33,62 @@ func Wrap(ctx context.Context, d lifxlan.Device, force bool) (Device, error) {
 		}
 	}
 
-	return &device{
-		Device: d,
-	}, nil
+	conn, err := d.Dial()
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+
+	select {
+	default:
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	}
+
+	const msg = Get
+
+	seq, err := d.Send(
+		ctx,
+		conn,
+		0, // flags
+		msg,
+		nil, // payload
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	for {
+		resp, err := lifxlan.ReadNextResponse(ctx, conn)
+		if err != nil {
+			return nil, err
+		}
+		if resp.Sequence != seq || resp.Source != d.Source() {
+			continue
+		}
+
+		switch resp.Message {
+		case State:
+			var raw RawStatePayload
+			r := bytes.NewReader(resp.Payload)
+			if err := binary.Read(r, binary.LittleEndian, &raw); err != nil {
+				return nil, err
+			}
+
+			ld := &device{
+				Device: d,
+			}
+			*ld.Label() = raw.Label
+			return ld, nil
+
+		case lifxlan.StateUnhandled:
+			var raw lifxlan.RawStateUnhandledPayload
+			r := bytes.NewReader(resp.Payload)
+			if err := binary.Read(r, binary.LittleEndian, &raw); err != nil {
+				return nil, err
+			}
+
+			return nil, raw.GenerateError(msg)
+		}
+	}
 }

@@ -15,4 +15,5 @@ const (
 	StateLabel      MessageType = 25
 	GetVersion      MessageType = 32
 	StateVersion    MessageType = 33
+	StateUnhandled  MessageType = 223
 )

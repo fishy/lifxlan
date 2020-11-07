@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/fishy/lifxlan"
+	"github.com/fishy/lifxlan/light"
 	"github.com/fishy/lifxlan/mock"
 	"github.com/fishy/lifxlan/tile"
 )
@@ -38,8 +39,14 @@ func TestWrap(t *testing.T) {
 
 	const timeout = time.Millisecond * 200
 
+	var label lifxlan.Label
+	label.Set("foo")
+
 	service, device := mock.StartService(t)
 	defer service.Stop()
+	service.RawStatePayload = &light.RawStatePayload{
+		Label: label,
+	}
 
 	rawEmpty := &tile.RawStateDeviceChainPayload{}
 

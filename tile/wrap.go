@@ -15,7 +15,7 @@ import (
 // When force is false and d is already a tile device,
 // d will be casted and returned directly.
 // Otherwise, this function calls a tile device API,
-// and only return a non-nil Device if it supports the API.
+// and only returns a non-nil Device if it supports the API.
 //
 // If the device is not a tile device,
 // the function might block until ctx is cancelled.
