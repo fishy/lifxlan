@@ -457,6 +457,15 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		MinKelvin:   1500,
 		MaxKelvin:   9000,
 	},
+	ProductMapKey(1, 70): {
+		VendorName:  "LIFX",
+		ProductName: "LIFX Switch",
+		Color:       false,
+		Infrared:    false,
+		MultiZone:   false,
+		Chain:       false,
+		Matrix:      false,
+	},
 	ProductMapKey(1, 81): {
 		VendorName:  "LIFX",
 		ProductName: "LIFX Candle White To Warm",
@@ -511,6 +520,15 @@ var ProductMap = map[uint64]ParsedHardwareVersion{
 		Matrix:      false,
 		MinKelvin:   2700,
 		MaxKelvin:   2700,
+	},
+	ProductMapKey(1, 89): {
+		VendorName:  "LIFX",
+		ProductName: "LIFX Switch",
+		Color:       false,
+		Infrared:    false,
+		MultiZone:   false,
+		Chain:       false,
+		Matrix:      false,
 	},
 	ProductMapKey(1, 90): {
 		VendorName:  "LIFX",

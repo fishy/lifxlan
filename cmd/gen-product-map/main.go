@@ -64,7 +64,8 @@ func main() {
 
 	for _, vendor := range data {
 		for _, product := range vendor.Products {
-			if len(product.Features.TemperatureRange) != 2 {
+			tempLen := len(product.Features.TemperatureRange)
+			if tempLen != 2 && tempLen != 0 {
 				fmt.Fprintf(os.Stderr, "Skipping invalid product info: %+v\n", product)
 				continue
 			}
@@ -76,8 +77,10 @@ func main() {
 			fmt.Printf("\t\tMultiZone:   %v,\n", product.Features.MultiZone)
 			fmt.Printf("\t\tChain:       %v,\n", product.Features.Chain)
 			fmt.Printf("\t\tMatrix:      %v,\n", product.Features.Matrix)
-			fmt.Printf("\t\tMinKelvin:   %v,\n", product.Features.TemperatureRange[0])
-			fmt.Printf("\t\tMaxKelvin:   %v,\n", product.Features.TemperatureRange[1])
+			if tempLen == 2 {
+				fmt.Printf("\t\tMinKelvin:   %v,\n", product.Features.TemperatureRange[0])
+				fmt.Printf("\t\tMaxKelvin:   %v,\n", product.Features.TemperatureRange[1])
+			}
 			fmt.Printf("\t},\n")
 		}
 	}
