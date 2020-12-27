@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fishy/lifxlan"
-	"github.com/fishy/lifxlan/mock"
+	"go.yhsif.com/lifxlan"
+	"go.yhsif.com/lifxlan/mock"
 )
 
 func TestLabel(t *testing.T) {

@@ -2,7 +2,7 @@
 //
 // To install it:
 //
-//     go get -u github.com/fishy/lifxlan/cmd/gen-product-map
+//     go get -u go.yhsif.com/lifxlan/cmd/gen-product-map
 //
 // To run it:
 //

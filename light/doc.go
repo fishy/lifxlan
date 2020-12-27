@@ -3,4 +3,4 @@
 // https://lan.developer.lifx.com/v2.0/docs/light-messages
 //
 // Please refer to its parent package for more background/context.
-package light
+package light // import "go.yhsif.com/lifxlan/light"

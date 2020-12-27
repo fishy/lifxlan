@@ -1,7 +1,7 @@
 package tile
 
 import (
-	"github.com/fishy/lifxlan"
+	"go.yhsif.com/lifxlan"
 )
 
 // Tile related MessageType values.

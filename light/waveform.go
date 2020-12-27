@@ -6,7 +6,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/fishy/lifxlan"
+	"go.yhsif.com/lifxlan"
 )
 
 // Waveform defines the type of the waveform.

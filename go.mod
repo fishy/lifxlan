@@ -1,3 +1,3 @@
-module github.com/fishy/lifxlan
+module go.yhsif.com/lifxlan
 
-go 1.14
+go 1.15

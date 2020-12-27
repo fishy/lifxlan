@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/fishy/lifxlan/tile"
+	"go.yhsif.com/lifxlan/tile"
 )
 
 // To grately reduce typing in test code.

@@ -6,8 +6,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/fishy/lifxlan"
-	"github.com/fishy/lifxlan/light"
+	"go.yhsif.com/lifxlan"
+	"go.yhsif.com/lifxlan/light"
 )
 
 // Device is a wrapped lifxlan.Device that provides tile related APIs.

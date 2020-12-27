@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/fishy/lifxlan/tile"
+	"go.yhsif.com/lifxlan/tile"
 )
 
 func id(i, x, y int) *tile.IndexData {

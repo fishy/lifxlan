@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/fishy/lifxlan/tile"
+	"go.yhsif.com/lifxlan/tile"
 )
 
 // This example demonstrates how to draw a single frame on a tile device.

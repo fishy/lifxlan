@@ -6,7 +6,7 @@ import (
 	"testing/quick"
 	"time"
 
-	"github.com/fishy/lifxlan"
+	"go.yhsif.com/lifxlan"
 )
 
 func TestTime(t *testing.T) {

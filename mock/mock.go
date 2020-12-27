@@ -8,9 +8,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/fishy/lifxlan"
-	"github.com/fishy/lifxlan/light"
-	"github.com/fishy/lifxlan/tile"
+	"go.yhsif.com/lifxlan"
+	"go.yhsif.com/lifxlan/light"
+	"go.yhsif.com/lifxlan/tile"
 )
 
 // ListenAddr is the addr to listen on this device.

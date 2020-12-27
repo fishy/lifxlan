@@ -2,4 +2,4 @@
 // which can be used in test code to test API calls.
 //
 // Please refer to examples to see how to use them in the test code.
-package mock
+package mock // import "go.yhsif.com/lifxlan/mock"

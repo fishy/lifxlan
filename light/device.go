@@ -6,7 +6,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/fishy/lifxlan"
+	"go.yhsif.com/lifxlan"
 )
 
 // Device is a wrapped lifxlan.Device that provides light related APIs.

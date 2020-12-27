@@ -12,10 +12,10 @@ import (
 	"testing/quick"
 	"time"
 
-	"github.com/fishy/lifxlan"
-	"github.com/fishy/lifxlan/light"
-	"github.com/fishy/lifxlan/mock"
-	"github.com/fishy/lifxlan/tile"
+	"go.yhsif.com/lifxlan"
+	"go.yhsif.com/lifxlan/light"
+	"go.yhsif.com/lifxlan/mock"
+	"go.yhsif.com/lifxlan/tile"
 )
 
 func TestColorBoard(t *testing.T) {

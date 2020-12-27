@@ -17,4 +17,4 @@
 //
 // The API is unstable right now,
 // but the maintainer tries very hard not to break them.
-package lifxlan
+package lifxlan // import "go.yhsif.com/lifxlan"

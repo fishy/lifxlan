@@ -1,7 +1,7 @@
 package light
 
 import (
-	"github.com/fishy/lifxlan"
+	"go.yhsif.com/lifxlan"
 )
 
 // Light related MessageType values.

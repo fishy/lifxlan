@@ -7,7 +7,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/fishy/lifxlan"
+	"go.yhsif.com/lifxlan"
 )
 
 // RawSetColorPayload defines the struct to be used for encoding and decoding.
