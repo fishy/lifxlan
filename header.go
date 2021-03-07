@@ -46,7 +46,7 @@ const (
 
 // RawHeader defines the struct to be used for encoding and decoding.
 //
-// https://lan.developer.lifx.com/v2.0/docs/header-description
+// https://lan.developer.lifx.com/docs/header-description
 type RawHeader struct {
 	Size     uint16
 	Tagged   TaggedHeader

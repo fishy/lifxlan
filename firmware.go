@@ -10,7 +10,7 @@ import (
 // RawStateHostFirmwarePayload defines the struct to be used for encoding and
 // decoding.
 //
-// https://lan.developer.lifx.com/v2.0/docs/device-messages#section-stateversion-33
+// https://lan.developer.lifx.com/docs/device-messages#statehostfirmware---15
 type RawStateHostFirmwarePayload struct {
 	_            uint64 // build
 	_            uint64 // reserved

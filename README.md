@@ -4,7 +4,7 @@
 # LIFX LAN
 
 This is a library that provides API implemented in Go for
-[LIFX LAN Protocol](https://lan.developer.lifx.com/v2.0/docs/).
+[LIFX LAN Protocol](https://lan.developer.lifx.com/docs).
 
 ## Overview
 
@@ -23,7 +23,7 @@ capabilities.
 The reason its split into subpackages is to make sure that it's extendible.
 
 The main focus right now is on
-[tile API](https://lan.developer.lifx.com/v2.0/docs/tile-control) support.
+[tile API](https://lan.developer.lifx.com/docs/tile-control) support.
 The reason is that at the time of writing,
 although there are several Go projects implemented LIFX LAN Protocol available,
 none of them support tile APIs.

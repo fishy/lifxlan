@@ -7,7 +7,7 @@ import (
 
 // Color is the HSBK color type used in lifx lan API.
 //
-// https://lan.developer.lifx.com/v2.0/docs/light-messages#section-hsbk
+// https://lan.developer.lifx.com/docs/light-messages#hsbk
 type Color struct {
 	Hue        uint16
 	Saturation uint16

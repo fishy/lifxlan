@@ -11,26 +11,26 @@ import (
 
 // Waveform defines the type of the waveform.
 //
-// https://lan.developer.lifx.com/v2.0/docs/waveforms
+// https://lan.developer.lifx.com/docs/waveforms
 type Waveform uint8
 
 // Waveform values.
 //
-// https://lan.developer.lifx.com/v2.0/docs/waveforms
+// https://lan.developer.lifx.com/docs/waveforms
 const (
-	// https://lan.developer.lifx.com/v2.0/docs/waveforms#section-saw
+	// https://lan.developer.lifx.com/docs/waveforms#section-saw
 	WaveformSaw Waveform = 0
 
-	// https://lan.developer.lifx.com/v2.0/docs/waveforms#section-sine
+	// https://lan.developer.lifx.com/docs/waveforms#section-sine
 	WaveformSine Waveform = 1
 
-	// https://lan.developer.lifx.com/v2.0/docs/waveforms#section-half-sine
+	// https://lan.developer.lifx.com/docs/waveforms#section-half-sine
 	WaveformHalfSine Waveform = 2
 
-	// https://lan.developer.lifx.com/v2.0/docs/waveforms#section-triangle
+	// https://lan.developer.lifx.com/docs/waveforms#section-triangle
 	WaveformTriangle Waveform = 3
 
-	// https://lan.developer.lifx.com/v2.0/docs/waveforms#section-pulse
+	// https://lan.developer.lifx.com/docs/waveforms#section-pulse
 	WaveformPulse Waveform = 4
 )
 
@@ -53,7 +53,7 @@ func ConvertSkewRatio(v float64) int16 {
 // RawSetWaveformOptionalPayload defines the struct to be used for encoding and
 // decoding.
 //
-// https://lan.developer.lifx.com/v2.0/docs/light-messages#section-setwaveformoptional-119
+// https://lan.developer.lifx.com/docs/light-messages#setwaveformoptional---119
 type RawSetWaveformOptionalPayload struct {
 	_             uint8 // reserved
 	Transient     BoolUint8
@@ -88,7 +88,7 @@ type SetWaveformArgs struct {
 
 	// SkewRatio should be in range [0, 1] and it is only used with WaveformPulse.
 	//
-	// https://lan.developer.lifx.com/v2.0/docs/waveforms#section-pulse
+	// https://lan.developer.lifx.com/docs/waveforms#section-pulse
 	SkewRatio float64
 
 	// The color args with Keep* set to true will not be changed.
@@ -103,7 +103,7 @@ type SetWaveformArgs struct {
 	// RawSetWaveformOptionalPayload.
 	// The reason is to make sure that when they are all zero values,
 	// it behaves the same as SetWaveform message as defined in:
-	// https://lan.developer.lifx.com/v2.0/docs/light-messages#section-setwaveform-103
+	// https://lan.developer.lifx.com/docs/light-messages#setwaveform---103
 	KeepHue        bool
 	KeepSaturation bool
 	KeepBrightness bool

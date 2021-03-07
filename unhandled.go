@@ -6,7 +6,7 @@ import (
 
 // RawStateUnhandledPayload defines the struct to be used for encoding and decoding.
 //
-// https://lan.developer.lifx.com/v2.0/docs/the-lifx-switch#section-stateunhandled-223
+// https://lan.developer.lifx.com/docs/the-lifx-switch#stateunhandled---223
 type RawStateUnhandledPayload struct {
 	UnhandledType MessageType
 }

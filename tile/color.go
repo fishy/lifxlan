@@ -42,7 +42,7 @@ func (cb ColorBoard) GetColor(x, y int) *lifxlan.Color {
 // RawSetTileState64Payload defines the struct to be used for encoding and
 // decoding.
 //
-// https://lan.developer.lifx.com/v2.0/docs/tile-messages#section-settilestate64-715
+// https://lan.developer.lifx.com/docs/tile-messages#settilestate64---715
 type RawSetTileState64Payload struct {
 	TileIndex uint8
 	Length    uint8
@@ -170,7 +170,7 @@ func (td *device) SetColors(
 // RawGetTileState64Payload defines the struct to be used for encoding and
 // decoding.
 //
-// https://lan.developer.lifx.com/v2.0/docs/tile-messages#section-gettilestate64-707
+// https://lan.developer.lifx.com/docs/tile-messages#gettilestate64---707
 type RawGetTileState64Payload struct {
 	TileIndex uint8
 	Length    uint8
@@ -183,7 +183,7 @@ type RawGetTileState64Payload struct {
 // RawStateTileState64Payload defines the struct to be used for encoding and
 // decoding.
 //
-// https://lan.developer.lifx.com/v2.0/docs/tile-messages#section-statetilestate64-711
+// https://lan.developer.lifx.com/docs/tile-messages#statetilestate64---711
 type RawStateTileState64Payload struct {
 	TileIndex uint8
 	_         uint8 // reserved

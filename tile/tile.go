@@ -13,7 +13,7 @@ type Coordinate struct {
 
 // RawTileDevice defines the struct to be used for encoding and decoding.
 //
-// https://lan.developer.lifx.com/v2.0/docs/tile-messages#section-tile
+// https://lan.developer.lifx.com/docs/tile-messages#section-tile
 type RawTileDevice struct {
 	AccelMeasX      int16
 	AccelMeasY      int16

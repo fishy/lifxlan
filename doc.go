@@ -1,6 +1,6 @@
 // Package lifxlan provides API implemented in Go for LIFX LAN Protocol:
 //
-// https://lan.developer.lifx.com/v2.0/docs/
+// https://lan.developer.lifx.com/docs/
 //
 // This package focuses on the base stuff, device discovery,
 // and capabilities shared by all types of devices.
