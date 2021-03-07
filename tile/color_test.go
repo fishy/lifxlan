@@ -367,7 +367,7 @@ func TestColorsAPIs(t *testing.T) {
 						}
 						for i := range raw.Colors {
 							k := raw.Colors[i].Kelvin
-							if k < parsed.MinKelvin || k > parsed.MaxKelvin {
+							if k < parsed.Features.TemperatureRange.Min() || k > parsed.Features.TemperatureRange.Max() {
 								t.Errorf(
 									"Color(%d) not sanitized: %+v",
 									i,

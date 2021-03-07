@@ -14,18 +14,27 @@ import (
 
 func mockProductMap(t *testing.T) {
 	t.Helper()
-	lifxlan.ProductMap = map[uint64]lifxlan.ParsedHardwareVersion{
+
+	backupProductMap := lifxlan.ProductMap
+	t.Cleanup(func() {
+		lifxlan.ProductMap = backupProductMap
+	})
+
+	lifxlan.ProductMap = map[uint64]lifxlan.Product{
 		lifxlan.ProductMapKey(1, 1): {
 			ProductName: "Foo",
-			Color:       true,
-			Chain:       true,
+			Features: lifxlan.Features{
+				Color: lifxlan.OptionalBoolPtr(true),
+				Chain: lifxlan.OptionalBoolPtr(true),
+			},
 		},
 		lifxlan.ProductMapKey(1, 2): {
 			ProductName: "Boo",
-			Color:       true,
-			Chain:       true,
-			MinKelvin:   100,
-			MaxKelvin:   200,
+			Features: lifxlan.Features{
+				Color:            lifxlan.OptionalBoolPtr(true),
+				Chain:            lifxlan.OptionalBoolPtr(true),
+				TemperatureRange: lifxlan.TemperatureRange{100, 200},
+			},
 		},
 	}
 }

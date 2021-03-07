@@ -26,25 +26,6 @@ func ProductMapKey(vendor, product uint32) uint64 {
 	return uint64(vendor)<<32 + uint64(product)
 }
 
-// ParsedHardwareVersion is the parsed hardware version info.
-type ParsedHardwareVersion struct {
-	VendorName  string
-	ProductName string
-
-	// Features
-	Color     bool
-	Infrared  bool
-	MultiZone bool
-	Chain     bool
-	Matrix    bool
-	// Both values are inclusive.
-	MinKelvin uint16
-	MaxKelvin uint16
-
-	// Embedded raw info.
-	Raw HardwareVersion
-}
-
 // HardwareVersion defines raw version info in message payloads according to:
 //
 // https://lan.developer.lifx.com/v2.0/docs/device-messages#section-stateversion-33
@@ -62,12 +43,11 @@ func (raw HardwareVersion) ProductMapKey() uint64 {
 // Parse parses the raw hardware version info by looking up ProductMap.
 //
 // If this hardware version info is not in ProductMap, nil will be returned.
-func (raw HardwareVersion) Parse() *ParsedHardwareVersion {
+func (raw HardwareVersion) Parse() *Product {
 	parsed, ok := ProductMap[raw.ProductMapKey()]
 	if !ok {
 		return nil
 	}
-	parsed.Raw = raw
 	return &parsed
 }
 

@@ -12,10 +12,18 @@ import (
 
 func mockProductMap(t *testing.T) {
 	t.Helper()
-	lifxlan.ProductMap = map[uint64]lifxlan.ParsedHardwareVersion{
+
+	backupProductMap := lifxlan.ProductMap
+	t.Cleanup(func() {
+		lifxlan.ProductMap = backupProductMap
+	})
+
+	lifxlan.ProductMap = map[uint64]lifxlan.Product{
 		lifxlan.ProductMapKey(1, 1): {
 			ProductName: "Foo",
-			Color:       true,
+			Features: lifxlan.Features{
+				Color: lifxlan.OptionalBoolPtr(true),
+			},
 		},
 	}
 }
@@ -31,10 +39,11 @@ func TestVersion(t *testing.T) {
 				ProductID:       1,
 				HardwareVersion: 1,
 			}
-			expectedParsed := lifxlan.ParsedHardwareVersion{
+			expectedParsed := lifxlan.Product{
 				ProductName: "Foo",
-				Color:       true,
-				Raw:         *raw,
+				Features: lifxlan.Features{
+					Color: lifxlan.OptionalBoolPtr(true),
+				},
 			}
 			parsed := raw.Parse()
 			if !reflect.DeepEqual(*parsed, expectedParsed) {

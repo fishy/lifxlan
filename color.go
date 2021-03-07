@@ -44,11 +44,11 @@ func (d *device) SanitizeColor(color Color) Color {
 	if parsed == nil {
 		ret.Sanitize()
 	} else {
-		if ret.Kelvin < parsed.MinKelvin {
-			ret.Kelvin = parsed.MinKelvin
+		if min := parsed.FeaturesAt(*d.Firmware()).TemperatureRange.Min(); ret.Kelvin < min {
+			ret.Kelvin = min
 		}
-		if ret.Kelvin > parsed.MaxKelvin {
-			ret.Kelvin = parsed.MaxKelvin
+		if max := parsed.FeaturesAt(*d.Firmware()).TemperatureRange.Max(); ret.Kelvin > max {
+			ret.Kelvin = max
 		}
 	}
 	return ret

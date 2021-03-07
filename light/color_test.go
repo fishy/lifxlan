@@ -16,13 +16,20 @@ import (
 
 func mockProductMap(t *testing.T) {
 	t.Helper()
-	lifxlan.ProductMap = map[uint64]lifxlan.ParsedHardwareVersion{
+
+	backupProductMap := lifxlan.ProductMap
+	t.Cleanup(func() {
+		lifxlan.ProductMap = backupProductMap
+	})
+
+	lifxlan.ProductMap = map[uint64]lifxlan.Product{
 		lifxlan.ProductMapKey(1, 1): {
 			ProductName: "Bar",
-			Color:       true,
-			Chain:       true,
-			MinKelvin:   100,
-			MaxKelvin:   200,
+			Features: lifxlan.Features{
+				Color:            lifxlan.OptionalBoolPtr(true),
+				Chain:            lifxlan.OptionalBoolPtr(true),
+				TemperatureRange: lifxlan.TemperatureRange{100, 200},
+			},
 		},
 	}
 }
@@ -132,7 +139,7 @@ func TestSetColor(t *testing.T) {
 							t.Fatal("No hardware version cached")
 						}
 						k := raw.Color.Kelvin
-						if k < parsed.MinKelvin || k > parsed.MaxKelvin {
+						if k < parsed.Features.TemperatureRange.Min() || k > parsed.Features.TemperatureRange.Max() {
 							t.Errorf("Color not sanitized: %+v", raw.Color)
 						}
 					}

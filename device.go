@@ -89,10 +89,15 @@ type Device interface {
 	Send(ctx context.Context, conn net.Conn, flags AckResFlag, message MessageType, payload interface{}) (seq uint8, err error)
 
 	// SanitizeColor tries to sanitize (keep values inside appropriate boundaries)
-	// color based on the device's hardware version, if available.
+	// color based on the device's feature, if available.
 	//
+	// Both the device's hardware version and firmware version can affect the
+	// boundaries used for sanitization.
 	// If the device's hardware version was never fetched and cached,
 	// it uses default boundaries (see doc for Color.Sanitize).
+	// If the device's firmware version was never fetched and cached,
+	// it uses the hardware's default boundaries (without potential firmware
+	// upgrades).
 	SanitizeColor(color Color) Color
 
 	// GetPower returns the current power level of the device.
@@ -124,6 +129,10 @@ type Device interface {
 	// The hardware version info of the device.
 	HardwareVersion() *HardwareVersion
 	GetHardwareVersion(ctx context.Context, conn net.Conn) error
+
+	// The firmware version of the device.
+	Firmware() *FirmwareUpgrade
+	GetFirmware(ctx context.Context, conn net.Conn) error
 }
 
 var _ Device = (*device)(nil)
@@ -141,8 +150,9 @@ type device struct {
 	sequence uint32
 
 	// Cached properties.
-	label   Label
-	version HardwareVersion
+	label    Label
+	version  HardwareVersion
+	firmware FirmwareUpgrade
 }
 
 // NewDevice creates a new Device.
