@@ -38,9 +38,7 @@ type RawStatePowerPayload struct {
 }
 
 func (d *device) GetPower(ctx context.Context, conn net.Conn) (Power, error) {
-	select {
-	default:
-	case <-ctx.Done():
+	if ctx.Err() != nil {
 		return 0, ctx.Err()
 	}
 
@@ -52,9 +50,7 @@ func (d *device) GetPower(ctx context.Context, conn net.Conn) (Power, error) {
 		defer newConn.Close()
 		conn = newConn
 
-		select {
-		default:
-		case <-ctx.Done():
+		if ctx.Err() != nil {
 			return 0, ctx.Err()
 		}
 	}
@@ -105,9 +101,7 @@ func (d *device) SetPower(
 	power Power,
 	ack bool,
 ) error {
-	select {
-	default:
-	case <-ctx.Done():
+	if ctx.Err() != nil {
 		return ctx.Err()
 	}
 
@@ -119,9 +113,7 @@ func (d *device) SetPower(
 		defer newConn.Close()
 		conn = newConn
 
-		select {
-		default:
-		case <-ctx.Done():
+		if ctx.Err() != nil {
 			return ctx.Err()
 		}
 	}

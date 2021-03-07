@@ -61,9 +61,7 @@ func (td *device) SetColors(
 	transition time.Duration,
 	ack bool,
 ) error {
-	select {
-	default:
-	case <-ctx.Done():
+	if ctx.Err() != nil {
 		return ctx.Err()
 	}
 
@@ -75,9 +73,7 @@ func (td *device) SetColors(
 		defer newConn.Close()
 		conn = newConn
 
-		select {
-		default:
-		case <-ctx.Done():
+		if ctx.Err() != nil {
 			return ctx.Err()
 		}
 	}
@@ -197,9 +193,7 @@ func (td *device) GetColors(
 	ctx context.Context,
 	conn net.Conn,
 ) (ColorBoard, error) {
-	select {
-	default:
-	case <-ctx.Done():
+	if ctx.Err() != nil {
 		return nil, ctx.Err()
 	}
 
@@ -211,9 +205,7 @@ func (td *device) GetColors(
 		defer newConn.Close()
 		conn = newConn
 
-		select {
-		default:
-		case <-ctx.Done():
+		if ctx.Err() != nil {
 			return nil, ctx.Err()
 		}
 	}

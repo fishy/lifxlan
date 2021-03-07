@@ -57,9 +57,7 @@ func Discover(
 ) error {
 	defer close(devices)
 
-	select {
-	default:
-	case <-ctx.Done():
+	if ctx.Err() != nil {
 		return ctx.Err()
 	}
 
@@ -93,9 +91,7 @@ func Discover(
 		return err
 	}
 
-	select {
-	default:
-	case <-ctx.Done():
+	if ctx.Err() != nil {
 		return ctx.Err()
 	}
 
@@ -113,9 +109,7 @@ func Discover(
 
 	buf := make([]byte, ResponseReadBufferSize)
 	for {
-		select {
-		default:
-		case <-ctx.Done():
+		if ctx.Err() != nil {
 			return ctx.Err()
 		}
 

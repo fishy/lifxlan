@@ -26,9 +26,7 @@ func (ld *device) SetColor(
 	transition time.Duration,
 	ack bool,
 ) error {
-	select {
-	default:
-	case <-ctx.Done():
+	if ctx.Err() != nil {
 		return ctx.Err()
 	}
 
@@ -40,9 +38,7 @@ func (ld *device) SetColor(
 		defer newConn.Close()
 		conn = newConn
 
-		select {
-		default:
-		case <-ctx.Done():
+		if ctx.Err() != nil {
 			return ctx.Err()
 		}
 	}
@@ -88,9 +84,7 @@ func (ld *device) GetColor(
 	ctx context.Context,
 	conn net.Conn,
 ) (*lifxlan.Color, error) {
-	select {
-	default:
-	case <-ctx.Done():
+	if ctx.Err() != nil {
 		return nil, ctx.Err()
 	}
 
@@ -102,9 +96,7 @@ func (ld *device) GetColor(
 		defer newConn.Close()
 		conn = newConn
 
-		select {
-		default:
-		case <-ctx.Done():
+		if ctx.Err() != nil {
 			return nil, ctx.Err()
 		}
 	}

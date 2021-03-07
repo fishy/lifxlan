@@ -15,9 +15,7 @@ func (d *device) Send(
 	message MessageType,
 	payload interface{},
 ) (seq uint8, err error) {
-	select {
-	default:
-	case <-ctx.Done():
+	if ctx.Err() != nil {
 		err = ctx.Err()
 		return
 	}
@@ -43,9 +41,7 @@ func (d *device) Send(
 		return
 	}
 
-	select {
-	default:
-	case <-ctx.Done():
+	if ctx.Err() != nil {
 		err = ctx.Err()
 		return
 	}
@@ -64,9 +60,7 @@ func (d *device) Send(
 		return
 	}
 
-	select {
-	default:
-	case <-ctx.Done():
+	if ctx.Err() != nil {
 		err = ctx.Err()
 		return
 	}

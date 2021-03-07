@@ -116,9 +116,7 @@ func (ld *device) SetWaveform(
 	args *SetWaveformArgs,
 	ack bool,
 ) error {
-	select {
-	default:
-	case <-ctx.Done():
+	if ctx.Err() != nil {
 		return ctx.Err()
 	}
 
@@ -130,9 +128,7 @@ func (ld *device) SetWaveform(
 		defer newConn.Close()
 		conn = newConn
 
-		select {
-		default:
-		case <-ctx.Done():
+		if ctx.Err() != nil {
 			return ctx.Err()
 		}
 	}

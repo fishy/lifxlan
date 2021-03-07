@@ -89,9 +89,7 @@ func Example_sendMessageWithAck() {
 	}
 	defer conn.Close()
 
-	select {
-	default:
-	case <-ctx.Done():
+	if ctx.Err() != nil {
 		log.Fatal(ctx.Err())
 	}
 
@@ -138,9 +136,7 @@ func Example_sendMessageWithResponse() {
 	}
 	defer conn.Close()
 
-	select {
-	default:
-	case <-ctx.Done():
+	if ctx.Err() != nil {
 		log.Fatal(ctx.Err())
 	}
 

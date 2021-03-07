@@ -59,9 +59,7 @@ func (l Label) Get() interface{} {
 }
 
 func (d *device) GetLabel(ctx context.Context, conn net.Conn) error {
-	select {
-	default:
-	case <-ctx.Done():
+	if ctx.Err() != nil {
 		return ctx.Err()
 	}
 
@@ -73,9 +71,7 @@ func (d *device) GetLabel(ctx context.Context, conn net.Conn) error {
 		defer newConn.Close()
 		conn = newConn
 
-		select {
-		default:
-		case <-ctx.Done():
+		if ctx.Err() != nil {
 			return ctx.Err()
 		}
 	}

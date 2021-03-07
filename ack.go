@@ -32,9 +32,7 @@ func WaitForAcks(
 	}
 	copy(e.Total, sequences)
 
-	select {
-	default:
-	case <-ctx.Done():
+	if ctx.Err() != nil {
 		e.Cause = ctx.Err()
 		return e
 	}

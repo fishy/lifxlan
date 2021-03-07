@@ -23,9 +23,7 @@ import (
 // When returning a valid tile device,
 // the device's HardwareVersion is guaranteed to be cached.
 func Wrap(ctx context.Context, d lifxlan.Device, force bool) (Device, error) {
-	select {
-	default:
-	case <-ctx.Done():
+	if ctx.Err() != nil {
 		return nil, ctx.Err()
 	}
 
@@ -46,9 +44,7 @@ func Wrap(ctx context.Context, d lifxlan.Device, force bool) (Device, error) {
 	}
 	defer conn.Close()
 
-	select {
-	default:
-	case <-ctx.Done():
+	if ctx.Err() != nil {
 		return nil, ctx.Err()
 	}
 

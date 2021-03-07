@@ -73,9 +73,7 @@ func ParseResponse(msg []byte) (*Response, error) {
 func ReadNextResponse(ctx context.Context, conn net.Conn) (*Response, error) {
 	buf := make([]byte, ResponseReadBufferSize)
 	for {
-		select {
-		default:
-		case <-ctx.Done():
+		if ctx.Err() != nil {
 			return nil, ctx.Err()
 		}
 
