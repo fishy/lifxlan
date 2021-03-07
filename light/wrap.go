@@ -87,8 +87,7 @@ func Wrap(ctx context.Context, d lifxlan.Device, force bool) (Device, error) {
 			if err := binary.Read(r, binary.LittleEndian, &raw); err != nil {
 				return nil, err
 			}
-
-			return nil, raw.GenerateError(msg)
+			return nil, raw
 		}
 	}
 }

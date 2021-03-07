@@ -11,17 +11,9 @@ type RawStateUnhandledPayload struct {
 	UnhandledType MessageType
 }
 
-// GenerateError generates an error regarding this unhandled message.
-func (p RawStateUnhandledPayload) GenerateError(expected MessageType) error {
-	if expected == p.UnhandledType {
-		return fmt.Errorf(
-			"lifxlan.RawStateUnhandledPayload: unhandled message: %v",
-			p.UnhandledType,
-		)
-	}
-	return fmt.Errorf(
-		"lifxlan.RawStateUnhandledPayload: unexpected UnhandledType %v, was expecting %v",
+func (p RawStateUnhandledPayload) Error() string {
+	return fmt.Sprintf(
+		"lifxlan: unhandled message: %v",
 		p.UnhandledType,
-		expected,
 	)
 }

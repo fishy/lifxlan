@@ -52,11 +52,13 @@ func Wrap(ctx context.Context, d lifxlan.Device, force bool) (Device, error) {
 		return nil, ctx.Err()
 	}
 
+	const msg = GetDeviceChain
+
 	seq, err := d.Send(
 		ctx,
 		conn,
 		0, // flags
-		GetDeviceChain,
+		msg,
 		nil, // payload
 	)
 	if err != nil {
@@ -71,29 +73,37 @@ func Wrap(ctx context.Context, d lifxlan.Device, force bool) (Device, error) {
 		if resp.Sequence != seq || resp.Source != d.Source() {
 			continue
 		}
-		if resp.Message != StateDeviceChain {
-			continue
-		}
 
-		var raw RawStateDeviceChainPayload
-		r := bytes.NewReader(resp.Payload)
-		if err := binary.Read(r, binary.LittleEndian, &raw); err != nil {
-			return nil, err
+		switch resp.Message {
+		case StateDeviceChain:
+			var raw RawStateDeviceChainPayload
+			r := bytes.NewReader(resp.Payload)
+			if err := binary.Read(r, binary.LittleEndian, &raw); err != nil {
+				return nil, err
+			}
+			if raw.TotalCount == 0 {
+				return nil, errors.New("lifxlan/tile.Wrap: no tiles found")
+			}
+			*d.HardwareVersion() = raw.TileDevices[int(raw.StartIndex)].HardwareVersion
+			td := &device{
+				Device:     ld,
+				startIndex: raw.StartIndex,
+				tiles:      make([]*Tile, raw.TotalCount),
+			}
+			for i := range td.tiles {
+				td.tiles[i] = ParseTile(&raw.TileDevices[int(raw.StartIndex)+i])
+			}
+			td.parseBoard()
+			return td, nil
+
+		case lifxlan.StateUnhandled:
+			var raw lifxlan.RawStateUnhandledPayload
+			r := bytes.NewReader(resp.Payload)
+			if err := binary.Read(r, binary.LittleEndian, &raw); err != nil {
+				return nil, err
+			}
+			return nil, raw
 		}
-		if raw.TotalCount == 0 {
-			return nil, errors.New("lifxlan/tile.Wrap: no tiles found")
-		}
-		*d.HardwareVersion() = raw.TileDevices[int(raw.StartIndex)].HardwareVersion
-		td := &device{
-			Device:     ld,
-			startIndex: raw.StartIndex,
-			tiles:      make([]*Tile, raw.TotalCount),
-		}
-		for i := range td.tiles {
-			td.tiles[i] = ParseTile(&raw.TileDevices[int(raw.StartIndex)+i])
-		}
-		td.parseBoard()
-		return td, nil
 	}
 }
 

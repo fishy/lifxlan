@@ -46,14 +46,24 @@ func ParseResponse(msg []byte) (*Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Response{
+	resp := &Response{
 		Message:  d.Type,
 		Flags:    d.Flags,
 		Source:   d.Source,
 		Target:   d.Target,
 		Sequence: d.Sequence,
 		Payload:  payload,
-	}, nil
+	}
+
+	if resp.Message == StateUnhandled {
+		var raw RawStateUnhandledPayload
+		r := bytes.NewReader(resp.Payload)
+		if err := binary.Read(r, binary.LittleEndian, &raw); err != nil {
+			return nil, err
+		}
+		return nil, raw
+	}
+	return resp, nil
 }
 
 // ReadNextResponse returns the next received response.
