@@ -35,7 +35,7 @@ type Device interface {
 	// device.
 	SetColor(ctx context.Context, conn net.Conn, color *lifxlan.Color, transition time.Duration, ack bool) error
 
-	// SetLightPower set the power level of the device and specify how long it
+	// SetLightPower sets the power level of the device and specifies how long it
 	// will take to transition to the new power state.
 	//
 	// If conn is nil,
