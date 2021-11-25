@@ -35,6 +35,21 @@ type Device interface {
 	// device.
 	SetColor(ctx context.Context, conn net.Conn, color *lifxlan.Color, transition time.Duration, ack bool) error
 
+	// SetLightPower set the power level of the device and specify how long it
+	// will take to transition to the new power state.
+	//
+	// If conn is nil,
+	// a new connection will be made and guaranteed to be closed before returning.
+	// You should pre-dial and pass in the conn if you plan to call APIs on this
+	// device repeatedly.
+	//
+	// If ack is false,
+	// this function returns nil error after the API is sent successfully.
+	// If ack is true,
+	// this function will only return nil error after it received ack from the
+	// device.
+	SetLightPower(ctx context.Context, conn net.Conn, power lifxlan.Power, transition time.Duration, ack bool) error
+
 	// SetWaveform sends SetWaveformOptional message as defined in
 	//
 	// https://lan.developer.lifx.com/docs/light-messages#section-setwaveformoptional-119
