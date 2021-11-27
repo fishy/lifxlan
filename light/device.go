@@ -52,7 +52,7 @@ type Device interface {
 
 	// SetWaveform sends SetWaveformOptional message as defined in
 	//
-	// https://lan.developer.lifx.com/docs/light-messages#section-setwaveformoptional-119
+	// https://lan.developer.lifx.com/docs/changing-a-device#setwaveformoptional---packet-119
 	SetWaveform(ctx context.Context, conn net.Conn, args *SetWaveformArgs, ack bool) error
 }
 

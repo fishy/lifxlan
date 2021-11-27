@@ -12,9 +12,9 @@ import (
 
 // RawSetColorPayload defines the struct to be used for encoding and decoding.
 //
-// https://lan.developer.lifx.com/docs/light-messages#setcolor---102
+// https://lan.developer.lifx.com/docs/changing-a-device#setcolor---packet-102
 type RawSetColorPayload struct {
-	_        uint8 // reserved
+	_        byte // reserved
 	Color    lifxlan.Color
 	Duration lifxlan.TransitionTime
 }
@@ -71,13 +71,13 @@ func (ld *device) SetColor(
 
 // RawStatePayload defines the struct to be used for encoding and decoding.
 //
-// https://lan.developer.lifx.com/docs/light-messages#state---107
+// https://lan.developer.lifx.com/docs/information-messages#lightstate---packet-107
 type RawStatePayload struct {
 	Color lifxlan.Color
-	_     int16 // reserved
+	_     [2]byte // reserved
 	Power lifxlan.Power
 	Label lifxlan.Label
-	_     uint64 // reserved
+	_     [8]byte // reserved
 }
 
 func (ld *device) GetColor(

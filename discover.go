@@ -11,7 +11,7 @@ import (
 // RawStateServicePayload defines the struct to be used for encoding and
 // decoding.
 //
-// https://lan.developer.lifx.com/docs/device-messages#stateservice---3
+// https://lan.developer.lifx.com/docs/information-messages#stateservice---packet-3
 type RawStateServicePayload struct {
 	Service ServiceType
 	Port    uint32

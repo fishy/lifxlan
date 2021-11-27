@@ -52,16 +52,19 @@ func Example_drawContinuously() {
 	defer conn.Close()
 
 	for range time.Tick(interval) {
-		ctx, cancel := context.WithTimeout(context.Background(), timeout)
-		defer cancel()
-		if err := device.SetColors(
-			ctx,
-			conn,
-			nextFrame(),
-			0,    // fade in duration
-			true, // ack
-		); err != nil {
-			log.Fatal(err)
-		}
+		// Use lambda to make sure defer works as expected.
+		func() {
+			ctx, cancel := context.WithTimeout(context.Background(), timeout)
+			defer cancel()
+			if err := device.SetColors(
+				ctx,
+				conn,
+				nextFrame(),
+				0,    // fade in duration
+				true, // ack
+			); err != nil {
+				log.Fatal(err)
+			}
+		}()
 	}
 }

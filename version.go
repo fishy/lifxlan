@@ -16,7 +16,7 @@ const EmptyHardwareVersion = "(0, 0, 0)"
 // RawStateVersionPayload defines the struct to be used for encoding and
 // decoding.
 //
-// https://lan.developer.lifx.com/docs/device-messages#stateversion---33
+// https://lan.developer.lifx.com/docs/information-messages#stateversion---packet-33
 type RawStateVersionPayload struct {
 	Version HardwareVersion
 }
@@ -28,7 +28,7 @@ func ProductMapKey(vendor, product uint32) uint64 {
 
 // HardwareVersion defines raw version info in message payloads according to:
 //
-// https://lan.developer.lifx.com/docs/device-messages#stateversion---33
+// https://lan.developer.lifx.com/docs/information-messages#stateversion---packet-33
 type HardwareVersion struct {
 	VendorID        uint32
 	ProductID       uint32

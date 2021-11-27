@@ -13,22 +13,20 @@ type Coordinate struct {
 
 // RawTileDevice defines the struct to be used for encoding and decoding.
 //
-// https://lan.developer.lifx.com/docs/tile-messages#section-tile
+// https://lan.developer.lifx.com/docs/field-types#tile
 type RawTileDevice struct {
 	AccelMeasX      int16
 	AccelMeasY      int16
 	AccelMeasZ      int16
-	_               int16 // reserved
+	_               [2]byte // reserved
 	UserX           float32
 	UserY           float32
 	Width           uint8
 	Height          uint8
-	_               uint8 // reserved
+	_               byte // reserved
 	HardwareVersion lifxlan.HardwareVersion
-	_               uint64 // firmware_build
-	_               uint64 // reserved
-	_               uint32 // firmware_version
-	_               uint32 // reserved
+	Firmware        lifxlan.RawStateHostFirmwarePayload
+	_               [4]byte // reserved
 }
 
 // Tile defines a single tile inside a TileDevice

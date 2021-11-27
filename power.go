@@ -9,7 +9,8 @@ import (
 
 // Power is the raw power level value in messages.
 //
-// https://lan.developer.lifx.com/docs/device-messages#section-power-level
+// https://lan.developer.lifx.com/docs/changing-a-device#setpower---packet-21
+// https://lan.developer.lifx.com/docs/information-messages#statepower---packet-22
 type Power uint16
 
 // Power values.
@@ -32,7 +33,7 @@ func (p Power) String() string {
 
 // RawStatePowerPayload defines the struct to be used for encoding and decoding.
 //
-// https://lan.developer.lifx.com/docs/device-messages#statepower---22
+// https://lan.developer.lifx.com/docs/information-messages#statepower---packet-22
 type RawStatePowerPayload struct {
 	Level Power
 }
@@ -90,7 +91,7 @@ func (d *device) GetPower(ctx context.Context, conn net.Conn) (Power, error) {
 
 // RawSetPowerPayload defines the struct to be used for encoding and decoding.
 //
-// https://lan.developer.lifx.com/docs/device-messages#setpower---21
+// https://lan.developer.lifx.com/docs/changing-a-device#setpower---packet-21
 type RawSetPowerPayload struct {
 	Level Power
 }

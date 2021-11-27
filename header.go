@@ -46,18 +46,18 @@ const (
 
 // RawHeader defines the struct to be used for encoding and decoding.
 //
-// https://lan.developer.lifx.com/docs/header-description
+// https://lan.developer.lifx.com/docs/packet-contents#header
 type RawHeader struct {
 	Size     uint16
 	Tagged   TaggedHeader
 	Source   uint32
 	Target   Target
-	_        [6]uint8 // reserved
+	_        [6]byte // reserved
 	Flags    AckResFlag
 	Sequence uint8
-	_        uint64 // reserved
+	_        [8]byte // reserved
 	Type     MessageType
-	_        uint16 // reserved
+	_        [2]byte // reserved
 }
 
 // HeaderLength is the length of the header

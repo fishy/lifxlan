@@ -178,8 +178,7 @@ type Service struct {
 	Context context.Context
 	Cancel  context.CancelFunc
 
-	wg      sync.WaitGroup
-	started bool
+	wg sync.WaitGroup
 }
 
 // StartService starts a mock service, returns the service and the device.
@@ -273,7 +272,6 @@ func (s *Service) Reply(
 			len(msg),
 		)
 	}
-	return
 }
 
 func (s *Service) handler(conn net.PacketConn) {

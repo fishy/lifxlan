@@ -46,7 +46,7 @@ func ParseRotation(x, y, z int16) Rotation {
 	}
 
 	// Copied from:
-	// https://lan.developer.lifx.com/docs/tile-messages#section-tile
+	// https://lan.developer.lifx.com/docs/tile-control#tile-orientation
 	absX := abs(x)
 	absY := abs(y)
 	absZ := abs(z)

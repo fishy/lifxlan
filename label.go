@@ -17,7 +17,7 @@ func (d *device) Label() *Label {
 
 // RawStateLabelPayload defines the struct to be used for encoding and decoding.
 //
-// https://lan.developer.lifx.com/docs/device-messages#statelabel---25
+// https://lan.developer.lifx.com/docs/information-messages#statelabel---packet-25
 type RawStateLabelPayload struct {
 	Label Label
 }
@@ -27,7 +27,7 @@ const LabelLength = 32
 
 // Label defines raw label in message payloads according to:
 //
-// https://lan.developer.lifx.com/docs/device-messages#section-labels
+// https://lan.developer.lifx.com/docs/information-messages#statelabel---packet-25
 type Label [LabelLength]byte
 
 var _ flag.Getter = (*Label)(nil)

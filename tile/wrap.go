@@ -106,7 +106,7 @@ func Wrap(ctx context.Context, d lifxlan.Device, force bool) (Device, error) {
 // RawStateDeviceChainPayload defines the struct to be used for encoding and
 // decoding.
 //
-// https://lan.developer.lifx.com/docs/tile-messages#statedevicechain---702
+// https://lan.developer.lifx.com/docs/information-messages#statedevicechain---packet-702
 type RawStateDeviceChainPayload struct {
 	StartIndex  uint8
 	TileDevices [16]RawTileDevice
