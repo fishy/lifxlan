@@ -198,8 +198,8 @@ var ProductMap = map[uint64]Product{
 		},
 		Upgrades: Upgrades{
 			{
-				Major: 2,
-				Minor: 80,
+				Major:    2,
+				Minor:    80,
 				Features: Features{
 					TemperatureRange: TemperatureRange{1500, 9000},
 				},
@@ -225,8 +225,8 @@ var ProductMap = map[uint64]Product{
 		},
 		Upgrades: Upgrades{
 			{
-				Major: 2,
-				Minor: 80,
+				Major:    2,
+				Minor:    80,
 				Features: Features{
 					TemperatureRange: TemperatureRange{1500, 9000},
 				},
@@ -252,8 +252,8 @@ var ProductMap = map[uint64]Product{
 		},
 		Upgrades: Upgrades{
 			{
-				Major: 2,
-				Minor: 80,
+				Major:    2,
+				Minor:    80,
 				Features: Features{
 					TemperatureRange: TemperatureRange{1500, 9000},
 				},
@@ -279,8 +279,8 @@ var ProductMap = map[uint64]Product{
 		},
 		Upgrades: Upgrades{
 			{
-				Major: 2,
-				Minor: 80,
+				Major:    2,
+				Minor:    80,
 				Features: Features{
 					TemperatureRange: TemperatureRange{1500, 9000},
 				},
@@ -324,15 +324,15 @@ var ProductMap = map[uint64]Product{
 		},
 		Upgrades: Upgrades{
 			{
-				Major: 2,
-				Minor: 80,
+				Major:    2,
+				Minor:    80,
 				Features: Features{
 					TemperatureRange: TemperatureRange{1500, 9000},
 				},
 			},
 			{
-				Major: 2,
-				Minor: 77,
+				Major:    2,
+				Minor:    77,
 				Features: Features{
 					ExtendedMultizone: OptionalBoolPtr(true),
 				},
@@ -358,8 +358,8 @@ var ProductMap = map[uint64]Product{
 		},
 		Upgrades: Upgrades{
 			{
-				Major: 2,
-				Minor: 80,
+				Major:    2,
+				Minor:    80,
 				Features: Features{
 					TemperatureRange: TemperatureRange{1500, 9000},
 				},
@@ -385,8 +385,8 @@ var ProductMap = map[uint64]Product{
 		},
 		Upgrades: Upgrades{
 			{
-				Major: 2,
-				Minor: 80,
+				Major:    2,
+				Minor:    80,
 				Features: Features{
 					TemperatureRange: TemperatureRange{1500, 9000},
 				},
@@ -412,15 +412,15 @@ var ProductMap = map[uint64]Product{
 		},
 		Upgrades: Upgrades{
 			{
-				Major: 2,
-				Minor: 80,
+				Major:    2,
+				Minor:    80,
 				Features: Features{
 					TemperatureRange: TemperatureRange{1500, 9000},
 				},
 			},
 			{
-				Major: 2,
-				Minor: 77,
+				Major:    2,
+				Minor:    77,
 				Features: Features{
 					ExtendedMultizone: OptionalBoolPtr(true),
 				},
@@ -430,7 +430,7 @@ var ProductMap = map[uint64]Product{
 	ProductMapKey(1, 39): {
 		VendorName:  "LIFX",
 		VendorID:    1,
-		ProductName: "LIFX Downlight White To Warm",
+		ProductName: "LIFX Downlight White to Warm",
 		ProductID:   39,
 		Features: Features{
 			HEV:               OptionalBoolPtr(false),
@@ -442,12 +442,12 @@ var ProductMap = map[uint64]Product{
 			Infrared:          OptionalBoolPtr(false),
 			Multizone:         OptionalBoolPtr(false),
 			ExtendedMultizone: OptionalBoolPtr(false),
-			TemperatureRange:  TemperatureRange{1500, 9000},
+			TemperatureRange:  TemperatureRange{2500, 9000},
 		},
 		Upgrades: Upgrades{
 			{
-				Major: 2,
-				Minor: 80,
+				Major:    2,
+				Minor:    80,
 				Features: Features{
 					TemperatureRange: TemperatureRange{1500, 9000},
 				},
@@ -473,8 +473,8 @@ var ProductMap = map[uint64]Product{
 		},
 		Upgrades: Upgrades{
 			{
-				Major: 2,
-				Minor: 80,
+				Major:    2,
+				Minor:    80,
 				Features: Features{
 					TemperatureRange: TemperatureRange{1500, 9000},
 				},
@@ -500,8 +500,8 @@ var ProductMap = map[uint64]Product{
 		},
 		Upgrades: Upgrades{
 			{
-				Major: 2,
-				Minor: 80,
+				Major:    2,
+				Minor:    80,
 				Features: Features{
 					TemperatureRange: TemperatureRange{1500, 9000},
 				},
@@ -527,8 +527,8 @@ var ProductMap = map[uint64]Product{
 		},
 		Upgrades: Upgrades{
 			{
-				Major: 2,
-				Minor: 80,
+				Major:    2,
+				Minor:    80,
 				Features: Features{
 					TemperatureRange: TemperatureRange{1500, 9000},
 				},
@@ -554,8 +554,8 @@ var ProductMap = map[uint64]Product{
 		},
 		Upgrades: Upgrades{
 			{
-				Major: 2,
-				Minor: 80,
+				Major:    2,
+				Minor:    80,
 				Features: Features{
 					TemperatureRange: TemperatureRange{1500, 9000},
 				},
@@ -581,8 +581,8 @@ var ProductMap = map[uint64]Product{
 		},
 		Upgrades: Upgrades{
 			{
-				Major: 2,
-				Minor: 80,
+				Major:    2,
+				Minor:    80,
 				Features: Features{
 					TemperatureRange: TemperatureRange{1500, 9000},
 				},
@@ -610,7 +610,7 @@ var ProductMap = map[uint64]Product{
 	ProductMapKey(1, 50): {
 		VendorName:  "LIFX",
 		VendorID:    1,
-		ProductName: "LIFX Mini White To Warm",
+		ProductName: "LIFX Mini White to Warm",
 		ProductID:   50,
 		Features: Features{
 			HEV:               OptionalBoolPtr(false),
@@ -626,8 +626,8 @@ var ProductMap = map[uint64]Product{
 		},
 		Upgrades: Upgrades{
 			{
-				Major: 3,
-				Minor: 70,
+				Major:    3,
+				Minor:    70,
 				Features: Features{
 					TemperatureRange: TemperatureRange{1500, 9000},
 				},
@@ -745,7 +745,7 @@ var ProductMap = map[uint64]Product{
 	ProductMapKey(1, 60): {
 		VendorName:  "LIFX",
 		VendorID:    1,
-		ProductName: "LIFX Mini White To Warm",
+		ProductName: "LIFX Mini White to Warm",
 		ProductID:   60,
 		Features: Features{
 			HEV:               OptionalBoolPtr(false),
@@ -761,8 +761,8 @@ var ProductMap = map[uint64]Product{
 		},
 		Upgrades: Upgrades{
 			{
-				Major: 3,
-				Minor: 70,
+				Major:    3,
+				Minor:    70,
 				Features: Features{
 					TemperatureRange: TemperatureRange{1500, 9000},
 				},
@@ -884,7 +884,7 @@ var ProductMap = map[uint64]Product{
 		ProductID:   68,
 		Features: Features{
 			HEV:               OptionalBoolPtr(false),
-			Color:             OptionalBoolPtr(false),
+			Color:             OptionalBoolPtr(true),
 			Chain:             OptionalBoolPtr(false),
 			Matrix:            OptionalBoolPtr(true),
 			Relays:            OptionalBoolPtr(false),
@@ -932,7 +932,7 @@ var ProductMap = map[uint64]Product{
 	ProductMapKey(1, 81): {
 		VendorName:  "LIFX",
 		VendorID:    1,
-		ProductName: "LIFX Candle White To Warm",
+		ProductName: "LIFX Candle White to Warm",
 		ProductID:   81,
 		Features: Features{
 			HEV:               OptionalBoolPtr(false),
@@ -1090,6 +1090,24 @@ var ProductMap = map[uint64]Product{
 			TemperatureRange:  TemperatureRange{1500, 9000},
 		},
 	},
+	ProductMapKey(1, 93): {
+		VendorName:  "LIFX",
+		VendorID:    1,
+		ProductName: "LIFX A19 US",
+		ProductID:   93,
+		Features: Features{
+			HEV:               OptionalBoolPtr(false),
+			Color:             OptionalBoolPtr(true),
+			Chain:             OptionalBoolPtr(false),
+			Matrix:            OptionalBoolPtr(false),
+			Relays:            OptionalBoolPtr(false),
+			Buttons:           OptionalBoolPtr(false),
+			Infrared:          OptionalBoolPtr(false),
+			Multizone:         OptionalBoolPtr(false),
+			ExtendedMultizone: OptionalBoolPtr(false),
+			TemperatureRange:  TemperatureRange{1500, 9000},
+		},
+	},
 	ProductMapKey(1, 94): {
 		VendorName:  "LIFX",
 		VendorID:    1,
@@ -1111,7 +1129,7 @@ var ProductMap = map[uint64]Product{
 	ProductMapKey(1, 96): {
 		VendorName:  "LIFX",
 		VendorID:    1,
-		ProductName: "LIFX Candle White To Warm",
+		ProductName: "LIFX Candle White to Warm",
 		ProductID:   96,
 		Features: Features{
 			HEV:               OptionalBoolPtr(false),
@@ -1265,6 +1283,60 @@ var ProductMap = map[uint64]Product{
 			Relays:            OptionalBoolPtr(false),
 			Buttons:           OptionalBoolPtr(false),
 			Infrared:          OptionalBoolPtr(true),
+			Multizone:         OptionalBoolPtr(false),
+			ExtendedMultizone: OptionalBoolPtr(false),
+			TemperatureRange:  TemperatureRange{1500, 9000},
+		},
+	},
+	ProductMapKey(1, 112): {
+		VendorName:  "LIFX",
+		VendorID:    1,
+		ProductName: "LIFX BR30 Night Vision Intl",
+		ProductID:   112,
+		Features: Features{
+			HEV:               OptionalBoolPtr(false),
+			Color:             OptionalBoolPtr(true),
+			Chain:             OptionalBoolPtr(false),
+			Matrix:            OptionalBoolPtr(false),
+			Relays:            OptionalBoolPtr(false),
+			Buttons:           OptionalBoolPtr(false),
+			Infrared:          OptionalBoolPtr(true),
+			Multizone:         OptionalBoolPtr(false),
+			ExtendedMultizone: OptionalBoolPtr(false),
+			TemperatureRange:  TemperatureRange{1500, 9000},
+		},
+	},
+	ProductMapKey(1, 113): {
+		VendorName:  "LIFX",
+		VendorID:    1,
+		ProductName: "LIFX Mini WW US",
+		ProductID:   113,
+		Features: Features{
+			HEV:               OptionalBoolPtr(false),
+			Color:             OptionalBoolPtr(false),
+			Chain:             OptionalBoolPtr(false),
+			Matrix:            OptionalBoolPtr(false),
+			Relays:            OptionalBoolPtr(false),
+			Buttons:           OptionalBoolPtr(false),
+			Infrared:          OptionalBoolPtr(false),
+			Multizone:         OptionalBoolPtr(false),
+			ExtendedMultizone: OptionalBoolPtr(false),
+			TemperatureRange:  TemperatureRange{1500, 9000},
+		},
+	},
+	ProductMapKey(1, 114): {
+		VendorName:  "LIFX",
+		VendorID:    1,
+		ProductName: "LIFX Mini WW Intl",
+		ProductID:   114,
+		Features: Features{
+			HEV:               OptionalBoolPtr(false),
+			Color:             OptionalBoolPtr(false),
+			Chain:             OptionalBoolPtr(false),
+			Matrix:            OptionalBoolPtr(false),
+			Relays:            OptionalBoolPtr(false),
+			Buttons:           OptionalBoolPtr(false),
+			Infrared:          OptionalBoolPtr(false),
 			Multizone:         OptionalBoolPtr(false),
 			ExtendedMultizone: OptionalBoolPtr(false),
 			TemperatureRange:  TemperatureRange{1500, 9000},
