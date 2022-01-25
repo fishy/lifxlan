@@ -101,7 +101,9 @@ type Device interface {
 	SanitizeColor(color Color) Color
 
 	// Echo sends a message to the device and waits for a response to ensure that
-	// the device is online and responding
+	// the device is online and responding. A payload can optionally be provided
+	// to define the data that is sent to the device and expected to be returned
+	// in the echo response.
 	//
 	// If conn is nil,
 	// a new connection will be made and guaranteed to be closed before returning.
