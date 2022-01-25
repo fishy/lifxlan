@@ -73,10 +73,7 @@ func (d *device) Echo(ctx context.Context, conn net.Conn, payload []byte) error 
 			return err
 		}
 
-		var expected [EchoPayloadLength]byte
-		copy(expected[:], body)
-
-		if raw.Echoing != expected {
+		if !bytes.Equal(raw.Echoing[:], body) {
 			return errors.New("unexpected echo response value")
 		}
 
