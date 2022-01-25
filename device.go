@@ -107,7 +107,7 @@ type Device interface {
 	// a new connection will be made and guaranteed to be closed before returning.
 	// You should pre-dial and pass in the conn if you plan to call APIs on this
 	// device repeatedly.
-	Echo(ctx context.Context, conn net.Conn) error
+	Echo(ctx context.Context, conn net.Conn, payload []byte) error
 
 	// GetPower returns the current power level of the device.
 	//

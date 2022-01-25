@@ -20,7 +20,7 @@ type RawEchoResponsePayload struct {
 	Echoing [EchoPayloadLength]byte
 }
 
-func (d *device) Echo(ctx context.Context, conn net.Conn) error {
+func (d *device) Echo(ctx context.Context, conn net.Conn, payload []byte) error {
 	if ctx.Err() != nil {
 		return ctx.Err()
 	}
@@ -38,15 +38,16 @@ func (d *device) Echo(ctx context.Context, conn net.Conn) error {
 		}
 	}
 
-	payload := make([]byte, EchoPayloadLength)
-	rand.Read(payload)
+	body := make([]byte, EchoPayloadLength)
+	rand.Read(body)
+	copy(body, payload)
 
 	seq, err := d.Send(
 		ctx,
 		conn,
 		0, // flags
 		EchoRequest,
-		payload,
+		body,
 	)
 	if err != nil {
 		return err
@@ -71,7 +72,7 @@ func (d *device) Echo(ctx context.Context, conn net.Conn) error {
 		}
 
 		var expected [EchoPayloadLength]byte
-		copy(expected[:], payload)
+		copy(expected[:], body)
 
 		if raw.Echoing != expected {
 			return errors.New("unexpected echo response value")

@@ -21,8 +21,23 @@ func TestEcho(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	err := device.Echo(ctx, nil)
-	if err != nil {
-		t.Fatal(err)
-	}
+	t.Run(
+		"UserPayload",
+		func(t *testing.T) {
+			err := device.Echo(ctx, nil, []byte("payload"))
+			if err != nil {
+				t.Fatal(err)
+			}
+		},
+	)
+
+	t.Run(
+		"DefaultPayload",
+		func(t *testing.T) {
+			err := device.Echo(ctx, nil, nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+		},
+	)
 }
