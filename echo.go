@@ -39,8 +39,10 @@ func (d *device) Echo(ctx context.Context, conn net.Conn, payload []byte) error 
 	}
 
 	body := make([]byte, EchoPayloadLength)
-	rand.Read(body)
 	copy(body, payload)
+	if len(payload) < EchoPayloadLength {
+		rand.Read(body[len(payload):])
+	}
 
 	seq, err := d.Send(
 		ctx,
