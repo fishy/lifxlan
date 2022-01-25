@@ -9,11 +9,15 @@ import (
 	"net"
 )
 
+const (
+	EchoPayloadLength = 64
+)
+
 // RawEchoResponsePayload defines echo response payload according to:
 //
 // https://lan.developer.lifx.com/docs/information-messages#echoresponse---packet-59
 type RawEchoResponsePayload struct {
-	Echoing [64]byte
+	Echoing [EchoPayloadLength]byte
 }
 
 func (d *device) Echo(ctx context.Context, conn net.Conn) error {
@@ -34,7 +38,7 @@ func (d *device) Echo(ctx context.Context, conn net.Conn) error {
 		}
 	}
 
-	payload := make([]byte, 64)
+	payload := make([]byte, EchoPayloadLength)
 	rand.Read(payload)
 
 	seq, err := d.Send(
@@ -66,7 +70,7 @@ func (d *device) Echo(ctx context.Context, conn net.Conn) error {
 			return err
 		}
 
-		var expected [64]byte
+		var expected [EchoPayloadLength]byte
 		copy(expected[:], payload)
 
 		if raw.Echoing != expected {

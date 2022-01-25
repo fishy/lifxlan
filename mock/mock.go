@@ -72,7 +72,7 @@ func DefaultHandlerFunc(
 
 	case lifxlan.EchoRequest:
 		buf := new(bytes.Buffer)
-		var echoing [64]byte
+		var echoing [lifxlan.EchoPayloadLength]byte
 		copy(echoing[:], orig.Payload)
 		if err := binary.Write(
 			buf,
