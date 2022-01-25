@@ -9,6 +9,9 @@ import (
 	"net"
 )
 
+// RawEchoResponsePayload defines echo response payload according to:
+//
+// https://lan.developer.lifx.com/docs/information-messages#echoresponse---packet-59
 type RawEchoResponsePayload struct {
 	Echoing [64]byte
 }
