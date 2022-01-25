@@ -187,7 +187,6 @@ type Service struct {
 	RawStatePayload             *light.RawStatePayload
 	RawStateDeviceChainPayload  *tile.RawStateDeviceChainPayload
 	RawStateTileState64Payloads []*tile.RawStateTileState64Payload
-	RawEchoResponsePayload      *lifxlan.RawEchoResponsePayload
 
 	// The service context.
 	//
