@@ -70,6 +70,18 @@ func DefaultHandlerFunc(
 		}
 		s.Reply(conn, addr, orig, lifxlan.StateVersion, buf.Bytes())
 
+	case lifxlan.EchoRequest:
+		buf := new(bytes.Buffer)
+		if err := binary.Write(
+			buf,
+			binary.LittleEndian,
+			s.RawEchoResponsePayload,
+		); err != nil {
+			s.TB.Log(err)
+			return
+		}
+		s.Reply(conn, addr, orig, lifxlan.EchoResponse, buf.Bytes())
+
 	case light.Get:
 		buf := new(bytes.Buffer)
 		if err := binary.Write(
@@ -171,6 +183,7 @@ type Service struct {
 	RawStatePayload             *light.RawStatePayload
 	RawStateDeviceChainPayload  *tile.RawStateDeviceChainPayload
 	RawStateTileState64Payloads []*tile.RawStateTileState64Payload
+	RawEchoResponsePayload      *lifxlan.RawEchoResponsePayload
 
 	// The service context.
 	//
