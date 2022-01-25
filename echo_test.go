@@ -32,6 +32,16 @@ func TestEcho(t *testing.T) {
 	)
 
 	t.Run(
+		"OversizePayload",
+		func(t *testing.T) {
+			err := device.Echo(ctx, nil, []byte("this is a big string that's longer than the allowed 64 bytes for the echo payload"))
+			if err != nil {
+				t.Fatal(err)
+			}
+		},
+	)
+
+	t.Run(
 		"DefaultPayload",
 		func(t *testing.T) {
 			err := device.Echo(ctx, nil, nil)
