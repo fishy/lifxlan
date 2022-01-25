@@ -31,7 +31,7 @@ func (d *device) Echo(ctx context.Context, conn net.Conn) error {
 		}
 	}
 
-	payload := make([]byte, 0, 64)
+	payload := make([]byte, 64)
 	rand.Read(payload)
 
 	seq, err := d.Send(
