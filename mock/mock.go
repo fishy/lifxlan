@@ -72,10 +72,14 @@ func DefaultHandlerFunc(
 
 	case lifxlan.EchoRequest:
 		buf := new(bytes.Buffer)
+		var echoing [64]byte
+		copy(echoing[:], orig.Payload)
 		if err := binary.Write(
 			buf,
 			binary.LittleEndian,
-			s.RawEchoResponsePayload,
+			&lifxlan.RawEchoResponsePayload{
+				Echoing: echoing,
+			},
 		); err != nil {
 			s.TB.Log(err)
 			return
