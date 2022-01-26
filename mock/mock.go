@@ -70,6 +70,22 @@ func DefaultHandlerFunc(
 		}
 		s.Reply(conn, addr, orig, lifxlan.StateVersion, buf.Bytes())
 
+	case lifxlan.EchoRequest:
+		buf := new(bytes.Buffer)
+		var echoing [lifxlan.EchoPayloadLength]byte
+		copy(echoing[:], orig.Payload)
+		if err := binary.Write(
+			buf,
+			binary.LittleEndian,
+			&lifxlan.RawEchoResponsePayload{
+				Echoing: echoing,
+			},
+		); err != nil {
+			s.TB.Log(err)
+			return
+		}
+		s.Reply(conn, addr, orig, lifxlan.EchoResponse, buf.Bytes())
+
 	case light.Get:
 		buf := new(bytes.Buffer)
 		if err := binary.Write(

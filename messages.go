@@ -19,4 +19,6 @@ const (
 	StateLabel        MessageType = 25
 	GetVersion        MessageType = 32
 	StateVersion      MessageType = 33
+	EchoRequest       MessageType = 58
+	EchoResponse      MessageType = 59
 )

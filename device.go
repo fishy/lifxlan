@@ -100,6 +100,17 @@ type Device interface {
 	// upgrades).
 	SanitizeColor(color Color) Color
 
+	// Echo sends a message to the device and waits for a response to ensure that
+	// the device is online and responding. A payload can optionally be provided
+	// to define the data that is sent to the device and expected to be returned
+	// in the echo response.
+	//
+	// If conn is nil,
+	// a new connection will be made and guaranteed to be closed before returning.
+	// You should pre-dial and pass in the conn if you plan to call APIs on this
+	// device repeatedly.
+	Echo(ctx context.Context, conn net.Conn, payload []byte) error
+
 	// GetPower returns the current power level of the device.
 	//
 	// If conn is nil,
