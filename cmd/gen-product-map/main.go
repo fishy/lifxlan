@@ -88,8 +88,8 @@ func main() {
 				fmt.Printf("\t\tUpgrades: Upgrades{\n")
 				for _, upgrade := range product.Upgrades {
 					fmt.Printf("\t\t\t{\n")
-					fmt.Printf("\t\t\t\tMajor:    %v,\n", upgrade.Major)
-					fmt.Printf("\t\t\t\tMinor:    %v,\n", upgrade.Minor)
+					fmt.Printf("\t\t\t\tMajor: %v,\n", upgrade.Major)
+					fmt.Printf("\t\t\t\tMinor: %v,\n", upgrade.Minor)
 					fmt.Printf("\t\t\t\tFeatures: Features{\n")
 					if upgrade.Features.HEV != nil {
 						fmt.Printf("\t\t\t\t\tHEV: OptionalBoolPtr(%v),\n", upgrade.Features.HEV.Get())
