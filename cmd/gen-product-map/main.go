@@ -17,6 +17,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"runtime/debug"
 	"sort"
 
 	"go.yhsif.com/lifxlan"
@@ -36,6 +37,12 @@ var url = flag.String(
 	"The URL to fetch json data.",
 )
 
+var version = flag.Bool(
+	"v",
+	false,
+	"Show version/build info and exit.",
+)
+
 func errorOut(v ...interface{}) {
 	fmt.Fprintln(os.Stderr, v...)
 	os.Exit(-1)
@@ -43,6 +50,22 @@ func errorOut(v ...interface{}) {
 
 func main() {
 	flag.Parse()
+
+	if *version {
+		info, ok := debug.ReadBuildInfo()
+		if !ok {
+			fmt.Fprintln(os.Stderr, "No version info available")
+			os.Exit(-1)
+		}
+		encoder := json.NewEncoder(os.Stdout)
+		encoder.SetIndent("", "  ")
+		if err := encoder.Encode(info); err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to output build info: %v\n", err)
+			os.Exit(-1)
+		}
+		return
+	}
+
 	resp, err := http.Get(*url)
 	if err != nil {
 		errorOut(err)
