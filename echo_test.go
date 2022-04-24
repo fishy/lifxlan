@@ -15,8 +15,7 @@ func TestEcho(t *testing.T) {
 
 	const timeout = time.Millisecond * 200
 
-	service, device := mock.StartService(t)
-	defer service.Stop()
+	_, device := mock.StartService(t)
 
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()

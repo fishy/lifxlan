@@ -101,7 +101,6 @@ func TestGetHardwareVersion(t *testing.T) {
 	}
 
 	service, device := mock.StartService(t)
-	defer service.Stop()
 	service.RawStateVersionPayload = &lifxlan.RawStateVersionPayload{
 		Version: expected,
 	}

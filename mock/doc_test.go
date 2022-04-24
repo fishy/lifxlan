@@ -29,7 +29,6 @@ func Example_testGetLabel() {
 			expected.Set("foo")
 
 			service, device := mock.StartService(t)
-			defer service.Stop()
 			// This is the payload to be returned by the mock service.
 			service.RawStateLabelPayload = &lifxlan.RawStateLabelPayload{
 				Label: expected,
@@ -64,7 +63,6 @@ func Example_testGetLabelWithHandlerFunc() {
 			expected.Set("foo")
 
 			service, device := mock.StartService(t)
-			defer service.Stop()
 
 			// This defines the handler for GetLabel messages.
 			service.Handlers[lifxlan.GetLabel] = func(
@@ -112,7 +110,6 @@ func Example_testNotEnoughAcks() {
 			const timeout = time.Millisecond * 200
 
 			service, device := mock.StartService(t)
-			defer service.Stop()
 
 			rawTile1 := tile.RawTileDevice{
 				Width:  8,

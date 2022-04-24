@@ -98,7 +98,6 @@ func TestGetLabel(t *testing.T) {
 	expected.Set("foo")
 
 	service, device := mock.StartService(t)
-	defer service.Stop()
 	service.RawStateLabelPayload = &lifxlan.RawStateLabelPayload{
 		Label: expected,
 	}

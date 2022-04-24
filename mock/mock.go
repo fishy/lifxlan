@@ -210,6 +210,8 @@ func StartService(tb testing.TB) (*Service, lifxlan.Device) {
 }
 
 // Start starts the service and returns the device.
+//
+// It also register Stop to TB's Cleanup.
 func (s *Service) Start() lifxlan.Device {
 	s.TB.Helper()
 
@@ -225,6 +227,7 @@ func (s *Service) Start() lifxlan.Device {
 	s.wg.Add(1)
 	go s.handler(conn)
 
+	s.TB.Cleanup(s.Stop)
 	return lifxlan.NewDevice(
 		conn.LocalAddr().String(),
 		lifxlan.ServiceUDP,
@@ -250,9 +253,9 @@ func (s *Service) Reply(
 	message lifxlan.MessageType,
 	payload []byte,
 ) {
-	select {
-	default:
-	case <-s.Context.Done():
+	s.TB.Helper()
+
+	if s.Context.Err() != nil {
 		return
 	}
 
@@ -266,24 +269,22 @@ func (s *Service) Reply(
 		payload,
 	)
 	if err != nil {
-		s.TB.Log(err)
+		s.TB.Logf("lifxlan/mock.Reply: Failed to generate replay message: %v", err)
 		return
 	}
 
-	select {
-	default:
-	case <-s.Context.Done():
+	if s.Context.Err() != nil {
 		return
 	}
 
 	n, err := conn.WriteTo(msg, addr)
 	if err != nil {
-		s.TB.Log(err)
+		s.TB.Logf("lifxlan/mock.Reply: Failed to write replay message: %v", err)
 		return
 	}
 	if n < len(msg) {
 		s.TB.Logf(
-			"lifxlan/mock.Reply: only wrote %d out of %d bytes",
+			"lifxlan/mock.Reply: Only wrote %d out of %d bytes",
 			n,
 			len(msg),
 		)
@@ -296,9 +297,7 @@ func (s *Service) handler(conn net.PacketConn) {
 
 	buf := make([]byte, lifxlan.ResponseReadBufferSize)
 	for {
-		select {
-		default:
-		case <-s.Context.Done():
+		if s.Context.Err() != nil {
 			s.TB.Log(s.Context.Err())
 			return
 		}

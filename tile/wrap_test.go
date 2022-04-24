@@ -52,7 +52,6 @@ func TestWrap(t *testing.T) {
 	label.Set("foo")
 
 	service, device := mock.StartService(t)
-	defer service.Stop()
 	service.RawStatePayload = &light.RawStatePayload{
 		Label: label,
 	}

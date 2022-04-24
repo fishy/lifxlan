@@ -88,7 +88,6 @@ func TestGetPower(t *testing.T) {
 	expected := lifxlan.PowerOn
 
 	service, device := mock.StartService(t)
-	defer service.Stop()
 	service.RawStatePowerPayload = &lifxlan.RawStatePowerPayload{
 		Level: expected,
 	}
@@ -121,7 +120,6 @@ func TestSetPower(t *testing.T) {
 	expected := lifxlan.PowerOff
 
 	service, device := mock.StartService(t)
-	defer service.Stop()
 
 	var called bool
 
