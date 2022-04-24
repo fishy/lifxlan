@@ -1379,7 +1379,7 @@ var ProductMap = map[uint64]Product{
 	ProductMapKey(1, 117): {
 		VendorName:  "LIFX",
 		VendorID:    1,
-		ProductName: "LIFX Z",
+		ProductName: "LIFX Z US",
 		ProductID:   117,
 		Features: Features{
 			HEV:               OptionalBoolPtr(false),
@@ -1397,7 +1397,7 @@ var ProductMap = map[uint64]Product{
 	ProductMapKey(1, 118): {
 		VendorName:  "LIFX",
 		VendorID:    1,
-		ProductName: "LIFX Z",
+		ProductName: "LIFX Z Intl",
 		ProductID:   118,
 		Features: Features{
 			HEV:               OptionalBoolPtr(false),
@@ -1415,7 +1415,7 @@ var ProductMap = map[uint64]Product{
 	ProductMapKey(1, 119): {
 		VendorName:  "LIFX",
 		VendorID:    1,
-		ProductName: "LIFX Beam",
+		ProductName: "LIFX Beam US",
 		ProductID:   119,
 		Features: Features{
 			HEV:               OptionalBoolPtr(false),
@@ -1433,7 +1433,7 @@ var ProductMap = map[uint64]Product{
 	ProductMapKey(1, 120): {
 		VendorName:  "LIFX",
 		VendorID:    1,
-		ProductName: "LIFX Beam",
+		ProductName: "LIFX Beam Intl",
 		ProductID:   120,
 		Features: Features{
 			HEV:               OptionalBoolPtr(false),
