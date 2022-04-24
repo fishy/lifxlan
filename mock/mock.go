@@ -10,6 +10,7 @@ import (
 
 	"go.yhsif.com/lifxlan"
 	"go.yhsif.com/lifxlan/light"
+	"go.yhsif.com/lifxlan/relay"
 	"go.yhsif.com/lifxlan/tile"
 )
 
@@ -98,6 +99,18 @@ func DefaultHandlerFunc(
 		}
 		s.Reply(conn, addr, orig, light.State, buf.Bytes())
 
+	case relay.GetRPower:
+		buf := new(bytes.Buffer)
+		if err := binary.Write(
+			buf,
+			binary.LittleEndian,
+			s.RawStateRPowerPayload,
+		); err != nil {
+			s.TB.Log(err)
+			return
+		}
+		s.Reply(conn, addr, orig, relay.StateRPower, buf.Bytes())
+
 	case tile.GetDeviceChain:
 		buf := new(bytes.Buffer)
 		if err := binary.Write(
@@ -185,6 +198,7 @@ type Service struct {
 	RawStateLabelPayload        *lifxlan.RawStateLabelPayload
 	RawStateVersionPayload      *lifxlan.RawStateVersionPayload
 	RawStatePayload             *light.RawStatePayload
+	RawStateRPowerPayload       *relay.RawStateRPowerPayload
 	RawStateDeviceChainPayload  *tile.RawStateDeviceChainPayload
 	RawStateTileState64Payloads []*tile.RawStateTileState64Payload
 
