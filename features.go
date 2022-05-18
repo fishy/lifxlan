@@ -188,7 +188,7 @@ func (p Product) FeaturesAt(firmware FirmwareUpgrade) Features {
 	features := make([]Features, 0, len(p.Upgrades)+1)
 	for _, u := range p.Upgrades {
 		if firmware.Less(u) {
-			break
+			continue
 		}
 		features = append(features, u.Features)
 	}
